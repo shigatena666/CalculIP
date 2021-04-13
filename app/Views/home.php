@@ -1,22 +1,12 @@
 <?php
     $title="Exercices corrigés autour de TCP/IP - CalculIP";//Titre de la page
     require_once("../ThirdParty/DatabaseConnection.php");
-    require_once("../ThirdParty/header.php");//Inclusion du header et du menu
+    //Header inclusion isn't needed anymore as CodeIgniter handles it intelligently. It's done directly when
+    //instantiating the view.
 ?>
 <!-- CORPS -->
 <div class="container"><!-- début du corps -->
     <h1>CalculIP : Accueil</h1>
-
-    <?php
-        try {
-            $db = db_connect();
-            $query = $db->query("SELECT * FROM citations order by RAND() LIMIT 1");
-        }
-        catch (PDOException $e) {
-            echo 'Could not request quote.';
-        }
-        $response = $query->getFirstRow('array');
-    ?>
 
     <blockquote>
 	<p><?=$response['texte']?>.</p>
