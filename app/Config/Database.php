@@ -51,6 +51,32 @@ class Database extends Config
 	];
 
 	/**
+	 * The www-info database connection
+	 * If the DSN doesn't work, CodeIgniter will try to connect with the next settings.
+	 * 
+	 * @var array
+	 */
+	public $db = [
+		'DSN'      => 'mysql:host=localhost;dbname=calcul_ip2;charset=utf8',
+		'hostname' => 'localhost',
+		'username' => 'calcul_ip2',
+		'password' => '05FIxycj0',
+		'database' => '',
+		'DBDriver' => 'mysql',
+		'DBPrefix' => '',
+		'pConnect' => false,
+		'DBDebug'  => (ENVIRONMENT !== 'production'),
+		'charset'  => 'utf8',
+		'DBCollat' => 'utf8_general_ci',
+		'swapPre'  => '',
+		'encrypt'  => false,
+		'compress' => false,
+		'strictOn' => false,
+		'failover' => [],
+		'port'     => 3306,
+	];
+
+	/**
 	 * This database connection is used when
 	 * running PHPUnit database tests.
 	 *
