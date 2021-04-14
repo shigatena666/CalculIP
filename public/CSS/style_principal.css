@@ -124,7 +124,7 @@
     background-color: #FFF;
 }
 a.navbar-brand {
-    background:url('/CalculIP/images/logo.png') 0 0 no-repeat ;
+    background:url('../Pictures/logo.png') 0 0 no-repeat ;
     background-size:contain;
     background-position: center;
     min-width:100px;
@@ -164,7 +164,7 @@ a.navbar-brand img{
         height: 75px;
         background-color: #3E687E;
         border-color:#5E889E;
-        background-image:url('/CalculIP/images/logo_hover.png');
+        background-image:url('../Pictures/logo_hover.png');
         transition: all ease-in-out 0.4s;
     }
     

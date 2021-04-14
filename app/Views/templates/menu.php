@@ -1,6 +1,7 @@
 <?php
-include_once('function/fonction_utilisateur.php');
+//include_once('function/fonction_utilisateur.php');
 ?>
+
 <nav class="navbar navbar-default navbar-static-top ">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -78,6 +79,7 @@ include_once('function/fonction_utilisateur.php');
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
+
 <ol class="breadcrumb">
     <?php
     $tab = array();

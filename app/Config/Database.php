@@ -23,7 +23,7 @@ class Database extends Config
 	 *
 	 * @var string
 	 */
-	public $defaultGroup = 'default';
+	public $defaultGroup = 'db';
 
 	/**
 	 * The default database connection.
@@ -57,12 +57,12 @@ class Database extends Config
 	 * @var array
 	 */
 	public $db = [
-		'DSN'      => 'mysql:host=localhost;dbname=calcul_ip2;charset=utf8',
+		'DSN'      => 'MySQLi:host=localhost;dbname=calcul_ip2;charset=utf8',
 		'hostname' => 'localhost',
-		'username' => 'calcul_ip2',
-		'password' => '05FIxycj0',
-		'database' => '',
-		'DBDriver' => 'mysql',
+		'username' => 'root',
+		'password' => 'root',
+		'database' => 'calcul_ip2',
+		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',
 		'pConnect' => false,
 		'DBDebug'  => (ENVIRONMENT !== 'production'),
