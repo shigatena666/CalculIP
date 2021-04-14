@@ -7,27 +7,30 @@
     	session_start();
 
     if (isset($_REQUEST['login']) && !isset($_SESSION['connect'])) {
-        require_once('login.php');
+
+        $this->load->helper('login');
+
         if (authentication()) {
             $_SESSION['connect'] = getUser();
             $_SESSION['exo'] = basename($_SERVER['PHP_SELF'], '.php');
 
-            //Will no longer be used as CodeIgniter do that for us now.
-            //include_once('connectBDD.php');
-
+            //TODO: Remake this as the whole BDD system is handled by Code Igniter.
             include_once('function/fonction_utilisateur.php');
             connectionUser($_SESSION['connect'], $bdd);
+
             $_SESSION['nbExos'] = getNbExercices($bdd);
             $_SESSION['score'] = getScore($_SESSION['connect'], $bdd);
         }
     }
     if (isset($_SESSION['connect'])) {
-        require_once('login.php');
+
+        $this->load->helper('login');
+
 	    $_SESSION['exo']=basename($_SERVER['PHP_SELF'], '.php');
 	    //$_SESSION['score']= getScore($_SESSION['connect'],$bdd);
 
         if (isset($_REQUEST['logout']) && $_REQUEST['logout'] != 'success' ) {
-            deconnexion();
+            disconnect();
         }
     }
 
@@ -40,8 +43,8 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-migrate-3.3.2.js"></script>
 
-        <script src="../ThirdParty/JavaScript/bootstrap.js"></script>
-        <script src="../ThirdParty/JavaScript/matomo.js"></script>
+        <script src="JavaScript/bootstrap.js"></script>
+        <script src="JavaScript/matomo.js"></script>
         <!-- <script src="/CalculIP/js/npm.js"></script>-->
         <link href="CSS/bootstrap.css" rel="stylesheet">
         <link href="CSS/style_principal.css" rel="stylesheet">
