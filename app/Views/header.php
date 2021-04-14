@@ -40,17 +40,17 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/jquery-migrate-3.3.2.js"></script>
 
-        <script src="JavaScript/bootstrap.js"></script>
-        <script src="JavaScript/matomo.js"></script>
+        <script src="../ThirdParty/JavaScript/bootstrap.js"></script>
+        <script src="../ThirdParty/JavaScript/matomo.js"></script>
         <!-- <script src="/CalculIP/js/npm.js"></script>-->
-        <link href="../Views/CSS/bootstrap.css" rel="stylesheet">
-        <link href="../Views/CSS/style_principal.css" rel="stylesheet">
-        <link rel="icon" type="/CalculIP/image/ico" href="Pictures/favicon.ico" />
+        <link href="CSS/bootstrap.css" rel="stylesheet">
+        <link href="CSS/style_principal.css" rel="stylesheet">
+        <link rel="icon" type="/CalculIP/image/ico" href="../ThirdParty/Pictures/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
 	    <meta name="keywords" content="TCP/IP, Excercices, corrigés">
         <meta name="description" 
 	    content="Site d'exercices corrigés autour de TCP/IP: masques, CIDR, tables de routage, etc.">
-        <title><?php echo $title ?></title>
+        <title><?= $title ?></title>
     </head>
 
     <body>
