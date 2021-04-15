@@ -19,10 +19,9 @@ class UserModel extends Model
      * @param $userID: The userID to lookup for in the database.
      * @return bool|null: Returns true if it's found, false if not and null in case of an exception.
      */
-    function isExistUser($userID): ?bool
+    function userExists($userID): bool
     {
         try {
-
             $query = $this->db->table('utilisateurs')
                 ->select()
                 ->distinct()
@@ -31,12 +30,10 @@ class UserModel extends Model
 
             return count($query->getFirstRow('array')) === 1;
         } catch (Exception $e) {
-            echo "Error at isExistUser";
-            return null;
+            error_log( "Error at isExistUser");
+            return false;
         }
     }
-
-    //Allow the user to connect to the database
 
     /**
      * Allows an user to register into the database.
@@ -46,16 +43,12 @@ class UserModel extends Model
     {
         try {
             //Check if the user exists.
-            if (($isExist = $this->isExistUser($userID)) != null) {
+            if (!$this->userExists($userID)) {
 
-                //If it does, check the return value (-1 means not found)
-                if ($isExist == -1) {
-
-                    //Add the user to the database.
-                    $data = [ "UserID" => $userID ];
-                    $this->db->table('utilisateurs')
-                        ->insert($data);
-                }
+                //Add the user to the database.
+                $data = [ "UserID" => $userID ];
+                $this->db->table('utilisateurs')
+                    ->insert($data);
             }
         } catch (Exception $e) {
             error_log("Error during insertion of user");

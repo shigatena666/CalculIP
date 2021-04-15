@@ -18,11 +18,13 @@ class QuoteModel extends Model
     function generate_quote(): ?array
     {
         try {
+            //Send the query to the database, sorting randomly the quotes and then picking the first.
             $query = $this->db->table('citations')
                 ->select()
                 ->orderBy("RAND()")
                 ->get(1);
 
+            //Get the row result as an array.
             return $query->getFirstRow('array');
         } catch (Exception $e) {
             return null;

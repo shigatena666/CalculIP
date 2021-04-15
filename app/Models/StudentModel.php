@@ -18,19 +18,17 @@ class StudentModel extends Model
      * @param $userID: The userID to lookup for in the database.
      * @return array|null: The first row of (nom, prenom) ; null if not found or when an exception occurred.
      */
-    function getSurnameFirstname($userID): ?array {
+    function getSurnameFirstname($userID): ?array
+    {
         try {
-
-            $query = $this->db->table('etudiants')
+            //Send the query to the database.
+            $query = $this->db->table($this->table)
                 ->select(["nom", "prenom"])
                 ->where('UserID', $userID)
                 ->get();
 
-            $result = $query->getFirstRow('array');
-            if (count($result) === 1) {
-                return $result;
-            }
-            return null;
+            //Return the result from the database an array (nom, prenom).
+            return $query->getFirstRow('array');
         } catch (Exception $e){
             error_log ("Error at getSurnameFirstname");
             return null;
