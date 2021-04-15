@@ -22,7 +22,9 @@ class UserModel extends Model
     function userExists($userID): bool
     {
         try {
-            $query = $this->db->table('utilisateurs')
+            //TODO: Maybe remove distinct as ID is unique ?
+            //Query to check if an userID matches the database's users.
+            $query = $this->db->table($this->table)
                 ->select()
                 ->distinct()
                 ->where('UserID', $userID)
@@ -30,7 +32,7 @@ class UserModel extends Model
 
             return count($query->getFirstRow('array')) === 1;
         } catch (Exception $e) {
-            error_log( "Error at isExistUser");
+            error_log( "Error at userExists");
             return false;
         }
     }
@@ -47,11 +49,35 @@ class UserModel extends Model
 
                 //Add the user to the database.
                 $data = [ "UserID" => $userID ];
-                $this->db->table('utilisateurs')
+                $this->db->table($this->table)
                     ->insert($data);
             }
         } catch (Exception $e) {
             error_log("Error during insertion of user");
         }
+    }
+
+    function setSession() {
+        $session = session();
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        if (isset($_REQUEST['login']) && !isset($_SESSION['connect'])) {
+
+            $this->load->helper('login');
+
+            if (authentication()) {
+                $_SESSION['connect'] = getUser();
+                $_SESSION['exo'] = basename($_SERVER['PHP_SELF'], '.php');
+
+                //TODO: Remake this as the whole BDD system is handled by Code Igniter.
+                include_once('function/fonction_utilisateur.php');
+                connectionUser($_SESSION['connect'], $bdd);
+
+                $_SESSION['nbExos'] = getNbExercices($bdd);
+                $_SESSION['score'] = getScore($_SESSION['connect'], $bdd);
+            }
+        }
+
     }
 }
