@@ -2,24 +2,25 @@
 
 namespace App\Controllers;
 
+use App\Models\QuoteModel;
+
 class Home extends BaseController
 {
+    /**
+     * This method represents the / of CalculIP.
+     * @return string: The home view built with the data.
+     */
     public function index(): string
     {
+        $model = new QuoteModel();
+        $quote = $model->generate_quote();
+
         $data = array(
             "title" => "Exercices corrigés autour de TCP/IP - CalculIP",
             "menu_view" => view('templates/menu'),
-            "quote" => $this->generate_quote()
+            "quote" => $quote
         );
 
         return view('home', $data);
-    }
-
-    private function generate_quote(): array
-    {
-        //TODO: Take a look at error handling of CI4. What does happen when the query results into an error?
-        $db = db_connect();
-        $query = $db->query("SELECT * FROM citations order by RAND() LIMIT 1");
-        return $query->getFirstRow('array');
     }
 }
