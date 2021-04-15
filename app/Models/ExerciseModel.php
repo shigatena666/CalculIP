@@ -43,7 +43,7 @@ class ExerciseModel extends Model
      * Get the number of exercise in the database.
      * @return int The number of exercise.
      */
-    function getNbExercises() : int {
+    function getExercisesCount() : int {
         try {
 
             //Count how many exercises there are in the database.

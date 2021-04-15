@@ -88,6 +88,42 @@ class ExerciseDoneModel extends Model
     }
 
     /**
+     * Get the number of exercise the user has done, increased by 1 if the user has succeeded one time.
+     * @param $userID: The user's ID we need to retrieve the information from.
+     * @return int The amount of exercise
+     */
+    //TODO: Not sure if it works that way, will test later.
+    function getExercicesCountDone($userID) : int {
+        try {
+            //Increase by 1 the number of exercice if succeeded.
+            $query = $this->db->table($this->table)
+                ->selectSum("IF (reussi>0, 1 ,0)", "score")
+                ->where("userID", $userID)
+                ->get();
+
+            //Return the database response as an integer.
+            return $query->getFirstRow("array")["score"];
+        } catch (Exception $e) {
+            error_log ("Error at getNbExercicesDiffOk");
+            return -1;
+        }
+    }
+
+    /**
+     * Get the score as a percentage of an user's ID.
+     * @param $userID: The user ID to retrieve the score from.
+     * @return float: The score as a percentage.
+     */
+    function getScore($userID) : float {
+        if (!isset($_SESSION['nbExos']))
+            return -1.0;
+
+        $exerciseModel = new ExerciseModel();
+        $getTotalExercisesCount =  $exerciseModel->getExercisesCount();
+        return round(100.0 * $this->getExercicesCountDone($userID) / $getTotalExercisesCount,2);
+    }
+
+    /**
      * This function handles itself the logic to update or insert the score of an user.
      * @param $userID: The user's ID on which we will apply the logic.
      * @param $exercise_name: The exercise on which we are supposed to update or insert the score.
@@ -120,6 +156,9 @@ class ExerciseDoneModel extends Model
             else {
                 $this->insertUserOnExercise($userID, $exercise_id, $isSuccess);
             }
+
+            //Update the session score.
+            $_SESSION["score"] = $this->getScore($userID);
         } catch (Exception $e) {
             error_log("Error at updateOrInsertUserOnExercise");
         }
