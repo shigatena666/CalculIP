@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 
-<!-- Header -->
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -30,7 +29,6 @@
 <?= $this->renderSection("content"); ?>
 
 
-<!-- FOOTER -->
 <footer class="footer text-center">
     <div>
         <img class="img_footer" style="float: left;left: 0;" src="../../../public/Pictures/IUT_Villetaneuse_Logo.png"
@@ -49,7 +47,7 @@
     if ($("#score").length) {
         <?php
         if (isset($_SESSION['connect']))
-            echo '$("#score").text("' . $percentageExercises->getScore($_SESSION['connect']) . ' %");'
+            echo '$("#score").text("' . $exercisesDoneModel->getScore($_SESSION['connect']) . ' %");'
         ?>
     } else {
         setInterval(function (clignote) {

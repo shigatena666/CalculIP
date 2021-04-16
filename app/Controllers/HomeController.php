@@ -5,10 +5,10 @@ namespace App\Controllers;
 use App\Models\ExerciseDoneModel;
 use App\Models\QuoteModel;
 
-class Home extends BaseController
+class HomeController extends BaseController
 {
     /**
-     * This method represents the root / of CalculIP.
+     * This method represents the root /CalculIP/ or /CalculIP/index.php .
      * @return string: The home view built with the data.
      */
     public function index(): string

@@ -1,4 +1,4 @@
-<?= $this->extend("layouts/main") ?>
+<?= $this->extend("Layouts/main") ?>
 
 <?= $this->section("content") ?>
 
@@ -22,28 +22,28 @@
 
                     <ul class="list-group">
 
-                        <a href="Exercices/Conversion.php" class="list-group-item">
+                        <a href="Exercises/Conversion.php" class="list-group-item">
                             <dl class="dl-horizontal">
                                 <dt>Conversions</dt>
                                 <dd>Entraînez-vous à des changements de base&nbsp;: binaire, décimal, hexa!</dd>
                             </dl>
                         </a>
 
-                        <a href="Exercices/TrouverClasse.php" class="list-group-item">
+                        <a href="Exercises/TrouverClasse.php" class="list-group-item">
                             <dl class="dl-horizontal">
                                 <dt>Classes d'adresse IP</dt>
                                 <dd>Entraînez-vous à trouver la bonne classe d'adresse IP&nbsp;!</dd>
                             </dl>
                         </a>
 
-                        <a href="Exercices/TableRoutage.php" class="list-group-item">
+                        <a href="Exercises/TableRoutage.php" class="list-group-item">
                             <dl class="dl-horizontal">
                                 <dt>Tables de routage</dt>
                                 <dd>Entraînez-vous à faire des tables de routage&nbsp;!</dd>
                             </dl>
                         </a>
 
-                        <a href="Exercices" class="list-group-item">
+                        <a href="Exercises" class="list-group-item">
                             <dl class="dl-horizontal">
                                 <dt>Plus d'exercices</dt>
                                 <dd>Voir le menu !</dd>
