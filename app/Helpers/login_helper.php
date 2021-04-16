@@ -1,7 +1,7 @@
 <?php
 
 //TODO: Split CAS into a library
-require_once('../ThirdParty/CAS.php');
+require_once(APPPATH . 'ThirdParty/CAS.php');
 error_reporting(E_ALL & ~E_NOTICE);
 
 //phpCAS::setDebug('/var/log/phpCAS.log');

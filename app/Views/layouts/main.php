@@ -1,42 +1,6 @@
-<!-- Header -->
 <!DOCTYPE html>
 
-<?php
-/*
-//TODO: Maybe move that in a separate script ?
-if (!isset($_SESSION))
-    session_start();
-
-if (isset($_REQUEST['login']) && !isset($_SESSION['connect'])) {
-
-    $this->load->helper('login');
-
-    if (authentication()) {
-        $_SESSION['connect'] = getUser();
-        $_SESSION['exo'] = basename($_SERVER['PHP_SELF'], '.php');
-
-        //TODO: Remake this as the whole BDD system is handled by Code Igniter.
-        include_once('function/fonction_utilisateur.php');
-        connectionUser($_SESSION['connect'], $bdd);
-
-        $_SESSION['nbExos'] = getNbExercices($bdd);
-        $_SESSION['score'] = getScore($_SESSION['connect'], $bdd);
-    }
-}
-if (isset($_SESSION['connect'])) {
-
-    $this->load->helper('login');
-
-    $_SESSION['exo'] = basename($_SERVER['PHP_SELF'], '.php');
-    //$_SESSION['score']= getScore($_SESSION['connect'],$bdd);
-
-    if (isset($_REQUEST['logout']) && $_REQUEST['logout'] != 'success') {
-        disconnect();
-    }
-}
-*/
-?>
-
+<!-- Header -->
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -80,12 +44,12 @@ if (isset($_SESSION['connect'])) {
 </footer>
 </body>
 
-<script type="javascript">
+<script type="text/javascript">
     //TODO: Create a separate script and link it using HTML tags.
     if ($("#score").length) {
         <?php
         if (isset($_SESSION['connect']))
-            echo '$("#score").text("' . getScore($_SESSION['connect'], $db) . ' %");'
+            echo '$("#score").text("' . $percentageExercises->getScore($_SESSION['connect']) . ' %");'
         ?>
     } else {
         setInterval(function (clignote) {

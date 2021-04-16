@@ -13,14 +13,24 @@ class SessionFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
+        //Initialize a new session, kinda like session_start
         $session = session();
 
-        if ($session->has("login") && !$session->has("connect")) {
+        $request = service("request");
+
+        $request->uri->getPath();
+
+        echo $request->getVar("login");
+
+        //Has is the equivalent of $_SESSION["obj"]
+        if (isset($_REQUEST["login"]) && !$session->has("connect")) {
 
             //Load the login helper.
             helper("login");
 
+            //Auth from the login helper and CAS.
             if (authentication()) {
+
                 $session->set("connect", getUser());
                 $session->set("exo", basename($_SERVER['PHP_SELF'], '.php'));
 
@@ -37,7 +47,7 @@ class SessionFilter implements FilterInterface
 
         if ($session->has("connect")) {
 
-            helper('login');
+            helper("login");
 
             $session->set("exo", basename($_SERVER['PHP_SELF'], '.php'));
             //$_SESSION['score']= getScore($_SESSION['connect'],$bdd);
