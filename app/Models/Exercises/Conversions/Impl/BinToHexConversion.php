@@ -4,7 +4,7 @@
 use App\Models\ConversionsModel;
 use App\Models\ConversionType;
 
-class DecToBinConversion extends ConversionsModel
+class BinToHexConversion extends ConversionsModel
 {
     public function __construct()
     {
@@ -13,11 +13,11 @@ class DecToBinConversion extends ConversionsModel
 
     public function convert($number): string
     {
-        return decbin($number);
+        return bin2hex($number);
     }
 
     public function reverseConvert($number)
     {
-        return bindec($number);
+        return hex2bin($number);
     }
 }

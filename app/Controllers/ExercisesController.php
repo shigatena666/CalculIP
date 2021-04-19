@@ -2,8 +2,12 @@
 
 namespace App\Controllers;
 
+use App\Models\ConversionsModel;
 use App\Models\ExerciseDoneModel;
 use App\Models\QuoteModel;
+use BinToHexConversion;
+use DecToBinConversion;
+use DecToHexConversion;
 
 //Should be called Exercises but since the website is in french.
 class ExercisesController extends BaseController
@@ -26,12 +30,13 @@ class ExercisesController extends BaseController
 
     public function conversions(): string
     {
-        $quoteModel = new QuoteModel();
-        $quote = $quoteModel->generate_quote();
+        $test = new BinToHexConversion();
+        //$modelList = array(new BinToHexConversion(), new DecToHexConversion(), new DecToHexConversion());
 
         $data = array(
             "title" => "Conversions : Binaire - Hexadécimal - Décimal",
-            "menu_view" => view('templates/menu')
+            "menu_view" => view('templates/menu'),
+            "model" => $modelList
         );
         return view('Exercises/conversions', $data);
     }

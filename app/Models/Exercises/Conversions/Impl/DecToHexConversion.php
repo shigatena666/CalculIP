@@ -4,20 +4,20 @@
 use App\Models\ConversionsModel;
 use App\Models\ConversionType;
 
-class DecToBinConversion extends ConversionsModel
+class DecToHexConversion extends ConversionsModel
 {
     public function __construct()
     {
-        parent::__construct(ConversionType::$decimal, ConversionType::$binary);
+        parent::__construct(ConversionType::$decimal, ConversionType::$hexadecimal);
     }
 
     public function convert($number): string
     {
-        return decbin($number);
+        return dechex($number);
     }
 
     public function reverseConvert($number)
     {
-        return bindec($number);
+        return hexdec($number);
     }
 }

@@ -34,6 +34,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
 $routes->get("/Exercices/AnalyseTrame", "ExercisesController::frame_analysis");
+$routes->get("/Exercices/Conversion", "ExercisesController::conversions");
 
 /*
  * --------------------------------------------------------------------

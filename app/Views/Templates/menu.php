@@ -32,7 +32,7 @@
                            aria-expanded="false">Exercices<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/CalculIP/Exercices/AnalyseTrame">Analyse de trame</a></li>
-                            <li><a href="/CalculIP/Exercices/Conversion.php">Conversions <i><sub><small>Binaire,
+                            <li><a href="/CalculIP/Exercices/Conversion">Conversions <i><sub><small>Binaire,
                                                 Hexadécimal
                                                 et Décimal</small></sub></i></a></li>
                             <li><a href="/CalculIP/Exercices/TrouverClasse.php">Classe IP <i><sub><small>Trouver la
