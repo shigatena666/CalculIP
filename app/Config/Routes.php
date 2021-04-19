@@ -35,7 +35,7 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'HomeController::index');
 $routes->get("/Exercices/AnalyseTrame", "ExercisesController::frame_analysis");
 $routes->get("/Exercices/Conversion", "ExercisesController::conversions");
-
+$routes->post("/Exercices/Conversion", "ExercisesController::conversions");
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -1,8 +1,6 @@
 <?php
 
-
-namespace App\Models;
-
+namespace App\Models\Exercises\Conversions;
 
 class ConversionType
 {
@@ -12,11 +10,13 @@ class ConversionType
 
     private $name;
     private $base;
+    private $prefix;
 
-    public function __construct($name, $base)
+    public function __construct($name, $base, $prefix = "")
     {
         $this->name = $name;
         $this->base = $base;
+        $this->prefix = $prefix;
     }
 
     public function getString() : string
@@ -28,8 +28,13 @@ class ConversionType
     {
         return $this->base;
     }
+
+    public function getPrefix() : int
+    {
+        return $this->prefix;
+    }
 }
 
 ConversionType::$decimal = new ConversionType("Décimal", 10);
-ConversionType::$binary = new ConversionType("Binaire", 2);
-ConversionType::$hexadecimal = new ConversionType("Hexadécimal", 16);
+ConversionType::$binary = new ConversionType("Binaire", 2, "0b");
+ConversionType::$hexadecimal = new ConversionType("Hexadécimal", 16, "0x");

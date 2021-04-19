@@ -22,7 +22,7 @@
 
                     <ul class="list-group">
 
-                        <a href="Exercises/Conversion.php" class="list-group-item">
+                        <a href="/CalculIP/Exercices/Conversion" class="list-group-item">
                             <dl class="dl-horizontal">
                                 <dt>Conversions</dt>
                                 <dd>Entraînez-vous à des changements de base&nbsp;: binaire, décimal, hexa!</dd>
