@@ -11,5 +11,5 @@ $(document).ready(function() {
             $("#nonconnecte").toggleClass("rouge blanc");
         }, 300);
     }
-})
+});
 
