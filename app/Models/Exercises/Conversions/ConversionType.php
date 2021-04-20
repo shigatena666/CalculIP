@@ -29,7 +29,7 @@ class ConversionType
         return $this->base;
     }
 
-    public function getPrefix() : int
+    public function getPrefix() : string
     {
         return $this->prefix;
     }

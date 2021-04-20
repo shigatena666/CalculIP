@@ -17,6 +17,7 @@ class BinToHexConversion extends ConversionsModel
 
     public function convert($number): string
     {
-        return bin2hex($number);
+        //Chain function because bin2hex doesn't fill our need.
+        return dechex(bindec($number));
     }
 }

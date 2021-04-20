@@ -21,7 +21,7 @@
 
                         <select name="choix_form_1" class="form-control">
                             <?php foreach ($types as $type) : ?>
-                                <?php if ($type == $converter->getFirstFormat()) :?>
+                                <?php if ($type == $converter->getFirstFormat()) : ?>
                                     <option value= <?= $type->getString() ?> selected><?= $type->getString() ?></option>
                                 <?php else : ?>
                                     <option value= <?= $type->getString() ?>><?= $type->getString() ?></option>
@@ -33,7 +33,7 @@
 
                         <select name="choix_form_2" class="form-control">
                             <?php foreach ($types as $type) : ?>
-                                <?php if ($type == $converter->getSecondFormat()) :?>
+                                <?php if ($type == $converter->getSecondFormat()) : ?>
                                     <option value= <?= $type->getString() ?> selected><?= $type->getString() ?></option>
                                 <?php else : ?>
                                     <option value= <?= $type->getString() ?>><?= $type->getString() ?></option>
@@ -49,7 +49,38 @@
                 </div>
             </form>
 
-            <?= $response_view ?>
+            <form action="/CalculIP/Exercices/Conversion"  method="post">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="input-group input-group-sm">
+
+                                <span class="input-group-addon"><?= $converter->getFirstFormat()->getString() ?></span>
+
+                                <input type="text" id="conv" class="form-control "
+                                       placeholder="<?= $random_to_conv ?>" aria-label="<?= $random_to_conv ?>"
+                                       disabled>
+                                <span class="input-group-addon">=</span>
+
+                                <span class="input-group-addon sr-only">
+                                    <label for="conv">en <?= $converter->getSecondFormat()->getString() ?></label>
+                                </span>
+
+                                <input type="text" name="reponse" class="form-control"
+                                       placeholder="en <?= $converter->getSecondFormat()->getString() ?>"
+                                       aria-label="en <?= $converter->getSecondFormat()->getString() ?>">
+
+                                <div class="input-group-btn">
+                                    <button type="submit" name="submit" value="submit" class="btn btn-success">
+                                        Valider
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
 
         </div>
     </div>

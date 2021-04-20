@@ -30,6 +30,7 @@ class ExercisesController extends BaseController
         return view('Exercises/frame_analysis', $data);
     }
 
+    //TODO: This exercise could be made a lot easier if we didn't have the "send part" at first.
     public function conversions(): string
     {
         //TODO: Don't forget to escape values in the view.
@@ -40,43 +41,59 @@ class ExercisesController extends BaseController
             new DecToBinConversion(), new DecToHexConversion(),
             new HexToBinConversion(), new HexToDecConversion());
 
-        $request = service('request');
+        //Init our converter to decimal to hexadecimal conversion.
+        $converter = $converters[2];
 
-        //TODO: Wireshark this
-        //Let's look if we didn't send the form yet.
-        if (!$request->getPost("submit")) {
+        //Now in case the first base will be different of decimal we will need to convert it later.
+        $decConvert = $converters[2];
 
-            //Default values, choix_1 = dec, choix_2 = hex, converter = DecToHex
-            $choix_1 = $types[0];
-            $choix_2 = $types[1];
-            $converter = $converters[3];
-        }
-        else if ($request->getPost("submit") && $request->getPost("choix_form_1") && $request->getPost("choix_form_2")) {
+        //If the form has been sent check if it contains the data.
+        if (isset($_POST["choix"]) && isset($_POST["choix_form_1"]) && isset($_POST["choix_form_2"])) {
 
-            $choix_1 = $request->getPost("choix_form_1");
-            $choix_2 = $request->getPost("choix_form_2");
+            //Assign the data so that we can search our converter.
+            $choix_1 = $_POST["choix_form_1"];
+            $choix_2 = $_POST["choix_form_2"];
 
+            //Look-up the converter in the list and override its default value.
             foreach ($converters as $conv) {
-                if ($conv->getFirstFormat() == $choix_1 && $conv->getSecondFormat() == $choix_2) {
+                //Search our converter in both of the base the user chose.
+                if ($conv->getFirstFormat()->getString() === $choix_1 && $conv->getSecondFormat()->getString() === $choix_2) {
                     $converter = $conv;
+                }
+                //Now look a converter for decimal to the first base the user selected so that we can convert our random number.
+                if ($conv->getFirstFormat() === ConversionType::$decimal && $conv->getSecondFormat()->getString() === $choix_1) {
+                    $decConvert = $conv;
                 }
             }
         }
 
+        //Prepare the data.
         $data = array(
             "title" => "Conversions : Binaire - Hexadécimal - Décimal",
             "menu_view" => view('templates/menu'),
             "converter" => $converter,
-            "types" => $types
+            "types" => $types,
         );
 
-        //If the user asked the conversion, send him the right view
-        if ($request->getPost("submit")) {
-            $response_data = array();
-            $data["response_view"] = view('Exercises/Conversions/conversion_response', $response_data);
+        //If the user asked the conversion, send him a random number to convert
+        if (isset($_POST["choix"])) {
+            //Generate the random number.
+            $random_number = rand(17, 253);
+
+            //Use the decimal converter we searched for earlier to convert our random number if the base is not decimal.
+            $random_number_converted = $converter->getFirstFormat() === ConversionType::$decimal ?
+                $random_number :
+                $decConvert->convert($random_number);
+
+            $data["random_to_conv"] = $converter->getFirstFormat()->getPrefix() . $random_number_converted;
         }
 
-        return view('Exercises/Conversions/conversion_request', $data);
+        //If the user submitted the conversion, tell him if he did well or not.
+        if (isset($_POST["reponse"])) {
+
+        }
+
+        return view('Exercises/conversion', $data);
     }
 
 }

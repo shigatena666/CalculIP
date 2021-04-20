@@ -9,6 +9,7 @@
 
     <script src="../../../CalculIP/JavaScript/bootstrap.js"></script>
     <script src="../../../CalculIP/JavaScript/matomo.js"></script>
+    <script src="../../../CalculIP/JavaScript/Views/main.js"></script>
     <!-- <script src="/CalculIP/js/npm.js"></script>-->
     <link href="../../../CalculIP/CSS/bootstrap.css" rel="stylesheet">
     <link href="../../../CalculIP/CSS/style_principal.css" rel="stylesheet">
@@ -42,19 +43,5 @@
 </footer>
 </body>
 
-<script type="text/javascript">
-    //TODO: Create a separate script and link it using HTML tags.
-    if ($("#score").length) {
-        <?php
-        if (isset($_SESSION['connect']))
-            echo '$("#score").text("' . $exercisesDoneModel->getScore($_SESSION['connect']) . ' %");'
-        ?>
-    } else {
-        setInterval(function (clignote) {
-            var p = $("#nonconnecte");
-            p.toggleClass("rouge blanc");
-        }, 300);
-    }
-</script>
 </html>
 
