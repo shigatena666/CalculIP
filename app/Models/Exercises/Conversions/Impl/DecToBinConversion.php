@@ -15,8 +15,9 @@ class DecToBinConversion extends ConversionsModel
         parent::__construct(ConversionType::$decimal, ConversionType::$binary);
     }
 
-    public function convert($number): string
+    public function convert(string $number): string
     {
-        return decbin($number);
+        //Let's cast $number to int since basically it's a string.
+        return decbin(intval($number));
     }
 }

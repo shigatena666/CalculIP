@@ -15,8 +15,9 @@ class BinToDecConversion extends ConversionsModel
         parent::__construct(ConversionType::$binary, ConversionType::$decimal);
     }
 
-    public function convert($number): string
+    public function convert(string $number): string
     {
-        return bindec($number);
+        //Cast to string otherwise we will get a weird float.
+        return strval(bindec($number));
     }
 }

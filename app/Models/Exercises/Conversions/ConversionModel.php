@@ -24,5 +24,5 @@ abstract class ConversionsModel
         return $this->secondFormat;
     }
 
-    abstract public function convert($number);
+    abstract public function convert(string $number);
 }

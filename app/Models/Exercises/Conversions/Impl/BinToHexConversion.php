@@ -15,7 +15,7 @@ class BinToHexConversion extends ConversionsModel
         parent::__construct(ConversionType::$binary, ConversionType::$hexadecimal);
     }
 
-    public function convert($number): string
+    public function convert(string $number): string
     {
         //Chain function because bin2hex doesn't fill our need.
         return dechex(bindec($number));

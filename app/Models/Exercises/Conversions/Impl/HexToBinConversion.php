@@ -15,8 +15,8 @@ class HexToBinConversion extends ConversionsModel
         parent::__construct(ConversionType::$hexadecimal, ConversionType::$binary);
     }
 
-    public function convert($number): string
+    public function convert(string $number): string
     {
-        return hex2bin($number);
+        return decbin(hexdec($number));
     }
 }

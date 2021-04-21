@@ -15,8 +15,8 @@ class DecToHexConversion extends ConversionsModel
         parent::__construct(ConversionType::$decimal, ConversionType::$hexadecimal);
     }
 
-    public function convert($number): string
+    public function convert(string $number): string
     {
-        return dechex($number);
+        return dechex(intval($number));
     }
 }
