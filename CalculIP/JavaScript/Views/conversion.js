@@ -7,7 +7,6 @@ $(document).ready(function() {
         //Request to the server a random number with the correct formats.
         $.post("", { "requested_conv_1": $("#conv_1 option:selected").val(), "requested_conv_2": $("#conv_2 option:selected").val() },
             function(response) {
-                //$("#conv_number").attr("placeholder", response["prefix"] + response["random"]);
                 $("#conv_number").val(response["prefix"] + response["random"]);
             }, "json"
         );
@@ -21,7 +20,6 @@ $(document).ready(function() {
         //Request to the server a random number with the correct formats.
         $.post("", { "requested_conv_1": $(this).val(), "requested_conv_2": $("#conv_2 option:selected").val() },
             function(response) {
-                //$("#conv_number").attr("placeholder", response["prefix"] + response["random"]);
                 $("#conv_number").val(response["prefix"] + response["random"]);
             }, "json"
         );
@@ -35,7 +33,6 @@ $(document).ready(function() {
         //Request to the server a random number with the correct formats.
         $.post("", { "requested_conv_1": $("#conv_1 option:selected").val(), "requested_conv_2": $(this).val() },
             function(response) {
-                //$("#conv_number").attr("placeholder", response["prefix"] + response["random"]);
                 $("#conv_number").val(response["prefix"] + response["random"]);
             }, "json"
         );
