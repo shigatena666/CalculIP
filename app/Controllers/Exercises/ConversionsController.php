@@ -55,8 +55,7 @@ class ConversionsController extends BaseController
                     $contains_conv_2 = true;
                 }
             }
-
-            //TODO: Come back to this later.
+            
             //This will happen if the user tried to modify the input.
             if (!($contains_conv_1 && $contains_conv_2) ||
                 $_POST[self::REQUESTED_CONV_1] === $_POST[self::REQUESTED_CONV_2])
