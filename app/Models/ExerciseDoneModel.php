@@ -26,7 +26,7 @@ class ExerciseDoneModel extends Model
                 ->where("userID", $userID);
 
             //Check which field we need to update: reussi or echec.
-            if ($isSuccess === 1) {
+            if ($isSuccess) {
                 $update_query->set("reussi", "reussi + 1");
             } else {
                 $update_query->set("echec", "echec + 1");

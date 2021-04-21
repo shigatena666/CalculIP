@@ -3,6 +3,7 @@
 namespace App\Controllers\Exercises;
 
 use App\Controllers\BaseController;
+use App\Models\ExerciseDoneModel;
 use App\Models\Exercises\Conversions\ConversionType;
 use App\Models\Exercises\Conversions\Impl\BinToDecConversion;
 use App\Models\Exercises\Conversions\Impl\BinToHexConversion;
@@ -16,22 +17,21 @@ class ConversionsController extends BaseController
     const REQUESTED_CONV_1 = "requested_conv_1";
     const REQUESTED_CONV_2 = "requested_conv_2";
     const ANSWER = "reponse";
+    const TITLE = "Conversions : Binaire - Hexadécimal - Décimal";
 
     public function conversions(): string
     {
-        //TODO: Don't forget to use the base function to link our JS script with CI4, would be better.
-        //TODO: Don't forget to escape values in the view.
-        $types = array(
+        $types = [
             ConversionType::$decimal,
             ConversionType::$hexadecimal,
             ConversionType::$binary
-        );
+        ];
 
-        $converters = array(
+        $converters = [
             new BinToDecConversion(), new BinToHexConversion(),
             new DecToBinConversion(), new DecToHexConversion(),
             new HexToBinConversion(), new HexToDecConversion()
-        );
+        ];
 
         //Init our converter to decimal to hexadecimal conversion.
         $converter = $converters[2];
@@ -92,11 +92,11 @@ class ConversionsController extends BaseController
                 strval($random_number) :
                 $decConvert->convert($random_number));
 
-            //Populate the response array.
-            $data = array(
+            //Populate the response data.
+            $data = [
                 "random" => $session->get("random_number"),
                 "prefix" => $converter->getFirstFormat()->getPrefix()
-            );
+            ];
 
             //Send the response as JSON.
             $this->response->setHeader("Content-Type", "application/json")
@@ -113,15 +113,15 @@ class ConversionsController extends BaseController
             $converter;
 
         //Prepare the data.
-        $answer_data = array("converter" => $converter);
+        $answer_data = ["converter" => $converter];
 
-        $data = array(
-            "title" => "Conversions : Binaire - Hexadécimal - Décimal",
+        $data = [
+            "title" => self::TITLE,
             "menu_view" => view('templates/menu'),
             "converter" => $converter,
             "types" => $types,
             "conversion_answer" => view('Exercises/Conversions/conversion_answer', $answer_data)
-        );
+        ];
 
         //If an error has been detected during the process.
         if ($session->get("error")) {
@@ -139,7 +139,6 @@ class ConversionsController extends BaseController
             $answer = strtolower($_POST[self::ANSWER]);
 
             //Reformat user's answer.
-            //TODO: Re-test this
             if ($converter->getSecondFormat() !== $types[0] &&
                 strpos($answer, $converter->getSecondFormat()->getPrefix()) === 0)
             {
@@ -153,18 +152,29 @@ class ConversionsController extends BaseController
             }
 
             //Generate the response data view according to the results.
-            $result_data = array(
+            $result_data = [
                 "firstVal" => $session->get("random_number"),
                 "baseFirstVal" => $converter->getFirstFormat()->getBase(),
                 "secondVal" =>  $converter->convert($session->get("random_number")),
                 "baseSecondVal" => $converter->getSecondFormat()->getBase()
-            );
+            ];
 
             //Add the result to the view
             $data["conversion_result"] = view('Exercises/Conversions/conversion_' . $state, $result_data);
 
-            //TODO: Give the user a point in the database.
+            //Check if the user is connected and hasn't made an error.
+            if (isset($_SESSION["connect"]) && $state !== "error") {
 
+                //Create the model so that we can add the user points in the database.
+                $exerciseDoneModel = new ExerciseDoneModel();
+
+                //Insert or update the user's point if he succeeded or failed the exercise.
+                $exerciseDoneModel->updateOrInsertUserOnExercise(
+                    $session->get("connect"),
+                    self::TITLE,
+                    $state === "success"
+                );
+            }
             $session->destroy();
         }
 
