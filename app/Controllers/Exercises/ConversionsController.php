@@ -45,22 +45,30 @@ class ConversionsController extends BaseController
     const SESSION_RANDOM = "random_number";
     const SESSION_CONNECT = "connect";
 
+    //These are our arrays containing all the possible conversions.
     private $types;
     private $converters;
 
+    //These are our converters that we use to convert a number to another format.
     private $converter;
     private $decimalConverter;
 
+    //This is used so that we can throw an error if the user submitted a wrong input.
     private $session;
 
+    /**
+     * ConversionsController constructor.
+     */
     public function __construct()
     {
+        //Types array contains all the possible types. It's initialized as static in its own class.
         $this->types = [
             self::DECIMAL => ConversionType::$decimal,
             self::HEXADECIMAL => ConversionType::$hexadecimal,
             self::BINARY => ConversionType::$binary
         ];
 
+        //Converters array contains all the possible converters.
         $this->converters = [
             self::BINARY_TO_DECIMAL => new BinToDecConversion(),
             self::BINARY_TO_HEXADECIMAL => new BinToHexConversion(),
@@ -79,6 +87,11 @@ class ConversionsController extends BaseController
         $this->session = session();
     }
 
+    /**
+     * This method checks if the AJAX request contains both of the fields.
+     *
+     * @return bool: True if it contains both, false otherwise.
+     */
     private function post_request_contains_both() : bool {
         //Let's look-up through our types if the user didn't edit the values.
         $contains_conv_1 = false;
@@ -94,6 +107,9 @@ class ConversionsController extends BaseController
         return $contains_conv_1 && $contains_conv_2;
     }
 
+    /**
+     * This method is used to update the converters depending on the AJAX request.
+     */
     private function update_converters() {
         //Update our converters.
         foreach ($this->converters as $conv) {
@@ -116,13 +132,22 @@ class ConversionsController extends BaseController
         }
     }
 
+    /**
+     * This method handles the AJAX requests, doing the right checks to avoid errors.
+     */
     private function handle_ajax()
     {
         //This will happen if the user tried to modify the input or if the user set the two same conversions.
+        //It will set the error key to true if the last request did contain the same conversion.
         if (!($this->post_request_contains_both()) ||
-            ($_POST[self::REQUESTED_CONV_1] == $_POST[self::REQUESTED_CONV_2]))
+            ($_POST[self::REQUESTED_CONV_1] === $_POST[self::REQUESTED_CONV_2]))
         {
             $this->session->set(self::ERROR, true);
+        }
+        //Though, because of that we need to check if the last received request has changed of conversion.
+        //If yes, it will unset the error key to avoid having a bug.
+        if ($_POST[self::REQUESTED_CONV_1] !== $_POST[self::REQUESTED_CONV_2]) {
+            $this->session->remove(self::ERROR);
         }
 
         //Now, update our converters.
@@ -149,6 +174,11 @@ class ConversionsController extends BaseController
             ->send();
     }
 
+    /**
+     * This method handles what the user has typed, converting and displaying the right view.
+     *
+     * @return array: An array containing the right data for the view to show-up.
+     */
     private function handle_answers() : array
     {
         //Let's unserialize our converter otherwise, if there is none, generate one randomly.
@@ -157,7 +187,7 @@ class ConversionsController extends BaseController
             $this->converter;
 
         //Prepare the data.
-        $answer_data = ["converter" => $this->converter];
+        $answer_data = [ "converter" => $this->converter ];
 
         $data = [
             "title" => self::TITLE,
@@ -183,7 +213,8 @@ class ConversionsController extends BaseController
             $answer = strtolower($_POST[self::ANSWER]);
 
             //Reformat user's answer.
-            if ($this->converter->getSecondFormat() !== $this->types[self::DECIMAL] &&
+            //Don't use strict comparison for the first check otherwise it will create an exception.
+            if ($this->converter->getSecondFormat() != $this->types[self::DECIMAL] &&
                 strpos($answer, $this->converter->getSecondFormat()->getPrefix()) === 0)
             {
                 $answer = substr($answer, 2);
@@ -192,7 +223,9 @@ class ConversionsController extends BaseController
             //Let's match the results if an answer has been given.
             $state = self::FAILED;
             if ($answer !== "") {
-                $state = ($answer === $this->converter->convert($this->session->get(self::SESSION_RANDOM)) ? self::SUCCESS : self::FAILED);
+                $state = $answer === $this->converter->convert($this->session->get(self::SESSION_RANDOM)) ?
+                    self::SUCCESS :
+                    self::FAILED;
             }
 
             //Generate the response data view according to the results.
@@ -226,6 +259,11 @@ class ConversionsController extends BaseController
         return $data;
     }
 
+    /**
+     * This is our conversion controller. Basically what is called when we are on Exercises/Conversions.
+     *
+     * @return string: The view generated according to the data.
+     */
     public function conversions(): string
     {
         //This part is basically useful to handle the AJAX requests incoming from the user.
@@ -237,7 +275,6 @@ class ConversionsController extends BaseController
         }
 
         //This part handles when the user has submitted the answer.
-        //Let's unserialize our converter otherwise, if there is none, generate one randomly.
         $data = $this->handle_answers();
 
         //Generate our view
