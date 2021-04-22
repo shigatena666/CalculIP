@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Exercises\Conversions;
+namespace App\Libraries\Exercises\Conversions;
 
 class ConversionType
 {

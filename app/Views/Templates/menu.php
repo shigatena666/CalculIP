@@ -35,7 +35,7 @@
                             <li><a href="/CalculIP/Exercices/Conversion">Conversions <i><sub><small>Binaire,
                                                 Hexadécimal
                                                 et Décimal</small></sub></i></a></li>
-                            <li><a href="/CalculIP/Exercices/TrouverClasse.php">Classe IP <i><sub><small>Trouver la
+                            <li><a href="/CalculIP/Exercices/TrouverClasse">Classe IP <i><sub><small>Trouver la
                                                 classe
                                                 correspondante</small></sub></i></a></li>
                             <li><a href="/CalculIP/Exercices/TrouverClasseInverse.php">Classe IP <i><sub><small>Trouver

@@ -2,7 +2,7 @@
 
 <?= $this->section("content") ?>
 
-<script src="../../../../CalculIP/JavaScript/Views/conversion.js"></script>
+<script src="../../../../CalculIP/JavaScript/Views/Exercises/Conversions/conversion.js"></script>
 
 <div class="container">
     <h1>Conversions <small>binaire, hexadécimal et décimal (à faire sans calculatrice)</small></h1>

@@ -34,8 +34,15 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
 $routes->get("/Exercices/AnalyseTrame", "ExercisesController::frame_analysis");
-$routes->get("/Exercices/Conversion", "Exercises/ConversionsController::conversions");
-$routes->post("/Exercices/Conversion", "Exercises/ConversionsController::conversions");
+
+// Accept GET and POST requests for conversions.
+$routes->get("/Exercices/Conversion", "Exercises/ConversionsController::index");
+$routes->post("/Exercices/Conversion", "Exercises/ConversionsController::index");
+
+// Accept GET and POST requests for IP classes.
+$routes->get("/Exercices/TrouverClasse", "Exercises/IPClassesController::index");
+$routes->post("/Exercices/TrouverClasse", "Exercises/IPClassesController::index");
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

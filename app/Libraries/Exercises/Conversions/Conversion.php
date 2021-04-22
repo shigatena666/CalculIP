@@ -1,16 +1,15 @@
 <?php
 
+namespace App\Libraries\Exercises\Conversions;
 
-namespace App\Models\Exercises\Conversions;
-
-abstract class ConversionsModel
+abstract class Conversion
 {
     private $firstFormat;
     private $secondFormat;
 
     public function __construct($firstFormat, $secondFormat)
     {
-        $this->firstFormat = $firstFormat;
+        $this->firstFormat  = $firstFormat;
         $this->secondFormat = $secondFormat;
     }
 

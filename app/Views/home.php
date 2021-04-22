@@ -29,7 +29,7 @@
                             </dl>
                         </a>
 
-                        <a href="Exercises/TrouverClasse.php" class="list-group-item">
+                        <a href="Exercices/TrouverClasse" class="list-group-item">
                             <dl class="dl-horizontal">
                                 <dt>Classes d'adresse IP</dt>
                                 <dd>Entraînez-vous à trouver la bonne classe d'adresse IP&nbsp;!</dd>
