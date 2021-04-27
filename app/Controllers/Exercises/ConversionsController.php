@@ -209,7 +209,7 @@ class ConversionsController extends BaseController
             $this->converter;
 
         //Prepare the data.
-        $answer_data = ["converter" => $this->converter];
+        $answer_data = [ "converter" => $this->converter ];
 
         $data = [
             "title" => self::TITLE,

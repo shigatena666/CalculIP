@@ -2,5 +2,6 @@
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
-    Tu as fait une erreur, l'adresse IP est <strong><?= $type ?></strong>
+    Faux, l'adresse IP <?= $ip_answer ?> est de la classe <strong><?= $ip_answer->check_class() ?></strong> et non pas de la classe
+    <strong><?= $ip_class ?></strong>
 </div>

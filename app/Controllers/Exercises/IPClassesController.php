@@ -17,6 +17,19 @@ class IPClassesController extends Controller
 
     private function handle_answer() : string
     {
+        //Special view, check if the class doesn't exist and the user has succeeded.
+        if ($this->session->get("ip")->check_class() === $_POST["classe"] &&
+            $this->session->get("ip")->check_class() === "None") {
+
+            return view("Exercises/IPClasses/ipclasses_success_none");
+        }
+        //Special view, check if the class doesn't exist and the user has failed.
+        else if ($this->session->get("ip")->check_class() !== $_POST["classe"] &&
+            $this->session->get("ip")->check_class() === "None") {
+
+            return view("Exercises/IPClasses/ipclasses_fail_none");
+        }
+
         //Let's compare the class of the IP in the session to the one he submitted.
         $state = $this->session->get("ip")->check_class() === $_POST["classe"] ? "success" : "fail";
 
@@ -32,12 +45,6 @@ class IPClassesController extends Controller
     private function handle_retry() {
         //Let's look if the user didn't click on retry and if our session doesn't contain an IP.
         if (isset($_POST["retry"]) && isset($_SESSION["ip"])) {
-
-            //This is to detect if the user tried to play with the request.
-            if (isset($_POST["submit"]) && isset($_POST["classe"])) {
-                //TODO: Generate a cheat view ?
-                return ;
-            }
             $this->session->remove("ip");
         }
     }
@@ -74,13 +81,8 @@ class IPClassesController extends Controller
         //If the user hasn't sent his answer send him the form.
         else {
 
-            //Prepare the data for the form.
-            $form_data = [
-                "ip" => $this->session->get("ip")
-            ];
-
             //Show the form to the user by appending this view to our general view.
-            $data["form_view"] = view("Exercises/IPClasses/ipclasses_form", $form_data);
+            $data["form_view"] = view("Exercises/IPClasses/ipclasses_form");
         }
 
         return view('Exercises/IPClasses/ipclasses', $data);

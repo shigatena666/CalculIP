@@ -33,7 +33,6 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
-$routes->get("/Exercices/AnalyseTrame", "ExercisesController::frame_analysis");
 
 // Accept GET and POST requests for conversions.
 $routes->get("/Exercices/Conversion", "Exercises/ConversionsController::index");
@@ -46,6 +45,10 @@ $routes->post("/Exercices/TrouverClasse", "Exercises/IPClassesController::index"
 // Accept GET and POST requests for reverse IP classes.
 $routes->get("/Exercices/TrouverClasseInverse", "Exercises/IPClassesReverseController::index");
 $routes->post("/Exercices/TrouverClasseInverse", "Exercises/IPClassesReverseController::index");
+
+// Accept GET and POST requests for frame analysis.
+$routes->get("/Exercices/AnalyseTrame", "Exercises/FrameAnalysisController::index");
+$routes->post("/Exercices/AnalyseTrame", "Exercises/FrameAnalysisController::index");
 
 /*
  * --------------------------------------------------------------------
