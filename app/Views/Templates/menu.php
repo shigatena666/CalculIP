@@ -38,7 +38,7 @@
                             <li><a href="/CalculIP/Exercices/TrouverClasse">Classe IP <i><sub><small>Trouver la
                                                 classe
                                                 correspondante</small></sub></i></a></li>
-                            <li><a href="/CalculIP/Exercices/TrouverClasseInverse.php">Classe IP <i><sub><small>Trouver
+                            <li><a href="/CalculIP/Exercices/TrouverClasseInverse">Classe IP <i><sub><small>Trouver
                                                 l'IP
                                                 correspondante</small></sub></i></a></li>
                             <li><a href="/CalculIP/Exercices/Masque.php">Masque (niveau S3)</a></li>

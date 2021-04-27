@@ -27,9 +27,9 @@
                         <select id="conv_1" name="choix_form_1" class="form-control">
                             <?php foreach ($types as $type) : ?>
                                 <?php if ($type == $converter->getFirstFormat()) : ?>
-                                    <option value=<?= $type->getString() ?> selected><?= $type->getString() ?></option>
+                                    <option value=<?= $type->getName() ?> selected><?= $type->getName() ?></option>
                                 <?php else : ?>
-                                    <option value=<?= $type->getString() ?>><?= $type->getString() ?></option>
+                                    <option value=<?= $type->getName() ?>><?= $type->getName() ?></option>
                                 <?php endif ?>
                             <?php endforeach ?>
                         </select>
@@ -39,9 +39,9 @@
                         <select id="conv_2" name="choix_form_2" class="form-control">
                             <?php foreach ($types as $type) : ?>
                                 <?php if ($type == $converter->getSecondFormat()) : ?>
-                                    <option value=<?= $type->getString() ?> selected><?= $type->getString() ?></option>
+                                    <option value=<?= $type->getName() ?> selected><?= $type->getName() ?></option>
                                 <?php else : ?>
-                                    <option value=<?= $type->getString() ?>><?= $type->getString() ?></option>
+                                    <option value=<?= $type->getName() ?>><?= $type->getName() ?></option>
                                 <?php endif ?>
                             <?php endforeach ?>
                         </select>

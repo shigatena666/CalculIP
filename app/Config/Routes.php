@@ -43,6 +43,10 @@ $routes->post("/Exercices/Conversion", "Exercises/ConversionsController::index")
 $routes->get("/Exercices/TrouverClasse", "Exercises/IPClassesController::index");
 $routes->post("/Exercices/TrouverClasse", "Exercises/IPClassesController::index");
 
+// Accept GET and POST requests for reverse IP classes.
+$routes->get("/Exercices/TrouverClasseInverse", "Exercises/IPClassesReverseController::index");
+$routes->post("/Exercices/TrouverClasseInverse", "Exercises/IPClassesReverseController::index");
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

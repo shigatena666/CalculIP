@@ -17,11 +17,6 @@ class ConversionsController extends BaseController
     //To later give an user some points.
     const TITLE = "Conversions : Binaire - Hexadécimal - Décimal";
 
-    //Const to access our types.
-    const DECIMAL = "Decimal";
-    const HEXADECIMAL = "Hexadecimal";
-    const BINARY = "Binary";
-
     //Const to access our converters.
     const BINARY_TO_DECIMAL = "BinToDec";
     const BINARY_TO_HEXADECIMAL = "BinToHex";
@@ -63,9 +58,9 @@ class ConversionsController extends BaseController
     {
         //Types array contains all the possible types. It's initialized as static in its own class.
         $this->types = [
-            self::DECIMAL => ConversionType::$decimal,
-            self::HEXADECIMAL => ConversionType::$hexadecimal,
-            self::BINARY => ConversionType::$binary
+            ConversionType::DECIMAL => ConversionType::$decimal,
+            ConversionType::HEXADECIMAL => ConversionType::$hexadecimal,
+            ConversionType::BINARY => ConversionType::$binary
         ];
 
         //TODO: Check if there is no way to build the converter from the type instead of storing them into a list.
@@ -166,9 +161,9 @@ class ConversionsController extends BaseController
         $contains_conv_2 = false;
 
         foreach ($this->types as $type) {
-            if ($type->getString() == $_POST[self::REQUESTED_CONV_1]) {
+            if ($type->getName() == $_POST[self::REQUESTED_CONV_1]) {
                 $contains_conv_1 = true;
-            } else if ($type->getString() == $_POST[self::REQUESTED_CONV_2]) {
+            } else if ($type->getName() == $_POST[self::REQUESTED_CONV_2]) {
                 $contains_conv_2 = true;
             }
         }
@@ -185,8 +180,8 @@ class ConversionsController extends BaseController
 
             //Search our converter in both of the base the user chose and save it.
             //Example: User wants hexadecimal to decimal, then search HexadecimalToDecimal converter.
-            if ($conv->getFirstFormat()->getString() === $_POST[self::REQUESTED_CONV_1] &&
-                $conv->getSecondFormat()->getString() === $_POST[self::REQUESTED_CONV_2]) {
+            if ($conv->getFirstFormat()->getName() === $_POST[self::REQUESTED_CONV_1] &&
+                $conv->getSecondFormat()->getName() === $_POST[self::REQUESTED_CONV_2]) {
                 $this->converter = $conv;
                 $this->session->set(self::SESSION_CONVERTER, serialize($this->converter));
             }
@@ -195,7 +190,7 @@ class ConversionsController extends BaseController
             //This one can be different from the reverse converter and there is no need to save it..
             //Example: User wants hexadecimal to decimal, then take DecimalToHexadecimal converter.
             if ($conv->getFirstFormat() === ConversionType::$decimal &&
-                $conv->getSecondFormat()->getString() === $_POST[self::REQUESTED_CONV_1]) {
+                $conv->getSecondFormat()->getName() === $_POST[self::REQUESTED_CONV_1]) {
                 $this->decimalConverter = $conv;
             }
         }
@@ -239,7 +234,7 @@ class ConversionsController extends BaseController
 
             //Reformat user's answer.
             //Don't use strict comparison for the first check otherwise it will create an exception.
-            if ($this->converter->getSecondFormat() != $this->types[self::DECIMAL] &&
+            if ($this->converter->getSecondFormat() != $this->types[ConversionType::DECIMAL] &&
                 strpos($answer, $this->converter->getSecondFormat()->getPrefix()) === 0) {
                 $answer = substr($answer, 2);
             }

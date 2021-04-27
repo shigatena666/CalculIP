@@ -38,8 +38,6 @@
                                     </label>
                             </span>
 
-            <input type="hidden" name="ip" value="<?= $ip ?>"/>
-
         </div>
     </div>
 </div>
