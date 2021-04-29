@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Libraries\Exercises\FrameAnalysis\Frames\EthernetFrame;
+namespace App\Libraries\Exercises\FrameAnalysis\Frames;
 
-class EthernetFrame
+use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
+
+class EthernetFrame extends FrameComponent
 {
     public static $MAC_builder;
     public static $Etype_builder;
@@ -16,7 +18,7 @@ class EthernetFrame
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
-           //Randomly generate the destination address, source address and etype.
+        //Randomly generate the destination address, source address and etype.
         $this->da = self::$MAC_builder[generateRandomIndex(self::$MAC_builder)] . "678910";
         $this->sa = self::$MAC_builder[generateRandomIndex(self::$MAC_builder)] . "012345";
         $this->etype = self::$Etype_builder[generateRandomIndex(self::$Etype_builder)];
@@ -46,7 +48,7 @@ class EthernetFrame
         return $this->etype;
     }
 
-    public function __toString()
+    public function generate() : string
     {
         return $this->getDA() . $this->getSA() . $this->getEtype();
     }

@@ -1,7 +1,8 @@
 <?php
 
+namespace App\Libraries\Exercises\FrameAnalysis\Packets;
 
-class IPFrame
+class IPPacket
 {
     private $ip_a;
     private $ip_b;
@@ -11,6 +12,7 @@ class IPFrame
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
+        //TODO: Correct this.
         $this->ip_a = ipAddressToHexadecimal(generateRandomIpAddress());
         $this->ip_b = ipAddressToHexadecimal(generateRandomIpAddress());
     }

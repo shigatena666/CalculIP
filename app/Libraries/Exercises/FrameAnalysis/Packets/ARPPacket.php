@@ -1,7 +1,10 @@
 <?php
 
+namespace App\Libraries\Exercises\FrameAnalysis\Packets;
 
-class ARPFrame
+use App\Libraries\Exercises\FrameAnalysis\FrameDecorator;
+
+class ARPPacket extends FrameDecorator
 {
     public const ARP_REQUEST_BROADCAST = 'FFFFFFFFFFFF';
     public const HARDWARE_ADDRESS_SPACE = '0001';
@@ -20,64 +23,25 @@ class ARPFrame
     private $target_hardware_address;
     private $target_protocol_address;
 
-    public function __construct($ethernetFrame, $ipFrame)
+    public function __construct($frame_component, $ethernetFrame, $ip_packet)
     {
+        parent::__construct($frame_component);
+
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
         $this->ethernetFrame = $ethernetFrame;
 
         $this->opCode = self::$ARP_builder[generateRandomIndex(self::$ARP_builder)];
-        $this->sender_hardware_address = $ipFrame->getIpA();
+        $this->sender_hardware_address = $ip_packet->getIpA();
         $this->sender_protocol_address = $ethernetFrame->getSA();
         $this->target_hardware_address = $this->opCode === '0001' ?
             self::TARGET_HARDWARE_ADDRESS : $ethernetFrame->getDA();
-        $this->target_protocol_address = $ipFrame->getIpB();
+        $this->target_protocol_address = $ip_packet->getIpB();
     }
 
-    /**
-     * @return string
-     */
-    public function getOpCode() : string
+    public function generate(): string
     {
-        return $this->opCode;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSenderHardwareAddress() : string
-    {
-        return $this->sender_hardware_address;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSenderProtocolAddress() : string
-    {
-        return $this->sender_protocol_address;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTargetHardwareAddress() : string
-    {
-        return $this->target_hardware_address;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTargetProtocolAddress() : string
-    {
-        return $this->target_protocol_address;
-    }
-
-    public function __toString()
-    {
-        //TODO: Look for Ethernet Frame as this is maybe not needed to build the frame.
         switch ($this->opCode) {
 
             //ARP-Request
@@ -95,20 +59,21 @@ class ARPFrame
                     $this->ethernetFrame->getEtype();
                 break;
 
-            //Will never be executed.
+            //Will never be executed, only to avoid warning.
             default:
                 return "";
         }
 
         //Hardware Address Space, Protocol Address Space, HLEN, PLEN, ARP op code.
         $builder .= self::HARDWARE_ADDRESS_SPACE . self::PROTOCOL_ADDRESS_SPACE . self::HLEN . self::PLEN .
-            $this->getOpCode();
+            $this->opCode;
 
         //Sender Hardware Address, Sender Protocol Address, Target Hardware Address, Target Protocol Address.
         $builder .= $this->sender_hardware_address . $this->sender_protocol_address .
             $this->target_hardware_address . $this->target_protocol_address;
-        return $builder;
+
+        return parent::getFrame()->generate() . $builder;
     }
 }
 
-ARPFrame::$ARP_builder = [ '0001', '0002' ];
+ARPPacket::$ARP_builder = [ '0001', '0002' ];

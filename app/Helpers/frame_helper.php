@@ -21,7 +21,7 @@ function generateRandomIpAddress() : string
 function ipAddressToHexadecimal($ip) : string
 {
     $ip_split = explode('.', $ip);
-    return sprintf('%02x %02x %02x %02x', $ip_split[0], $ip_split[1], $ip_split[2], $ip_split[3]);
+    return sprintf('%02x%02x%02x%02x', $ip_split[0], $ip_split[1], $ip_split[2], $ip_split[3]);
 }
 
 function generateRandomTTL() : string
@@ -31,7 +31,7 @@ function generateRandomTTL() : string
 
 function generateRandomPort() : int
 {
-    return rand(1, 65535);
+    return rand(2048, 65535);
 }
 
 function portToHexadecimal($port) : string
@@ -39,7 +39,22 @@ function portToHexadecimal($port) : string
     return sprintf('%04x', $port);
 }
 
+function generateRandomChecksum() : string
+{
+    return sprintf('%04x', rand(0, 65535));
+}
+
 function generateBooleanAsInt() : int
 {
     return rand(0, 1);
+}
+
+function formatToHexa($to_format) : string
+{
+    return sprintf('%02x', dechex($to_format));
+}
+
+function formatToHexa4($to_format) : string
+{
+    return sprintf('%04x', dechex($to_format));
 }
