@@ -1,47 +1,27 @@
 <?php
 
+const SHORT_MAXVALUE = 65535;
+
 function generateRandomIndex($array) : int
 {
     return rand(0, count($array) - 1);
 }
 
-function generateRandomIpAddress() : string
+function generateRandomTTL() : int
 {
-    //First byte will be in range of 1 - 223.
-    $result = rand(1, 223);
-
-    //Then we append the 2nd, 3rd and 4th byte.
-    for ($i = 0; $i < 3; $i++) {
-        $result .= rand(1, 254);
-    }
-
-    return $result;
-}
-
-function ipAddressToHexadecimal($ip) : string
-{
-    $ip_split = explode('.', $ip);
-    return sprintf('%02x%02x%02x%02x', $ip_split[0], $ip_split[1], $ip_split[2], $ip_split[3]);
-}
-
-function generateRandomTTL() : string
-{
-    return sprintf('%02x', rand(1, 255));
+    //TODO: Care as it was sprintf('%02x', rand(1, 255)); before.
+    return rand(1, 255);
 }
 
 function generateRandomPort() : int
 {
-    return rand(2048, 65535);
+    return rand(2048, SHORT_MAXVALUE);
 }
 
-function portToHexadecimal($port) : string
+function generateRandomChecksum() : int
 {
-    return sprintf('%04x', $port);
-}
-
-function generateRandomChecksum() : string
-{
-    return sprintf('%04x', rand(0, 65535));
+    //TODO: Care as it was sprintf('%04x', rand(0, 65535)); before.
+    return rand(0, SHORT_MAXVALUE);
 }
 
 function generateBooleanAsInt() : int
@@ -49,12 +29,7 @@ function generateBooleanAsInt() : int
     return rand(0, 1);
 }
 
-function formatToHexa($to_format) : string
+function convertAndFormatHexa(string $to_format, int $digits): string
 {
-    return sprintf('%02x', dechex($to_format));
-}
-
-function formatToHexa4($to_format) : string
-{
-    return sprintf('%04x', dechex($to_format));
+    return sprintf('%0' . $digits . 'x', $to_format);
 }

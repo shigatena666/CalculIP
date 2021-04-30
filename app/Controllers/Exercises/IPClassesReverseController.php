@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Exercises;
 
-use App\Libraries\Exercises\IPclasses\IPClass;
+use App\Libraries\Exercises\IPclasses\IPAddress;
 use CodeIgniter\Controller;
 
 class IPClassesReverseController extends Controller
@@ -27,7 +27,7 @@ class IPClassesReverseController extends Controller
         if (preg_match("/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/", $_POST["ip"], $ip_bytes)) {
 
             //Build the user IP from the bytes.
-            $ip = new IPClass($ip_bytes[1], $ip_bytes[2], $ip_bytes[3], $ip_bytes[4]);
+            $ip = new IPAddress($ip_bytes[1], $ip_bytes[2], $ip_bytes[3], $ip_bytes[4]);
 
             //Append to our view the right data.
             $result_data["ip_answer"] = $ip;

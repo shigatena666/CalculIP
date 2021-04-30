@@ -6,7 +6,7 @@ use CodeIgniter\Database\ConnectionInterface;
 use CodeIgniter\Model;
 use CodeIgniter\Validation\ValidationInterface;
 
-class IPClass
+class IPAddress
 {
     private $firstByte;
     private $secondByte;
@@ -15,6 +15,8 @@ class IPClass
 
     public function __construct($firstByte, $secondByte, $thirdByte, $fourthByte)
     {
+        helper('frame');
+
         $this->firstByte    = $firstByte;
         $this->secondByte   = $secondByte;
         $this->thirdByte    = $thirdByte;
@@ -94,5 +96,11 @@ class IPClass
     public function __toString() : string
     {
         return $this->firstByte . "." . $this->secondByte . "." . $this->thirdByte . "." . $this->fourthByte;
+    }
+
+    public function toHexa() : string
+    {
+        return convertAndFormatHexa($this->getFirstByte(), 2) . convertAndFormatHexa($this->getSecondByte(), 2) .
+            convertAndFormatHexa($this->getThirdByte(), 2) . convertAndFormatHexa($this->getFourthByte(), 2);
     }
 }

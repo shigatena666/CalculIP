@@ -17,4 +17,6 @@ abstract class FrameDecorator extends FrameComponent
     }
 
     public abstract function generate() : string;
+
+    public abstract function setDefaultBehaviour() : void;
 }

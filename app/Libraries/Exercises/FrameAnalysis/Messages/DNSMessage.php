@@ -3,6 +3,7 @@
 namespace App\Libraries\Exercises\FrameAnalysis\Messages;
 
 use App\Libraries\Exercises\Conversions\Impl\BinToHexConversion;
+use App\Libraries\Exercises\FrameAnalysis\FrameDecorator;
 
 class DNSMessage extends FrameDecorator
 {
