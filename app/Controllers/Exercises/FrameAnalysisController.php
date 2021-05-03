@@ -16,20 +16,16 @@ class FrameAnalysisController extends BaseController
 
     public function index(): string
     {
-        // On doit avoir des getters et setter avec valeurs par défaut.
-        // Quand on modifie avec un set on doit recalculer la longueur totale etc...
-        // On doit pouvoir créer n'importe quelle trame encapsulé.
-        // Supprimer certaines toutes les constantes par exemple en tête IP_v4. (except N ver)
-        // Réduire les constantes au minimum.
         // Il arrive qu'il y ai qq chose entre IP et Ethernet (LLC).
-        // Avoir des valeurs par défaut mais pouvoir les forcer. On doit pouvoir générer aléatoirement mais aussi construire
-        // de vraies trames (plus difficiles).
         // Classe adresse IP à avoir, qui aurait un get class.
         // TODO: Classe qui rassemble un objet adresse IP et la notation CIDR. Une adresse IP associée à son masque.
         // Distinguer adresse IP sans masque et avec son masque. Outils de conversion, CIDR vers decimal... test appartient à
         // tel ou tel réseau.
 
-        //TODO: Do something to automatically code a data in hex on X hexa number.
+        // 2 niveaux de difficultés:
+        // - un pour le département info: avec liste d'empilements possibles. (rand dedans)
+        // - un pour le département R&T: liste un peu plus lourde/longue d'empilements.
+        // Chercher une implémentation ^. Stack pour empilement.
 
         $ethernet = new EthernetFrame();
 

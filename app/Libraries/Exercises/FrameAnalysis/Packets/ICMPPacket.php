@@ -19,9 +19,7 @@ class ICMPPacket extends FrameDecorator
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
-        $this->setICMPType(0);
-        $this->setErrorCode(0);
-        $this->setChecksum(0);
+        $this->setDefaultBehaviour();
     }
 
     public function getICMPType(): string

@@ -29,15 +29,7 @@ class TCP extends FrameDecorator
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
-        $this->source_port = 0;
-        $this->destination_port = 0;
-        $this->num_sequence = 0;
-        $this->num_ack = 0;
-        $this->header_length = 0;
-        $this->flag = 0;
-        $this->window_length = 0;
-        $this->checksum = 0;
-        $this->urgent_pointer = 0;
+        $this->setDefaultBehaviour();
     }
 
     public function getSourcePort(): string
@@ -147,7 +139,7 @@ class TCP extends FrameDecorator
         $this->setHeaderLength(5); //TODO: Check this
         $this->setFlag(self::$TCP_flags[generateRandomIndex(self::$TCP_flags)]);
         //TODO: Ask how to generate this.
-        $this->setWindowLength(rand(1, SHORT_MAXVALUE));
+        $this->setWindowLength(rand(1, USHORT_MAXVALUE));
         //TODO: Do something for this.
         $this->setChecksum("TODO");
         $this->setUrgentPointer(0);

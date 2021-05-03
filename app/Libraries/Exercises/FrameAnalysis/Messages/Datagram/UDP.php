@@ -23,9 +23,7 @@ class UDP extends FrameDecorator
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
-        $this->source_port = 0;
-        $this->destination_port = 0;
-        $this->total_length = 0;
+        $this->setDefaultBehaviour();
     }
 
     public function getSourcePort(): string

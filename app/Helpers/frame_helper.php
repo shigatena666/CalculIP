@@ -1,6 +1,6 @@
 <?php
 
-const SHORT_MAXVALUE = 65535;
+const USHORT_MAXVALUE = 65535;
 
 function generateRandomIndex($array) : int
 {
@@ -15,18 +15,18 @@ function generateRandomTTL() : int
 
 function generateRandomPort() : int
 {
-    return rand(2048, SHORT_MAXVALUE);
+    return rand(2048, USHORT_MAXVALUE);
 }
 
 function generateRandomChecksum() : int
 {
     //TODO: Care as it was sprintf('%04x', rand(0, 65535)); before.
-    return rand(0, SHORT_MAXVALUE);
+    return rand(0, USHORT_MAXVALUE);
 }
 
-function generateBooleanAsInt() : int
+function generateBoolean() : bool
 {
-    return rand(0, 1);
+    return rand(0, 1) === 1;
 }
 
 function convertAndFormatHexa(string $to_format, int $digits): string

@@ -29,16 +29,8 @@ class ARPPacket extends FrameDecorator
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
-        $this->setHardwareAddressSpace(0);
-        $this->setProtocolAddressSpace(0);
-        $this->setHlen(0);
-        $this->setPlen(0);
-        $this->setOpCode(0);
-        //TODO: Create an object for default MACAddresses and IPAddresses.
-        $this->setSenderHardwareAddress(new MACAddress(0, 0, 0, 0, 0, 0));
-        $this->setSenderProtocolAddress(new IPAddress(0, 0, 0, 0));
-        $this->setTargetHardwareAddress(new MACAddress(0, 0, 0, 0, 0, 0));
-        $this->setTargetProtocolAddress(new IPAddress(0, 0, 0, 0));
+        //TODO: Maybe pass ethernetFrame?
+        $this->setDefaultBehaviour();
     }
 
     public function getHardwareAddressSpace(): string
@@ -141,19 +133,12 @@ class ARPPacket extends FrameDecorator
     public function setDefaultBehaviour(): void
     {
         $this->ethernetFrame = $ethernetFrame;
-
-        $this->opCode = self::$ARP_builder[generateRandomIndex(self::$ARP_builder)];
-        $this->sender_hardware_address = $ip_packet->getIpA();
-        $this->sender_protocol_address = $ethernetFrame->getSA();
-        $this->target_hardware_address = $this->opCode === '0001' ?
-            self::TARGET_HARDWARE_ADDRESS : $ethernetFrame->getDA();
-        $this->target_protocol_address = $ip_packet->getIpB();
-
         $this->setHardwareAddressSpace(1);
         $this->setProtocolAddressSpace(2048);
         $this->setHlen(6);
         $this->setPlen(4);
         $this->setOpCode(self::$ARP_builder[generateRandomIndex(self::$ARP_builder)]);
+        //TODO: Create an object for default MACAddresses and IPAddresses.
         $this->setSenderHardwareAddress(new MACAddress());
         $this->setSenderProtocolAddress(new IPAddress());
         $this->setTargetHardwareAddress(new MACAddress());
