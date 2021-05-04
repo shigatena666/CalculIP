@@ -20,8 +20,9 @@ class DNSFlags
     private $recursion_desired;
     private $recursion_available;
     private $response_code;
+
     //Hexadecimal representation of the flags.
-    private $flag;
+    private $flags;
 
     public function __construct()
     {
@@ -33,23 +34,6 @@ class DNSFlags
         $this->recursion_desired = false;
         $this->recursion_available = false;
         $this->response_code = "0000";
-    }
-
-    /**
-     * This method allows to encode properly on 16 bits the datagram's flag.
-     */
-    private function recompileFlag(): void
-    {
-        //Init our binary string to work with. Convert the booleans to string to get the 0s and 1s.
-        $binary = (int)$this->getQueryResponse() . $this->getOpCode() . (int)$this->getAuthoritativeAnswer() .
-            (int)$this->getTruncated() . (int)$this->getRecursionDesired() . (int)$this->getRecursionAvailable() .
-            self::ZERO . $this->getResponseCode();
-
-        //Initialize our converter from binary to decimal. The highest value will be 65355.
-        $converter = new BinToHexConversion();
-
-        //Convert the binary string to hexadecimal and set our flag according to this.
-        $this->flag = $converter->convert($binary);
     }
 
     /**
@@ -225,8 +209,26 @@ class DNSFlags
      *
      * @return string: An hexadecimal string on 16 bits.
      */
-    public function getFlag(): string
+    public function getFlags(): string
     {
-        return $this->flag;
+        return $this->flags;
+    }
+
+    /**
+     * This method allows to encode properly on 16 bits the datagram's flag.
+     */
+    private function recompileFlag(): void
+    {
+        //TODO: Maybe cache the converters.
+        //Init our binary string to work with. Convert the booleans to string to get the 0s and 1s.
+        $binary = (int)$this->getQueryResponse() . $this->getOpCode() . (int)$this->getAuthoritativeAnswer() .
+            (int)$this->getTruncated() . (int)$this->getRecursionDesired() . (int)$this->getRecursionAvailable() .
+            self::ZERO . $this->getResponseCode();
+
+        //Initialize our converter from binary to hexadecimal. The highest value will be 65355.
+        $converter = new BinToHexConversion();
+
+        //Convert the binary string to hexadecimal and set our flag according to this.
+        $this->flags = $converter->convert($binary);
     }
 }

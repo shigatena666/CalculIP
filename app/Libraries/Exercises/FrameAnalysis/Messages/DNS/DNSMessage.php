@@ -23,6 +23,8 @@ class DNSMessage extends FrameDecorator
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
+        $this->dnsFlags = new DNSFlags();
+
         //Now init the default values of DNS with common stuff.
         $this->setDefaultBehaviour();
     }
@@ -146,7 +148,7 @@ class DNSMessage extends FrameDecorator
     public function generate(): string
     {
         //Take the previous frame and now add our message.
-        return parent::getFrame()->generate() . $this->getID() . $this->dnsFlags->getFlag() . $this->getQueriesCount() .
+        return parent::getFrame()->generate() . $this->getID() . $this->dnsFlags->getFlags() . $this->getQueriesCount() .
             $this->getAnswersCount() . $this->getAuthorityCount() . $this->getAdditionalCount();
     }
 
@@ -156,7 +158,6 @@ class DNSMessage extends FrameDecorator
             setlocale(LC_ALL, 'fr_FR.UTF-8');
             $this->setID(strftime('%m%d'));
 
-            $this->dnsFlags = new DNSFlags();
             $this->dnsFlags->setQueryResponse(generateBoolean());
             $this->dnsFlags->setOpCode(0);
             $this->dnsFlags->setAuthoritativeAnswer(generateBoolean());
