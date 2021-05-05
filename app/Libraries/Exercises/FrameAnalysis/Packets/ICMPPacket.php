@@ -13,6 +13,8 @@ class ICMPPacket extends FrameDecorator
     private $ICMP_type;
     private $error_code;
     private $checksum;
+    private $identifier;
+    private $sequence_num;
 
     private $init_checksum;
 
@@ -32,9 +34,9 @@ class ICMPPacket extends FrameDecorator
     /**
      * This function allows you to get the type of the packet.
      *
-     * @return string: A 2 digit hexadecimal number.
+     * @return int : The packet type as integer.
      */
-    public function getICMPType(): string
+    public function getICMPType(): int
     {
         return $this->ICMP_type;
     }
@@ -50,16 +52,16 @@ class ICMPPacket extends FrameDecorator
         if ($ICMP_type < 0 || $ICMP_type > 255) {
             throw new Exception("Invalid ICMP type");
         }
-        $this->ICMP_type = convertAndFormatHexa($ICMP_type, 2);
-        $this->recompileChecksum();
+        $this->ICMP_type = $ICMP_type;
+        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
     }
 
     /**
      * This function allows you to get the packet error code.
      *
-     * @return string: A 2 digit hexadecimal number.
+     * @return int : The error code as integer.
      */
-    public function getErrorCode() : string
+    public function getErrorCode() : int
     {
         return $this->error_code;
     }
@@ -75,16 +77,16 @@ class ICMPPacket extends FrameDecorator
         if ($error_code < 0 || $error_code > 255) {
             throw new Exception("Invalid ICMP error code");
         }
-        $this->error_code = convertAndFormatHexa($error_code, 2);
-        $this->recompileChecksum();
+        $this->error_code = $error_code;
+        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
     }
 
     /**
      * This function allows you to get the checksum of the ICMP packet.
      *
-     * @return string: A 4 digit hexadecimal number.
+     * @return int : The checksum as an integer.
      */
-    public function getChecksum(): string
+    public function getChecksum(): int
     {
         return $this->checksum;
     }
@@ -99,44 +101,59 @@ class ICMPPacket extends FrameDecorator
     public function setChecksum(int $checksum): void
     {
         if ($checksum < 0 || $checksum > 65535) {
-            throw new Exception("Invalid ICMP checksum");
+            throw new Exception("Invalid ICMP checksum: " . $checksum);
         }
-        $this->checksum = convertAndFormatHexa($checksum, 4);
+        $this->checksum = $checksum;
     }
 
-    //TODO: Merge this one and IPv4 in the same one.
     /**
-     * This function allows you to recalculate the checksum when an element has changed in the packet.
+     * This function allows you to get the identifier.
+     *
+     * @return int : The identifier as integer.
      */
-    public function recompileChecksum(): void
+    public function getIdentifier(): int
     {
-        try {
-            if (!$this->init_checksum) return;
+        return $this->identifier;
+    }
 
-            //Get the whole header.
-            $str = $this->generate();
-
-            //Split every 4 characters.
-            $array = str_split($str, 4);
-
-            //Convert every character of the array to decimal.
-            $hexToDecConverter = new HexToDecConversion();
-            for ($i = 0; $i < count($array); $i++) {
-                $array[$i] = $hexToDecConverter->convert($array[$i]);
-            }
-
-            //Apply the checksum algorithm.
-            $sum = array_sum($array);
-            while (($sum >> 16) != 0) {
-                $sum = ($sum >> 16) + ($sum & 0xFFFF);
-            }
-
-            //0xFFFF is needed because otherwise we get negative numbers.
-            $this->setCheckSum(0xFFFF & ~$sum);
+    /**
+     * This function allows you to set the ICMP identifier.
+     *
+     * @param int $identifier: The identifier as integer, in range 0-65535.
+     * @throws Exception : Throws an exception if the identifier isn't in the right range.
+     */
+    public function setIdentifier(int $identifier): void
+    {
+        if ($identifier < 0 || $identifier > 65535) {
+            throw new Exception("Invalid ICMP identifier: " . $identifier);
         }
-        catch (Exception $e) {
-            //TODO: An exception occurred when calculating the checksum.
+        $this->identifier = $identifier;
+        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
+    }
+
+    /**
+     * This function allows you to get the sequence number.
+     *
+     * @return int : The sequence number as integer.
+     */
+    public function getSequenceNum(): int
+    {
+        return $this->sequence_num;
+    }
+
+    /**
+     * This function allows you to set the sequence number.
+     *
+     * @param int $sequence_num : The sequence number as integer, in the range 0-65535
+     * @throws Exception : Throws an exception if the sequence num is not in the right range.
+     */
+    public function setSequenceNum(int $sequence_num): void
+    {
+        if ($sequence_num < 0 || $sequence_num > 65535) {
+            throw new Exception("Invalid ICMP sequence num: " . $sequence_num);
         }
+        $this->sequence_num = $sequence_num;
+        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
     }
 
     public function setDefaultBehaviour(): void
@@ -145,11 +162,12 @@ class ICMPPacket extends FrameDecorator
             //Set all values.
             $this->setICMPType(array_rand(self::$ICMP_type_builder));
             $this->setErrorCode(0);
-
+            $this->setIdentifier(generateRandomUShort());
+            $this->setSequenceNum(generateRandomUShort());
             //Init the checksum for the first time, otherwise it will never be called.
             $this->init_checksum = true;
             //All values are set so we can now calculate the checksum.
-            $this->recompileChecksum();
+            $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
         }
         catch (Exception $e) {
             //TODO: An error happened during default values of ICMP.
@@ -158,7 +176,11 @@ class ICMPPacket extends FrameDecorator
 
     public function generate(): string
     {
-        return parent::getFrame()->generate() . $this->getICMPType() . $this->getErrorCode() . $this->getChecksum();
+        return parent::getFrame()->generate() . convertAndFormatHexa($this->getICMPType(), 2) .
+            convertAndFormatHexa($this->getErrorCode(), 2) .
+            convertAndFormatHexa($this->getChecksum(), 4) .
+            convertAndFormatHexa($this->getIdentifier(), 4) .
+            convertAndFormatHexa($this->getSequenceNum(), 4);
     }
 }
 

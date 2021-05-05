@@ -2,45 +2,51 @@
 
 namespace App\Libraries\Exercises\IPclasses;
 
-use CodeIgniter\Database\ConnectionInterface;
-use CodeIgniter\Model;
-use CodeIgniter\Validation\ValidationInterface;
+use Exception;
 
 class IPAddress
 {
-    private $firstByte;
-    private $secondByte;
-    private $thirdByte;
-    private $fourthByte;
+    private $bytes;
 
-    public function __construct($firstByte, $secondByte, $thirdByte, $fourthByte)
+    public function __construct(array $bytes)
     {
         helper('frame');
 
-        $this->firstByte    = $firstByte;
-        $this->secondByte   = $secondByte;
-        $this->thirdByte    = $thirdByte;
-        $this->fourthByte   = $fourthByte;
+        try {
+            $this->setBytes($bytes);
+        }
+        catch (Exception $e) {
+            //TODO: An error happened when trying to set the bytes of the IP address.
+        }
     }
 
-    public function getFirstByte() : int
+    /**
+     * This function allows you to get the bytes from the IP address.
+     *
+     * @return array: An array of integer.
+     */
+    public function getBytes(): array
     {
-        return $this->firstByte;
+        return $this->bytes;
     }
 
-    public function getSecondByte() : int
+    /**
+     * This function allows you to set the bytes of an IP address.
+     *
+     * @throws Exception: Throws an exception if the length of the array isn't 4 and/or integers.
+     */
+    public function setBytes(array $bytes): void
     {
-        return $this->secondByte;
-    }
+        foreach ($bytes as $byte) {
+            if (!is_integer($byte)) {
+                throw new Exception("Invalid IP address parameters: " . $bytes);
+            }
+        }
+        if (count($bytes) != 4) {
+            throw new Exception("Invalid IP address length: " . count($bytes));
+        }
 
-    public function getThirdByte() : int
-    {
-        return $this->thirdByte;
-    }
-
-    public function getFourthByte() : int
-    {
-        return $this->fourthByte;
+        $this->bytes = $bytes;
     }
 
     /**
@@ -62,27 +68,27 @@ class IPAddress
     public function check_class() : string
     {
         //Let's check if all the other bytes are in the right range.
-        if ($this->check_range($this->secondByte) && $this->check_range($this->thirdByte) &&
-            $this->check_range($this->fourthByte)) {
+        if ($this->check_range($this->bytes[1]) && $this->check_range($this->bytes[2]) &&
+            $this->check_range($this->bytes[3])) {
 
             //Now let's check our first byte.
             //Small trick because if we use the first byte in switch and its value is 0, PHP will think it's false.
             switch (true) {
 
                 //The first byte needs to be strictly greeter than 0.
-                case $this->firstByte > 0 && $this->firstByte <= 127:
+                case $this->bytes[0] > 0 && $this->bytes[0] <= 127:
                     return "A";
 
-                case $this->firstByte <= 191:
+                case $this->bytes[0] <= 191:
                     return "B";
 
-                case $this->firstByte <= 223:
+                case $this->bytes[0] <= 223:
                     return "C";
 
-                case $this->firstByte <= 239:
+                case $this->bytes[0] <= 239:
                     return "D";
 
-                case $this->firstByte <= 255:
+                case $this->bytes[0] <= 255:
                     return "E";
 
                 default:
@@ -93,14 +99,24 @@ class IPAddress
         return "None";
     }
 
-    public function __toString() : string
-    {
-        return $this->firstByte . "." . $this->secondByte . "." . $this->thirdByte . "." . $this->fourthByte;
-    }
-
+    /**
+     * Convert the IP address bytes to hexadecimal.
+     *
+     * @return string: The hexadecimal IP address with no spaces.
+     */
     public function toHexa() : string
     {
-        return convertAndFormatHexa($this->getFirstByte(), 2) . convertAndFormatHexa($this->getSecondByte(), 2) .
-            convertAndFormatHexa($this->getThirdByte(), 2) . convertAndFormatHexa($this->getFourthByte(), 2);
+        return convertAndFormatHexa($this->bytes[0], 2) . convertAndFormatHexa($this->bytes[1], 2) .
+            convertAndFormatHexa($this->bytes[2], 2) . convertAndFormatHexa($this->bytes[3], 2);
+    }
+
+    /**
+     * This function allows you to get the IP address bytes.
+     *
+     * @return string: A string with the following format: x.x.x.x where x is a byte.
+     */
+    public function __toString() : string
+    {
+        return $this->bytes[0] . "." . $this->bytes[1] . "." . $this->bytes[2] . "." . $this->bytes[3];
     }
 }

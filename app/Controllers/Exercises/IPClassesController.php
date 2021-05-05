@@ -5,6 +5,7 @@ namespace App\Controllers\Exercises;
 
 use App\Libraries\Exercises\IPclasses\IPAddress;
 use CodeIgniter\Controller;
+use Exception;
 
 class IPClassesController extends Controller
 {
@@ -49,9 +50,12 @@ class IPClassesController extends Controller
         }
     }
 
+    /**
+     * Generates a random (sometimes wrong) address IP.
+     */
     private function generate_random_ip() : IPAddress
     {
-        return new IPAddress(rand(1, 260), rand(0, 260), rand(0, 260), rand(0, 260));
+        return new IPAddress([ rand(1, 260), rand(0, 260), rand(0, 260), rand(0, 260) ]);
     }
 
     public function index(): string

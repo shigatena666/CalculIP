@@ -59,17 +59,17 @@ class IPv4Packet extends FrameDecorator
     }
 
     /**
-     * This allows us to get the header length of the IPv4 packet. It is counted in 32 bits words.
+     * This function allows you to get the header length of the IPv4 packet.
      *
-     * @return string
+     * @return int: The header length of the packet. It is counted in 32 bits words.
      */
-    public function getHeaderLength(): string
+    public function getHeaderLength(): int
     {
         return $this->header_length;
     }
 
     /**
-     * This allows to set the header length of an IPv4 packet. It is a 4 bit value.
+     * This function allows you to set the header length of an IPv4 packet. It is a 4 bit value.
      * This should not be manually modified.
      *
      * @param int $header_length : A 0-15 integer.
@@ -80,8 +80,8 @@ class IPv4Packet extends FrameDecorator
         if ($header_length < 0 || $header_length > 15) {
             throw new Exception("The header length is supposed to be a 0 to 15 range.");
         }
-        $this->header_length = convertAndFormatHexa($header_length, 1);
-        $this->recompileChecksum();
+        $this->header_length = $header_length;
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
     }
 
     /**
@@ -117,16 +117,16 @@ class IPv4Packet extends FrameDecorator
         if ($total_length < 0 || $total_length > 65535) {
             throw new Exception("Invalid total length for IPv4 packet");
         }
-        $this->total_length = convertAndFormatHexa($total_length, 4);
-        $this->recompileChecksum();
+        $this->total_length = $total_length;
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
     }
 
     /**
      * On 16 bits. Used to rebuild from fragments as they have all the same ID.
      *
-     * @return string: The ID of the packet.
+     * @return int : The ID of the packet.
      */
-    public function getIdentification(): string
+    public function getIdentification(): int
     {
         return $this->identification;
     }
@@ -134,12 +134,16 @@ class IPv4Packet extends FrameDecorator
     /**
      * This function allows to set the identification of a fragment.
      *
-     * @param string $identification: The given ID for the fragment.
+     * @param int $identification : The given ID for the fragment.
+     * @throws Exception : Throws an exception if the the id is not in the right range.
      */
-    public function setIdentification(string $identification): void
+    public function setIdentification(int $identification): void
     {
+        if ($identification < 0 || $identification > 65535) {
+            throw new Exception("Invalid id in IPv4 packet: " . $identification);
+        }
         $this->identification = $identification;
-        $this->recompileChecksum();
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
     }
 
     /**
@@ -155,9 +159,9 @@ class IPv4Packet extends FrameDecorator
     /**
      * This function allows you to get the TTL value.
      *
-     * @return string A 2 digit hexadecimal number.
+     * @return int: The TTL as integer.
      */
-    public function getTTL(): string
+    public function getTTL(): int
     {
         return $this->TTL;
     }
@@ -173,16 +177,16 @@ class IPv4Packet extends FrameDecorator
         if ($TTL < 0 || $TTL > 255) {
             throw new Exception("Invalid value for TTL");
         }
-        $this->TTL = convertAndFormatHexa($TTL, 2);
-        $this->recompileChecksum();
+        $this->TTL = $TTL;
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
     }
 
     /**
      * This function allows you to get the protocol.
      *
-     * @return string: A 2 digit hexadecimal number.
+     * @return int: The protocol number as integer.
      */
-    public function getProtocol(): string
+    public function getProtocol(): int
     {
         return $this->protocol;
     }
@@ -198,18 +202,28 @@ class IPv4Packet extends FrameDecorator
         if ($protocol < 0 || $protocol > 255) {
             throw new Exception("Invalid value for IPv4 protocol");
         }
-        $this->protocol = convertAndFormatHexa($protocol, 2);
-        $this->recompileChecksum();
+        $this->protocol = $protocol;
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
     }
 
     /**
      * This function allows you to get the checksum of the IPv4 header.
      *
-     * @return string: A 4 digit hexadecimal number.
+     * @return int: The checksum as integer.
      */
-    public function getCheckSum(): string
+    public function getCheckSum(): int
     {
         return $this->check_sum;
+    }
+
+    /**
+     * This function allows you to know if the checksum has already been initiated.
+     *
+     * @return bool : True if the checksum has been initiated, false otherwise.
+     */
+    public function getInitChecksum(): bool
+    {
+        return $this->init_checksum;
     }
 
     /**
@@ -224,18 +238,17 @@ class IPv4Packet extends FrameDecorator
         if ($check_sum < 0 || $check_sum > 65535) {
             throw new Exception("The checksum is supposed to be a 0 to 65535 range.");
         }
-        $this->check_sum = convertAndFormatHexa($check_sum, 4);
-        $this->recompileChecksum();
+        $this->check_sum = $check_sum;
     }
 
     /**
      * This function allows you to get the emitter's IP address.
      *
-     * @return string: An hexadecimal representation of the IP address.
+     * @return IPAddress : Representation of the IP address as an object.
      */
-    public function getEmitterIp(): string
+    public function getEmitterIp(): IPAddress
     {
-        return $this->emitter_ip->toHexa();
+        return $this->emitter_ip;
     }
 
     /**
@@ -250,15 +263,15 @@ class IPv4Packet extends FrameDecorator
             throw new Exception("Invalid IP address for the emitter");
         }
         $this->emitter_ip = $emitter_ip;
-        $this->recompileChecksum();
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
     }
 
     /**
      * This function allows you to get the receiver's IP address.
      *
-     * @return string: An hexadecimal representation of the IP address.
+     * @return IPAddress : Representation of the IP address as an object.
      */
-    public function getReceiverIp(): string
+    public function getReceiverIp(): IPAddress
     {
         return $this->receiver_ip->toHexa();
     }
@@ -275,14 +288,37 @@ class IPv4Packet extends FrameDecorator
             throw new Exception("Invalid IP address for the emitter");
         }
         $this->receiver_ip = $receiver_ip;
-        $this->recompileChecksum();
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
+    }
+
+    /**
+     * This function allows you to get the options of the IPv4 packet.
+     *
+     * @return IPv4Options: The IPv4 options as an object.
+     */
+    public function getOptions(): IPv4Options
+    {
+        return $this->options;
+    }
+
+    /**
+     * This function allows you to set the options of an IPv4 packet.
+     *
+     * @param IPv4Options $options : The IPv4 options as an object.
+     * @throws Exception : Throws an exception if the checksum has failed.
+     */
+    public function setOptions(IPv4Options $options): void
+    {
+        $this->options = $options;
+        $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
     }
 
     private function recompileHeaderLength(): void
     {
         try {
+            //TODO: This also grab the previous frame, correct that in other classes as well.
             //Get the whole header.
-            $str =  $this->generate();
+            $str = $this->generate();
 
             //An hexadecimal digit is 4 bits.
             $total_bits = strlen($str) * 4;
@@ -295,40 +331,6 @@ class IPv4Packet extends FrameDecorator
         }
     }
 
-    /**
-     * This function allows you to recalculate the checksum when an element has changed in the packet.
-     */
-    public function recompileChecksum(): void
-    {
-        try {
-            if (!$this->init_checksum) return;
-
-            //Get the whole header.
-            $str = $this->generate();
-
-            //Split every 4 characters.
-            $array = str_split($str, 4);
-
-            //Convert every character of the array to decimal.
-            $hexToDecConverter = new HexToDecConversion();
-            for ($i = 0; $i < count($array); $i++) {
-                $array[$i] = $hexToDecConverter->convert($array[$i]);
-            }
-
-            //Apply the checksum algorithm.
-            $sum = array_sum($array);
-            while (($sum >> 16) != 0) {
-                $sum = ($sum >> 16) + ($sum & 0xFFFF);
-            }
-
-            //0xFFFF is needed because otherwise we get negative numbers.
-            $this->setCheckSum(0xFFFF & ~$sum);
-        }
-        catch (Exception $e) {
-            //TODO: An exception occurred when calculating the checksum.
-        }
-    }
-
     public function setDefaultBehaviour(): void
     {
         try {
@@ -337,22 +339,36 @@ class IPv4Packet extends FrameDecorator
             //As well, initialize the checksum to 0, will be calculated after the header length.
             $this->setCheckSum(0);
 
-            setlocale(LC_ALL, 'fr_FR.UTF-8');
-            $this->setIdentification(strftime('%m%d'));
+            //TODO: Maybe set random values here ?
+            $this->getTypeOfService()->setPriority(0);
+            $this->getTypeOfService()->setDelay(0);
+            $this->getTypeOfService()->setThroughput(0);
+            $this->getTypeOfService()->setReliability(0);
+            $this->getTypeOfService()->setCost(0);
 
-            $this->getDfMfOffset()->setDontfragment(true);
+            //TODO: Do something for total length as it needs the following data length.
+            $this->setTotalLength(0);
+
+            setlocale(LC_ALL, 'fr_FR.UTF-8');
+            $this->setIdentification((int)strftime('%m%d'));
+
+            $this->getDfMfOffset()->setDontfragment(1);
+            $this->getDfMfOffset()->setMorefragment(0);
+            $this->getDfMfOffset()->setOffset(0);
+
             $this->setTTL(generateRandomTTL());
             $this->setProtocol(array_rand(self::$Protocol_codes_builder));
-            $this->setEmitterIp(new IPAddress(rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254)));
-            $this->setReceiverIp(new IPAddress(rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254)));
+            $this->setEmitterIp(new IPAddress([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]));
+            $this->setReceiverIp(new IPAddress([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]));
 
             //Recalculate the header length based on the setters. Should basically be 5 as long as there are no options.
             $this->recompileHeaderLength();
 
             //Init the checksum for the first time, otherwise it will never be called.
             $this->init_checksum = true;
+
             //Recalculate the checksum.
-            $this->recompileChecksum();
+            $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
         }
         catch (Exception $e) {
             //TODO: An exception occurred when trying to generate the frame.
@@ -366,10 +382,14 @@ class IPv4Packet extends FrameDecorator
      */
     public function generate(): string
     {
-        return parent::getFrame()->generate() . self::VERSION_IP . $this->getHeaderLength() .
-            $this->getTypeOfService()->getFlags() . $this->getTotalLength() . $this->getIdentification() .
-            $this->getDfMfOffset()->getFlags() . $this->getTTL() . $this->getProtocol() . $this->getCheckSum() .
-            $this->getEmitterIp() . $this->getReceiverIp();
+        return parent::getFrame()->generate() . self::VERSION_IP .
+            convertAndFormatHexa($this->getHeaderLength(), 1) .
+            $this->getTypeOfService()->getFlags() . convertAndFormatHexa($this->getTotalLength() , 4) .
+            convertAndFormatHexa($this->getIdentification(), 4) .
+            $this->getDfMfOffset()->getFlags() .
+            convertAndFormatHexa($this->getTTL(), 2) . convertAndFormatHexa($this->getProtocol(), 2) .
+            convertAndFormatHexa($this->getCheckSum(), 4) .
+            $this->getEmitterIp()->toHexa() . $this->getReceiverIp()->toHexa() . $this->getOptions()->getFlags();
     }
 }
 

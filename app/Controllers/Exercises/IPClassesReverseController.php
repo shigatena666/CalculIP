@@ -4,6 +4,7 @@ namespace App\Controllers\Exercises;
 
 use App\Libraries\Exercises\IPclasses\IPAddress;
 use CodeIgniter\Controller;
+use Exception;
 
 class IPClassesReverseController extends Controller
 {
@@ -21,20 +22,24 @@ class IPClassesReverseController extends Controller
         }
     }
 
+    /**
+     * Handle the answer of the user.
+     *
+     */
     private function handle_answer() : string
     {
         //Regex to check if we have the pattern of an IP and also extract its parts.
         if (preg_match("/(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/", $_POST["ip"], $ip_bytes)) {
 
-            //Build the user IP from the bytes.
-            $ip = new IPAddress($ip_bytes[1], $ip_bytes[2], $ip_bytes[3], $ip_bytes[4]);
+            //Build the user's IP from the bytes. Cast it to int otherwise it would be a string.
+            $ip = new IPAddress([ (int)$ip_bytes[1], (int)$ip_bytes[2], (int)$ip_bytes[3], (int)$ip_bytes[4] ]);
 
             //Append to our view the right data.
             $result_data["ip_answer"] = $ip;
             $result_data["ip_class"] = $this->session->get("ip_class");
 
             //Check the user input and compare it to the IP class.
-            $state = $ip->check_class() === $this->session->get("ip_class") ? "success" : "failS";
+            $state = $ip->check_class() === $this->session->get("ip_class") ? "success" : "fail";
         }
         //If it doesn't match an IP address.
         else {

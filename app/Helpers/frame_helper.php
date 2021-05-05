@@ -9,7 +9,6 @@ function generateRandomIndex($array) : int
 
 function generateRandomTTL() : int
 {
-    //TODO: Care as it was sprintf('%02x', rand(1, 255)); before.
     return rand(1, 255);
 }
 
@@ -18,9 +17,8 @@ function generateRandomPort() : int
     return rand(2048, USHORT_MAXVALUE);
 }
 
-function generateRandomChecksum() : int
+function generateRandomUShort() : int
 {
-    //TODO: Care as it was sprintf('%04x', rand(0, 65535)); before.
     return rand(0, USHORT_MAXVALUE);
 }
 
@@ -32,4 +30,29 @@ function generateBoolean() : bool
 function convertAndFormatHexa(string $to_format, int $digits): string
 {
     return sprintf('%0' . $digits . 'x', $to_format);
+}
+
+/**
+ * This function allows you to recalculate the checksum when an element has changed in the packet.
+ */
+function recompileChecksum($str, $initiated) : int
+{
+    if (!$initiated) return 0;
+
+    //Split every 4 characters.
+    $array = str_split($str, 4);
+
+    //Convert every character of the array to decimal.
+    for ($i = 0; $i < count($array); $i++) {
+        $array[$i] = hexdec($array[$i]);
+    }
+
+    //Apply the checksum algorithm.
+    $sum = array_sum($array);
+    while (($sum >> 16) != 0) {
+        $sum = ($sum >> 16) + ($sum & 0xFFFF);
+    }
+
+    //0xFFFF is needed because otherwise we get negative numbers.
+    return 0xFFFF & ~$sum;
 }

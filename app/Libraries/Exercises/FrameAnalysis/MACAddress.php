@@ -1,61 +1,73 @@
 <?php
 
 
-namespace App\Libraries\Exercises\FrameAnalysis;
+namespace App\Libraries\Exercises\FrameAnalysis\Frames;
 
+use Exception;
 
 class MACAddress
 {
-    private $firstByte;
-    private $secondByte;
-    private $thirdByte;
-    private $fourthByte;
-    private $fifthByte;
-    private $sixthByte;
+    private $bytes;
 
-    public function __construct($firstByte, $secondByte, $thirdByte, $fourthByte, $fifthByte, $sixthByte)
+    public function __construct(array $bytes)
     {
-        $this->firstByte    = $firstByte;
-        $this->secondByte   = $secondByte;
-        $this->thirdByte    = $thirdByte;
-        $this->fourthByte   = $fourthByte;
-        $this->fifthByte    = $fifthByte;
-        $this->sixthByte    = $sixthByte;
+        try {
+            $this->setBytes($bytes);
+        }
+        catch (Exception $e) {
+            //TODO: An error happened when trying to set the bytes of the MAC address.
+        }
     }
 
-    public function getFirstByte(): string
+    /**
+     * This function allows you to get the bytes from the MAC address.
+     *
+     * @return array: An array of integers.
+     */
+    public function getBytes(): array
     {
-        return $this->firstByte;
+        return $this->bytes;
     }
 
-    public function getSecondByte(): string
+    /**
+     * This function allows you to set the bytes of a MAC address.
+     *
+     * @throws Exception: Throws an exception if the length of the array isn't 6 and/or integers.
+     */
+    public function setBytes(array $bytes): void
     {
-        return $this->secondByte;
+        foreach ($bytes as $byte) {
+            if (!is_integer($byte) || $byte < 0 || $byte > 255) {
+                throw new Exception("Invalid MAC address parameters: " . $bytes);
+            }
+        }
+        if (count($bytes) != 6) {
+            throw new Exception("Invalid MAC address length: " . count($bytes));
+        }
+
+        $this->bytes = $bytes;
     }
 
-    public function getThirdByte(): string
+    /**
+     * Convert the MAC address bytes to hexadecimal.
+     *
+     * @return string: The hexadecimal MAC address with no spaces.
+     */
+    public function toHexa() : string
     {
-        return $this->thirdByte;
+        return convertAndFormatHexa($this->bytes[0], 2) . convertAndFormatHexa($this->bytes[1], 2) .
+            convertAndFormatHexa($this->bytes[2], 2) . convertAndFormatHexa($this->bytes[3], 2)
+            . convertAndFormatHexa($this->bytes[4], 2) . convertAndFormatHexa($this->bytes[5], 2);
     }
 
-    public function getFourthByte(): string
-    {
-        return $this->fourthByte;
-    }
-
-    public function getFifthByte(): string
-    {
-        return $this->fifthByte;
-    }
-
-    public function getSixthByte(): string
-    {
-        return $this->sixthByte;
-    }
-
+    /**
+     * This function allows you to get the MAC address bytes.
+     *
+     * @return string: A string with the following format: xxx:xxx:xxx:xxx:xxx:xxx. where x is a byte.
+     */
     public function __toString()
     {
-        return $this->getFirstByte() . $this->getSecondByte() . $this->getThirdByte() . $this->getFourthByte() .
-            $this->getFifthByte() . $this->getSixthByte();
+        return $this->bytes[0] . ":" . $this->bytes[1] . ":" . $this->bytes[2] . ":" . $this->bytes[3] . ":".
+            $this->bytes[4] . ":" . $this->bytes[5];
     }
 }

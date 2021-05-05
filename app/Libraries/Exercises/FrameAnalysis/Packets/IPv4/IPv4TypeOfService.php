@@ -28,10 +28,10 @@ class IPv4TypeOfService
 
         //Must initialize the flags to avoid errors.
         $this->priority = 0;
-        $this->delay = false;
-        $this->throughput = false;
-        $this->reliability = false;
-        $this->cost = false;
+        $this->delay = 0;
+        $this->throughput = 0;
+        $this->reliability = 0;
+        $this->cost = 0;
     }
 
     /**
@@ -62,9 +62,9 @@ class IPv4TypeOfService
     /**
      * This function allows you to know the importance of the packet's delay.
      *
-     * @return bool: True if it's low, false if it's normal.
+     * @return int : 1 if it's low, 0 if it's normal.
      */
-    public function getDelay(): bool
+    public function getDelay(): int
     {
         return $this->delay;
     }
@@ -72,10 +72,14 @@ class IPv4TypeOfService
     /**
      * This function allows you to set the importance of the packet's delay.
      *
-     * @param bool $delay: True if it's low, false if it's normal.
+     * @param int $delay : 1 if it's low, 0 if it's normal.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setDelay(bool $delay): void
+    public function setDelay(int $delay): void
     {
+        if ($delay !== 0 || $delay !== 1) {
+            throw new Exception("Invalid value for IPv4 delay: " . $delay);
+        }
         $this->delay = $delay;
         $this->recompileTOS();
     }
@@ -83,9 +87,9 @@ class IPv4TypeOfService
     /**
      * This function allows you to know the importance of the bandwidth.
      *
-     * @return bool: True if it's high, false if it's normal.
+     * @return int : 1 if it's high, 0 if it's normal.
      */
-    public function getThroughput(): bool
+    public function getThroughput(): int
     {
         return $this->throughput;
     }
@@ -93,10 +97,14 @@ class IPv4TypeOfService
     /**
      * This function allows you to set the importance of the packet's bandwidth.
      *
-     * @param bool $throughput: True if it's high, false if it's normal.
+     * @param int $throughput : 1 if it's high, 0 if it's normal.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setThroughput(bool $throughput): void
+    public function setThroughput(int $throughput): void
     {
+        if ($throughput !== 0 || $throughput !== 1) {
+            throw new Exception("Invalid value for IPv4 throughput: " . $throughput);
+        }
         $this->throughput = $throughput;
         $this->recompileTOS();
     }
@@ -104,9 +112,9 @@ class IPv4TypeOfService
     /**
      * This function allows you to know the quality of the packet.
      *
-     * @return bool: True if it's high, false if it's normal.
+     * @return int : 1 if it's high, 0 if it's normal.
      */
-    public function getReliability(): bool
+    public function getReliability(): int
     {
         return $this->reliability;
     }
@@ -114,10 +122,14 @@ class IPv4TypeOfService
     /**
      * This function allows you to set the quality of the packet.
      *
-     * @param bool $reliability: True if it's high, false if it's normal.
+     * @param int $reliability : 1 if it's high, 0 if it's normal.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setReliability(bool $reliability): void
+    public function setReliability(int $reliability): void
     {
+        if ($reliability !== 0 || $reliability !== 1) {
+            throw new Exception("Invalid value for IPv4 reliability: " . $reliability);
+        }
         $this->reliability = $reliability;
         $this->recompileTOS();
     }
@@ -125,9 +137,9 @@ class IPv4TypeOfService
     /**
      * This function allows you to know the cost of the packet.
      *
-     * @return bool: True if it's low, false if it's normal.
+     * @return int: 1 if it's low, 0 if it's normal.
      */
-    public function getCost(): bool
+    public function getCost(): int
     {
         return $this->cost;
     }
@@ -135,10 +147,14 @@ class IPv4TypeOfService
     /**
      * This function allows you to set the cost of the packet.
      *
-     * @param bool $cost: True if it's low, false if it's normal.
+     * @param int $cost : 1 if it's low, 0 if it's normal.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setCost(bool $cost): void
+    public function setCost(int $cost): void
     {
+        if ($cost !== 0 || $cost !== 1) {
+            throw new Exception("Invalid value for IPv4 reliability: " . $cost);
+        }
         $this->cost = $cost;
         $this->recompileTOS();
     }
@@ -156,9 +172,10 @@ class IPv4TypeOfService
     private function recompileTOS(): void
     {
         //TODO: Maybe cache the converters.
+
         //Convert the priority to a binary string, it's an integer otherwise.
         $decToBinConverter = new DecToBinConversion();
-        $priority_bin = $decToBinConverter->convert($this->getPriority());
+        $priority_bin = decbin($this->getPriority());
 
         //Add all the flags together.
         $bin = $priority_bin . $this->getDelay() . $this->getThroughput() . $this->getReliability() . $this->getCost() .
@@ -170,7 +187,12 @@ class IPv4TypeOfService
         //Set the Type of Service to the hexadecimal representation of the binary flags.
         $this->flags = $binToHexConverter->convert($bin);
 
-        //Recompile our checksum since the values have changed.
-        $this->packet->recompileChecksum();
+        try {
+            //Recompile our checksum since the values have changed.
+            $this->packet->setCheckSum(recompileChecksum($this->packet->generate(), $this->packet->getInitChecksum()));
+        }
+        catch (Exception $e) {
+            //TODO: An error has occurred when trying to assign the checksum from the TOS.
+        }
     }
 }

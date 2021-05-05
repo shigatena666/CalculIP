@@ -24,17 +24,17 @@ class IPv4DfMfOffset
     {
         $this->packet = $packet;
 
-        $this->dont_fragment = false;
-        $this->more_fragment = false;
+        $this->dont_fragment = 0;
+        $this->more_fragment = 0;
         $this->offset = 0;
     }
 
     /**
      * This function allows you to know if the fragmentation is allowed.
      *
-     * @return bool: True if it doesn't need to be fragmented, false if it needs to.
+     * @return int: 1 if it doesn't need to be fragmented, 0 if it needs to.
      */
-    public function getDontfragment(): bool
+    public function getDontfragment(): int
     {
         return $this->dont_fragment;
     }
@@ -42,10 +42,14 @@ class IPv4DfMfOffset
     /**
      * This function allows you to set if the fragmentation is allowed.
      *
-     * @param bool $dont_fragment: True if it doesn't need to be fragmented, false if it needs to.
+     * @param int $dont_fragment : 1 if it doesn't need to be fragmented, 0 if it needs to.
+     * @throws Exception : Throws an exception if the value isn't 1 or 0.
      */
-    public function setDontfragment(bool $dont_fragment): void
+    public function setDontfragment(int $dont_fragment): void
     {
+        if ($dont_fragment !== 0 || $dont_fragment !== 1) {
+            throw new Exception("Invalid value for IPv4 dont fragment: " . $dont_fragment);
+        }
         $this->dont_fragment = $dont_fragment;
         $this->recompileFlags();
     }
@@ -53,9 +57,9 @@ class IPv4DfMfOffset
     /**
      * This function allows you to know if the actual fragment is the last.
      *
-     * @return bool: True if there is more behind this one, false if it's the last.
+     * @return int : 1 if there is more behind this one, 0 if it's the last.
      */
-    public function getMorefragment(): bool
+    public function getMorefragment(): int
     {
         return $this->more_fragment;
     }
@@ -63,10 +67,14 @@ class IPv4DfMfOffset
     /**
      * This function allows you to set if the actual fragment is the last.
      *
-     * @param bool $more_fragment: True if there is more behind this one, false if it's the last.
+     * @param int $more_fragment : 1 if there is more behind this one, 0 if it's the last.
+     * @throws Exception : Throws an exception if the value isn't 1 or 0.
      */
-    public function setMorefragment(bool $more_fragment): void
+    public function setMorefragment(int $more_fragment): void
     {
+        if ($more_fragment !== 0 || $more_fragment !== 1) {
+            throw new Exception("Invalid value for IPv4 more fragment: " . $more_fragment);
+        }
         $this->more_fragment = $more_fragment;
         $this->recompileFlags();
     }
@@ -112,8 +120,7 @@ class IPv4DfMfOffset
     {
         //TODO: Maybe cache the converters.
         //Since offset is a decimal number, convert it to binary.
-        $decToBinConverter = new DecToBinConversion();
-        $offset_bin = $decToBinConverter->convert($this->getOffset());
+        $offset_bin = decbin($this->getOffset());
 
         //Merge the binary numbers altogether.
         $bin = self::RESERVED . $this->getDontfragment() . $this->getMorefragment() . $offset_bin;
@@ -122,7 +129,12 @@ class IPv4DfMfOffset
         $binToHexConverter = new BinToHexConversion();
         $this->flags = $binToHexConverter->convert($bin);
 
-        //Now recompile the checksum since values have changed.
-        $this->packet->recompileChecksum();
+        try {
+            //Recompile our checksum since the values have changed.
+            $this->packet->setCheckSum(recompileChecksum($this->packet->generate(), $this->packet->getInitChecksum()));
+        }
+        catch (Exception $e) {
+            //TODO: An error has occurred when trying to assign the checksum from the DfMfOffset.
+        }
     }
 }
