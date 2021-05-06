@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Libraries\Exercises\FrameAnalysis\Frames;
+namespace App\Libraries\Exercises\FrameAnalysis;
 
 use Exception;
 
@@ -22,7 +22,7 @@ class MACAddress
     /**
      * This function allows you to get the bytes from the MAC address.
      *
-     * @return array: An array of integers.
+     * @return array: An array of string.
      */
     public function getBytes(): array
     {
@@ -32,12 +32,12 @@ class MACAddress
     /**
      * This function allows you to set the bytes of a MAC address.
      *
-     * @throws Exception: Throws an exception if the length of the array isn't 6 and/or integers.
+     * @throws Exception: Throws an exception if the length of the array isn't 6 and/or strings of 2 chars.
      */
     public function setBytes(array $bytes): void
     {
         foreach ($bytes as $byte) {
-            if (!is_integer($byte) || $byte < 0 || $byte > 255) {
+            if (!is_string($byte) || strlen($byte) <= 0 || strlen($byte) > 2) {
                 throw new Exception("Invalid MAC address parameters: " . $bytes);
             }
         }
@@ -55,9 +55,7 @@ class MACAddress
      */
     public function toHexa() : string
     {
-        return convertAndFormatHexa($this->bytes[0], 2) . convertAndFormatHexa($this->bytes[1], 2) .
-            convertAndFormatHexa($this->bytes[2], 2) . convertAndFormatHexa($this->bytes[3], 2)
-            . convertAndFormatHexa($this->bytes[4], 2) . convertAndFormatHexa($this->bytes[5], 2);
+        return $this->bytes[0] . $this->bytes[1] . $this->bytes[2] . $this->bytes[3] . $this->bytes[4]. $this->bytes[5];
     }
 
     /**

@@ -3,10 +3,10 @@
 namespace App\Libraries\Exercises\FrameAnalysis\Packets;
 
 use App\Libraries\Exercises\Conversions\Impl\HexToDecConversion;
-use App\Libraries\Exercises\FrameAnalysis\FrameDecorator;
+use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
 use Exception;
 
-class ICMPPacket extends FrameDecorator
+class ICMPPacket extends FrameComponent
 {
     public static $ICMP_type_builder;
 
@@ -18,12 +18,15 @@ class ICMPPacket extends FrameDecorator
 
     private $init_checksum;
 
-    public function __construct($frame_component)
+    public function __construct()
     {
-        parent::__construct($frame_component);
-
         //Load the frame helper so that we can access useful functions.
         helper('frame');
+
+        $this->error_code = 0;
+        $this->checksum = 0;
+        $this->identifier = 0;
+        $this->sequence_num = 0;
 
         //This is in order to prevent methods from calling check_sum when other values aren't already allocated.
         $this->init_checksum = false;
@@ -53,7 +56,7 @@ class ICMPPacket extends FrameDecorator
             throw new Exception("Invalid ICMP type");
         }
         $this->ICMP_type = $ICMP_type;
-        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
+        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
     }
 
     /**
@@ -78,7 +81,7 @@ class ICMPPacket extends FrameDecorator
             throw new Exception("Invalid ICMP error code");
         }
         $this->error_code = $error_code;
-        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
+        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
     }
 
     /**
@@ -128,7 +131,7 @@ class ICMPPacket extends FrameDecorator
             throw new Exception("Invalid ICMP identifier: " . $identifier);
         }
         $this->identifier = $identifier;
-        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
+        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
     }
 
     /**
@@ -153,7 +156,7 @@ class ICMPPacket extends FrameDecorator
             throw new Exception("Invalid ICMP sequence num: " . $sequence_num);
         }
         $this->sequence_num = $sequence_num;
-        $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
+        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
     }
 
     public function setDefaultBehaviour(): void
@@ -167,20 +170,35 @@ class ICMPPacket extends FrameDecorator
             //Init the checksum for the first time, otherwise it will never be called.
             $this->init_checksum = true;
             //All values are set so we can now calculate the checksum.
-            $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
+            $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
         }
         catch (Exception $e) {
             //TODO: An error happened during default values of ICMP.
         }
     }
 
-    public function generate(): string
+    public function __toString(): string
     {
-        return parent::getFrame()->generate() . convertAndFormatHexa($this->getICMPType(), 2) .
+        $str = "ICMP type: " . convertAndFormatHexa($this->getICMPType(), 2);
+        $str .= "\nError code: " . convertAndFormatHexa($this->getErrorCode(), 2);
+        $str .= "\nChecksum: " . convertAndFormatHexa($this->getChecksum(), 4);
+        $str .= "\nIdentifier: " . convertAndFormatHexa($this->getIdentifier(), 4);
+        $str .= "\nSequence Num: " . convertAndFormatHexa($this->getSequenceNum(), 4) . "\n";
+        return $str;
+    }
+
+    private function getHeader(): string
+    {
+        return convertAndFormatHexa($this->getICMPType(), 2) .
             convertAndFormatHexa($this->getErrorCode(), 2) .
             convertAndFormatHexa($this->getChecksum(), 4) .
             convertAndFormatHexa($this->getIdentifier(), 4) .
             convertAndFormatHexa($this->getSequenceNum(), 4);
+    }
+
+    public function generate(): string
+    {
+        return $this->getHeader();
     }
 }
 

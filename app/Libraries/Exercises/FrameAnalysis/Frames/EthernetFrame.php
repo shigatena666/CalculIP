@@ -3,6 +3,7 @@
 namespace App\Libraries\Exercises\FrameAnalysis\Frames;
 
 use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
+use App\Libraries\Exercises\FrameAnalysis\MACAddress;
 use Exception;
 
 class EthernetFrame extends FrameComponent
@@ -120,8 +121,7 @@ class EthernetFrame extends FrameComponent
             $da_bytes = str_split($rand_da, 2);
 
             //Build our DA from the bytes and another part. Cast to int otherwise it will be a string.
-            $this->setDa(new MACAddress([ (int)$da_bytes[0], (int)$da_bytes[1], (int)$da_bytes[2], 67, 89, 10 ]));
-
+            $this->setDa(new MACAddress([ $da_bytes[0], $da_bytes[1], $da_bytes[2], "67", "89", "10" ]));
 
             //Randomly generate the 3 first bytes of the DA as a string.
             $rand_sa = self::$MAC_builder[generateRandomIndex(self::$MAC_builder)];
@@ -130,9 +130,9 @@ class EthernetFrame extends FrameComponent
             $sa_bytes = str_split($rand_sa, 2);
 
             //Build our SA from the bytes and another part. Cast to int otherwise it will be a string.
-            $this->setSa(new MACAddress([ (int)$sa_bytes[0], (int)$sa_bytes[1], (int)$sa_bytes[2], 01, 12, 45]));
+            $this->setSa(new MACAddress([ $sa_bytes[0], $sa_bytes[1], $sa_bytes[2], "01", "12", "45" ]));
 
-            $this->setEtype(self::$Etype_builder[generateRandomIndex(self::$Etype_builder)]);
+            $this->setEtype(array_rand(self::$Etype_builder));
         }
         catch (Exception $e) {
             //TODO: An exception occurred when setting the default behaviour of the ethernetFrame
@@ -151,6 +151,7 @@ class EthernetFrame extends FrameComponent
 
         //Check if the ethernet frame has some data set.
         if ($this->getData() !== null) {
+            //Append the frame the data frame to the current one.
             $frame_bytes .= $this->getData()->generate();
         }
         return $frame_bytes;
@@ -159,6 +160,7 @@ class EthernetFrame extends FrameComponent
 
 EthernetFrame::$MAC_builder = [ '00000C', '0000A2','0000AA', '00AA00', '08002B','080046' ];
 EthernetFrame::$Etype_builder = [
-    0x0800,
-    0x0806
+    2048 => 0x0800,
+    2054 => 0x0806,
+    34525 => 0x86dd
 ];

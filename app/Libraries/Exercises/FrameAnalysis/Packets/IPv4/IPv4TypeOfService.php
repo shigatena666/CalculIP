@@ -32,6 +32,8 @@ class IPv4TypeOfService
         $this->throughput = 0;
         $this->reliability = 0;
         $this->cost = 0;
+
+        $this->flags = "00000000";
     }
 
     /**
@@ -56,7 +58,7 @@ class IPv4TypeOfService
             throw new Exception("The priority should be ranged in [0-7].");
         }
         $this->priority = $priority;
-        $this->recompileTOS();
+        $this->recompileFlags();
     }
 
     /**
@@ -77,11 +79,11 @@ class IPv4TypeOfService
      */
     public function setDelay(int $delay): void
     {
-        if ($delay !== 0 || $delay !== 1) {
+        if ($delay != 0 && $delay != 1) {
             throw new Exception("Invalid value for IPv4 delay: " . $delay);
         }
         $this->delay = $delay;
-        $this->recompileTOS();
+        $this->recompileFlags();
     }
 
     /**
@@ -102,11 +104,11 @@ class IPv4TypeOfService
      */
     public function setThroughput(int $throughput): void
     {
-        if ($throughput !== 0 || $throughput !== 1) {
+        if ($throughput !== 0 && $throughput !== 1) {
             throw new Exception("Invalid value for IPv4 throughput: " . $throughput);
         }
         $this->throughput = $throughput;
-        $this->recompileTOS();
+        $this->recompileFlags();
     }
 
     /**
@@ -127,11 +129,11 @@ class IPv4TypeOfService
      */
     public function setReliability(int $reliability): void
     {
-        if ($reliability !== 0 || $reliability !== 1) {
+        if ($reliability !== 0 && $reliability !== 1) {
             throw new Exception("Invalid value for IPv4 reliability: " . $reliability);
         }
         $this->reliability = $reliability;
-        $this->recompileTOS();
+        $this->recompileFlags();
     }
 
     /**
@@ -152,11 +154,11 @@ class IPv4TypeOfService
      */
     public function setCost(int $cost): void
     {
-        if ($cost !== 0 || $cost !== 1) {
+        if ($cost !== 0 && $cost !== 1) {
             throw new Exception("Invalid value for IPv4 reliability: " . $cost);
         }
         $this->cost = $cost;
-        $this->recompileTOS();
+        $this->recompileFlags();
     }
 
     /**
@@ -169,13 +171,12 @@ class IPv4TypeOfService
         return $this->flags;
     }
 
-    private function recompileTOS(): void
+    private function recompileFlags(): void
     {
         //TODO: Maybe cache the converters.
 
         //Convert the priority to a binary string, it's an integer otherwise.
-        $decToBinConverter = new DecToBinConversion();
-        $priority_bin = decbin($this->getPriority());
+        $priority_bin = convertAndFormatBin(decbin($this->getPriority()), 3);
 
         //Add all the flags together.
         $bin = $priority_bin . $this->getDelay() . $this->getThroughput() . $this->getReliability() . $this->getCost() .
@@ -185,11 +186,11 @@ class IPv4TypeOfService
         $binToHexConverter = new BinToHexConversion();
 
         //Set the Type of Service to the hexadecimal representation of the binary flags.
-        $this->flags = $binToHexConverter->convert($bin);
+        $this->flags =  convertAndFormatHexa(decbin($bin), 2);
 
         try {
             //Recompile our checksum since the values have changed.
-            $this->packet->setCheckSum(recompileChecksum($this->packet->generate(), $this->packet->getInitChecksum()));
+            $this->packet->setCheckSum(recompileChecksum($this->packet->getHeader(), $this->packet->getInitChecksum()));
         }
         catch (Exception $e) {
             //TODO: An error has occurred when trying to assign the checksum from the TOS.

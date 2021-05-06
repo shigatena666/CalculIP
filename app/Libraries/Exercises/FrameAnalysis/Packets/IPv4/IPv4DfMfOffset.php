@@ -27,6 +27,8 @@ class IPv4DfMfOffset
         $this->dont_fragment = 0;
         $this->more_fragment = 0;
         $this->offset = 0;
+
+        $this->flags = "0000000000000000";
     }
 
     /**
@@ -47,7 +49,7 @@ class IPv4DfMfOffset
      */
     public function setDontfragment(int $dont_fragment): void
     {
-        if ($dont_fragment !== 0 || $dont_fragment !== 1) {
+        if ($dont_fragment !== 0 && $dont_fragment !== 1) {
             throw new Exception("Invalid value for IPv4 dont fragment: " . $dont_fragment);
         }
         $this->dont_fragment = $dont_fragment;
@@ -72,7 +74,7 @@ class IPv4DfMfOffset
      */
     public function setMorefragment(int $more_fragment): void
     {
-        if ($more_fragment !== 0 || $more_fragment !== 1) {
+        if ($more_fragment !== 0 && $more_fragment !== 1) {
             throw new Exception("Invalid value for IPv4 more fragment: " . $more_fragment);
         }
         $this->more_fragment = $more_fragment;
@@ -99,7 +101,7 @@ class IPv4DfMfOffset
      */
     public function setOffset(int $offset): void
     {
-        if ($offset < 0 || $offset > 8191) {
+        if ($offset < 0 && $offset > 8191) {
             throw new Exception("The offset should be in the range [0-8191]");
         }
         $this->offset = $offset;
@@ -120,18 +122,17 @@ class IPv4DfMfOffset
     {
         //TODO: Maybe cache the converters.
         //Since offset is a decimal number, convert it to binary.
-        $offset_bin = decbin($this->getOffset());
+        $offset_bin = convertAndFormatBin($this->getOffset(), 13);
 
         //Merge the binary numbers altogether.
         $bin = self::RESERVED . $this->getDontfragment() . $this->getMorefragment() . $offset_bin;
 
         //Convert our flags from binary to hexadecimal.
-        $binToHexConverter = new BinToHexConversion();
-        $this->flags = $binToHexConverter->convert($bin);
+        $this->flags = convertAndFormatHexa(bindec($bin), 4);
 
         try {
             //Recompile our checksum since the values have changed.
-            $this->packet->setCheckSum(recompileChecksum($this->packet->generate(), $this->packet->getInitChecksum()));
+            $this->packet->setCheckSum(recompileChecksum($this->packet->getHeader(), $this->packet->getInitChecksum()));
         }
         catch (Exception $e) {
             //TODO: An error has occurred when trying to assign the checksum from the DfMfOffset.

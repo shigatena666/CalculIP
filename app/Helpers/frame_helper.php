@@ -1,5 +1,7 @@
 <?php
 
+use App\Libraries\Exercises\IPclasses\IPAddress;
+
 const USHORT_MAXVALUE = 65535;
 
 function generateRandomIndex($array) : int
@@ -27,9 +29,19 @@ function generateBoolean() : bool
     return rand(0, 1) === 1;
 }
 
+function generateIpAddress() : IPAddress
+{
+    return new IPAddress([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
+}
+
 function convertAndFormatHexa(string $to_format, int $digits): string
 {
     return sprintf('%0' . $digits . 'x', $to_format);
+}
+
+function convertAndFormatBin(string $to_format, int $digits): string
+{
+    return sprintf('%0' . $digits . 'b', $to_format);
 }
 
 /**
