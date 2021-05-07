@@ -5,8 +5,11 @@ namespace App\Controllers\Exercises;
 
 use App\Controllers\BaseController;
 use App\Libraries\Exercises\FrameAnalysis\Frames\EthernetFrame;
+use App\Libraries\Exercises\FrameAnalysis\Messages\Datagram\UDP;
+use App\Libraries\Exercises\FrameAnalysis\Messages\DNS\DNSMessage;
 use App\Libraries\Exercises\FrameAnalysis\Packets\ARPPacket;
 use App\Libraries\Exercises\FrameAnalysis\Packets\ICMPPacket;
+use App\Libraries\Exercises\FrameAnalysis\Packets\IPv4\IPv4Options;
 use App\Libraries\Exercises\FrameAnalysis\Packets\IPv4\IPv4Packet;
 
 class FrameAnalysisController extends BaseController
@@ -29,13 +32,14 @@ class FrameAnalysisController extends BaseController
         // Chercher une implémentation ^. Stack pour empilement.
 
         $ethernet = new EthernetFrame();
-        //$icmp = new ICMPPacket();
-        //$ipv4 = new IPv4Packet();
-        $arp = new ARPPacket($ethernet);
-        $ethernet->setData($arp);
+        $ipv4 = new IPv4Packet();
+        $udp = new UDP();
+        $dns = new DNSMessage();
+        //$ethernet->setData($ipv4);
+        //$ipv4->setData($udp);
 
-        echo $ethernet->generate();
-
+        echo $dns;
+        //echo $ethernet->generate();
 
         //Fill the data with our IP address.
         $data = [

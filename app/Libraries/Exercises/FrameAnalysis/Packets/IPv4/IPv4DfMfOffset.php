@@ -118,6 +118,9 @@ class IPv4DfMfOffset
         return $this->flags;
     }
 
+    /**
+     * This function allows you to recompile the flags to an hexadecimal value.
+     */
     private function recompileFlags(): void
     {
         //TODO: Maybe cache the converters.
@@ -132,10 +135,10 @@ class IPv4DfMfOffset
 
         try {
             //Recompile our checksum since the values have changed.
-            $this->packet->setCheckSum(recompileChecksum($this->packet->getHeader(), $this->packet->getInitChecksum()));
+            $this->packet->setCheckSum(recompileChecksum($this->packet->generate(), $this->packet->getInitChecksum()));
         }
-        catch (Exception $e) {
-            //TODO: An error has occurred when trying to assign the checksum from the DfMfOffset.
+        catch (Exception $exception) {
+            die($exception->getMessage());
         }
     }
 }

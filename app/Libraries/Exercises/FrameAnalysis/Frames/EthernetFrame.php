@@ -82,7 +82,7 @@ class EthernetFrame extends FrameComponent
      */
     public function setEtype(int $etype): void
     {
-        if ($etype < 0 || $etype > 65535) {
+        if ($etype < 0 || $etype > USHORT_MAXVALUE) {
             throw new Exception("Invalid value for ethernet etype: " . $etype);
         }
         $this->etype = $etype;
@@ -91,9 +91,9 @@ class EthernetFrame extends FrameComponent
     /**
      * This function allows you to get the data of the ethernet frame.
      *
-     * @return FrameComponent: A frame component, it can be IPv4, ICMP...
+     * @return FrameComponent: A frame component, it can be IPv4, ICMP... or null if no data.
      */
-    public function getData(): FrameComponent
+    public function getData(): ?FrameComponent
     {
         return $this->data;
     }
@@ -101,9 +101,9 @@ class EthernetFrame extends FrameComponent
     /**
      * This function allows you to set the data of the ethernet frame.
      *
-     * @param FrameComponent $data: A frame component, it can be IPv4, ICMP...
+     * @param FrameComponent|null $data: A frame component, it can be IPv4, ICMP... or null if no data.
      */
-    public function setData(FrameComponent $data): void
+    public function setData(?FrameComponent $data): void
     {
         $this->data = $data;
     }
@@ -134,15 +134,15 @@ class EthernetFrame extends FrameComponent
 
             $this->setEtype(array_rand(self::$Etype_builder));
         }
-        catch (Exception $e) {
-            //TODO: An exception occurred when setting the default behaviour of the ethernetFrame
+        catch (Exception $exception) {
+            die($exception->getMessage());
         }
     }
 
     /**
      * This function allows you to get the generated frame.
      *
-     * @return string
+     * @return string : The frame as hexadecimal numbers.
      */
     public function generate() : string
     {
@@ -151,10 +151,27 @@ class EthernetFrame extends FrameComponent
 
         //Check if the ethernet frame has some data set.
         if ($this->getData() !== null) {
-            //Append the frame the data frame to the current one.
+            //Append the data frame to the current one.
             $frame_bytes .= $this->getData()->generate();
         }
         return $frame_bytes;
+    }
+
+
+    /**
+     * This function allows you to debug the ethernet data.
+     */
+    public function __toString(): string
+    {
+        $str = "DA: " . $this->getDa()->toHexa();
+        $str .= "\nSA: " . $this->getSa()->toHexa();
+        $str .= "\nEtype: " . convertAndFormatHexa($this->getEtype(), 4);
+
+        if ($this->getData() !== null) {
+            $str .= "\nData: " . $this->getData()->generate();
+        }
+
+        return $str;
     }
 }
 

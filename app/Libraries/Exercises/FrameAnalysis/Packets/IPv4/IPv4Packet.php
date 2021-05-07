@@ -88,7 +88,7 @@ class IPv4Packet extends FrameComponent
     private function setHeaderLength(int $header_length): void
     {
         if ($header_length < 0 || $header_length > 15) {
-            throw new Exception("The header length is supposed to be a 0 to 15 range.");
+            throw new Exception("Invalid header length in IPv4: " . $header_length);
         }
         $this->header_length = $header_length;
         $this->resetAndRecompileCheckSum();
@@ -124,8 +124,8 @@ class IPv4Packet extends FrameComponent
      */
     private function setTotalLength(int $total_length): void
     {
-        if ($total_length < 0 || $total_length > 65535) {
-            throw new Exception("Invalid total length for IPv4 packet");
+        if ($total_length < 0 || $total_length > USHORT_MAXVALUE) {
+            throw new Exception("Invalid total length for IPv4 packet: " . $total_length);
         }
         $this->total_length = $total_length;
         $this->resetAndRecompileCheckSum();
@@ -149,7 +149,7 @@ class IPv4Packet extends FrameComponent
      */
     public function setIdentification(int $identification): void
     {
-        if ($identification < 0 || $identification > 65535) {
+        if ($identification < 0 || $identification > USHORT_MAXVALUE) {
             throw new Exception("Invalid id in IPv4 packet: " . $identification);
         }
         $this->identification = $identification;
@@ -185,7 +185,7 @@ class IPv4Packet extends FrameComponent
     public function setTTL(int $TTL): void
     {
         if ($TTL < 0 || $TTL > 255) {
-            throw new Exception("Invalid value for TTL");
+            throw new Exception("Invalid value for IPv4 TTL: " . $TTL);
         }
         $this->TTL = $TTL;
         $this->resetAndRecompileCheckSum();
@@ -210,7 +210,7 @@ class IPv4Packet extends FrameComponent
     public function setProtocol(int $protocol): void
     {
         if ($protocol < 0 || $protocol > 255) {
-            throw new Exception("Invalid value for IPv4 protocol");
+            throw new Exception("Invalid value for IPv4 protocol: " . $protocol);
         }
         $this->protocol = $protocol;
         $this->resetAndRecompileCheckSum();
@@ -245,8 +245,8 @@ class IPv4Packet extends FrameComponent
      */
     public function setCheckSum(int $check_sum): void
     {
-        if ($check_sum < 0 || $check_sum > 65535) {
-            throw new Exception("The checksum is supposed to be a 0 to 65535 range.");
+        if ($check_sum < 0 || $check_sum > USHORT_MAXVALUE) {
+            throw new Exception("Invalid value for IPv4 checksum: " . $check_sum);
         }
         $this->check_sum = $check_sum;
     }
@@ -270,7 +270,7 @@ class IPv4Packet extends FrameComponent
     public function setEmitterIp(IPAddress $emitter_ip): void
     {
         if ($emitter_ip->check_class() === "None") {
-            throw new Exception("Invalid IP address for the emitter");
+            throw new Exception("Invalid IP address in IPv4 for the emitter: " . $emitter_ip);
         }
         $this->emitter_ip = $emitter_ip;
         $this->resetAndRecompileCheckSum();
@@ -295,7 +295,7 @@ class IPv4Packet extends FrameComponent
     public function setReceiverIp(IPAddress $receiver_ip): void
     {
         if ($receiver_ip->check_class() === "None") {
-            throw new Exception("Invalid IP address for the emitter");
+            throw new Exception("Invalid IP address in IPv4 for the receiver: " . $receiver_ip);
         }
         $this->receiver_ip = $receiver_ip;
         $this->resetAndRecompileCheckSum();
@@ -304,24 +304,29 @@ class IPv4Packet extends FrameComponent
     /**
      * This function allows you to get the options of the IPv4 packet.
      *
-     * @return IPv4Options: The IPv4 options as an object.
+     * @return array|null: The IPv4 options as an object.
      */
-    public function getOptions(): ?IPv4Options
-    {
-        return $this->options;
-    }
+    //Not used at the moment.
+    //public function getOptions(): ?array
+    //{
+    //    return $this->options;
+    //}
 
     /**
      * This function allows you to set the options of an IPv4 packet.
      *
-     * @param IPv4Options $options : The IPv4 options as an object.
+     * @param array|null $options : The IPv4 options as an array or null.
      * @throws Exception : Throws an exception if the checksum has failed.
+     * @throws Exception : Throws an exception if setting the total length has failed.
      */
-    public function setOptions(IPv4Options $options): void
-    {
-        $this->options = $options;
-        $this->resetAndRecompileCheckSum();
-    }
+    //Not used at the moment.
+    //public function setOptions(?array $options): void
+    //{
+    //    $this->options = $options;
+    //    $this->resetAndRecompileCheckSum();
+    //    $this->setTotalLength(strlen($this->getHeader()) +
+    //        ($this->getData() !== null ? strlen($this->getData()->generate()) : 0));
+    //}
 
     /**
      * This function allows you to get the data of the IPv4 packet.
@@ -345,13 +350,16 @@ class IPv4Packet extends FrameComponent
     /**
      * This function allows you to reset the checksum (because otherwise its value will be counted while calculating)
      * and recompiling it.
-     *
-     * @throws Exception : Throws an exception if the checksum has failed.
      */
     private function resetAndRecompileCheckSum(): void
     {
-        $this->setCheckSum(0);
-        $this->setCheckSum(recompileChecksum($this->getHeader(), $this->getInitChecksum()));
+        try {
+            $this->setCheckSum(0);
+            $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
+        }
+        catch (Exception $exception) {
+            die($exception->getMessage());
+        }
     }
 
     /**
@@ -362,7 +370,7 @@ class IPv4Packet extends FrameComponent
     public function recompileHeaderLength(): void
     {
         //Get the whole header.
-        $str = $this->getHeader();
+        $str = $this->generate();
 
         //An hexadecimal digit is 4 bits.
         $total_bits = strlen($str) * 4;
@@ -372,6 +380,9 @@ class IPv4Packet extends FrameComponent
         $this->setHeaderLength($total_bits / 32);
     }
 
+    /**
+     * This function allows you to set the default behaviour of the IPv4 Packet. Initializing the values randomly.
+     */
     public function setDefaultBehaviour(): void
     {
         try {
@@ -408,30 +419,22 @@ class IPv4Packet extends FrameComponent
             $this->init_checksum = true;
 
             //Recalculate the checksum.
-            $this->setCheckSum(recompileChecksum($this->getHeader(), $this->getInitChecksum()));
+            $this->setCheckSum(recompileChecksum($this->generate(), $this->getInitChecksum()));
 
-            //Total length if the header of IPv4 + the following data.
-            $this->setTotalLength(strlen($this->getHeader()) +
+            //Total length is the header of IPv4 + the following data.
+            $this->setTotalLength(strlen($this->generate()) +
                 ($this->getData() !== null ? strlen($this->getData()->generate()) : 0));
         }
-        catch (Exception $e) {
-            //TODO: Log exception
+        catch (Exception $exception) {
+            die($exception->getMessage());
         }
     }
 
-    public function getHeader() : string
-    {
-        return self::VERSION_IP .
-            convertAndFormatHexa($this->getHeaderLength(), 1) .
-            $this->getTypeOfService()->getFlags() . convertAndFormatHexa($this->getTotalLength() , 4) .
-            convertAndFormatHexa($this->getIdentification(), 4) .
-            $this->getDfMfOffset()->getFlags() .
-            convertAndFormatHexa($this->getTTL(), 2) . convertAndFormatHexa($this->getProtocol(), 2) .
-            convertAndFormatHexa($this->getCheckSum(), 4) .
-            $this->getEmitterIp()->toHexa() . $this->getReceiverIp()->toHexa() .
-            ($this->getOptions() !== null ? $this->getOptions()->getFlags() : "");
-    }
-
+    /**
+     * This function allows you to debug the IPv4 data.
+     *
+     * @return string : A string that contains every information of the IPv4 packet.
+     */
     public function __toString() : string
     {
         $str = "VerIP: " . self::VERSION_IP;
@@ -444,24 +447,38 @@ class IPv4Packet extends FrameComponent
         $str .= "\nProtocol: " . convertAndFormatHexa($this->getProtocol(), 2);
         $str .= "\nChecksum: " . convertAndFormatHexa($this->getCheckSum(), 4);
         $str .= "\nEmitter IP: " . $this->getEmitterIp()->toHexa();
-        $str .= "\nReceiver IP: " . $this->getReceiverIp()->toHexa() . "\n";
+        $str .= "\nReceiver IP: " . $this->getReceiverIp()->toHexa();
+        $str .= "\nTotal bytes: " . strlen($this->generate()) / 2; //Pair of 2 hex numbers
+
+        if ($this->getData() !== null) {
+            $str .= "\nData: " . $this->getData()->generate();
+        }
+
         return $str;
     }
 
     /**
-     * This function allows you to grab the IPv4 packet.
+     * This function allows you to get the generated frame.
      *
-     * @return string: An hexadecimal representation of the IPv4 packet.
+     * @return string : The frame as hexadecimal numbers.
      */
     public function generate(): string
     {
-        $frame_bytes = $this->getHeader();
+        $frame_bytes = self::VERSION_IP .
+            convertAndFormatHexa($this->getHeaderLength(), 1) .
+            $this->getTypeOfService()->getFlags() . convertAndFormatHexa($this->getTotalLength() , 4) .
+            convertAndFormatHexa($this->getIdentification(), 4) .
+            $this->getDfMfOffset()->getFlags() .
+            convertAndFormatHexa($this->getTTL(), 2) . convertAndFormatHexa($this->getProtocol(), 2) .
+            convertAndFormatHexa($this->getCheckSum(), 4) .
+            $this->getEmitterIp()->toHexa() . $this->getReceiverIp()->toHexa();
 
         //Check if the IPv4 packet has some data set.
         if ($this->getData() !== null) {
             //Append the data frame to the current one.
             $frame_bytes .= $this->getData()->generate();
         }
+
         return $frame_bytes;
     }
 }

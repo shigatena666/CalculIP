@@ -5,7 +5,6 @@ namespace App\Libraries\Exercises\FrameAnalysis\Messages\DNS;
 
 
 use App\Libraries\Exercises\Conversions\Impl\BinToHexConversion;
-use App\Libraries\Exercises\Conversions\Impl\DecToBinConversion;
 use Exception;
 
 class DNSFlags
@@ -39,9 +38,9 @@ class DNSFlags
     /**
      * This function allows you to know if it's a query or a response.
      *
-     * @return bool: False if it's a query. True if it's a response.
+     * @return int: 0 if it's a query. 1 if it's a response.
      */
-    public function getQueryResponse(): bool
+    public function getQueryResponse(): int
     {
         return $this->query_response;
     }
@@ -50,10 +49,14 @@ class DNSFlags
      * This function allows you to specify if the datagram is a query or a response.
      * The flag will be automatically changed according to the value of this field.
      *
-     * @param bool $query_response: False if it's a query. True if it's a response.
+     * @param int $query_response : 0 if it's a query. 1 if it's a response.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setQueryResponse(bool $query_response): void
+    public function setQueryResponse(int $query_response): void
     {
+        if ($query_response !== 0 && $query_response !== 1) {
+            throw new Exception("Invalid value for DNS query response: " . $query_response);
+        }
         $this->query_response = $query_response;
         $this->recompileFlag();
     }
@@ -61,9 +64,9 @@ class DNSFlags
     /**
      * This function allows you to know the query type.
      *
-     * @return string: A binary string of 4 bits.
+     * @return int: The OP code as integer.
      */
-    public function getOpCode(): string
+    public function getOpCode(): int
     {
         return $this->op_code;
     }
@@ -80,19 +83,16 @@ class DNSFlags
         if ($op_code < 0 || $op_code > 15) {
             throw new Exception("OpCode must be in the range of 0-15.");
         }
-
-        //The op_code is encoded on 4 bits. Thus the max value will be 16.
-        $converter = new DecToBinConversion();
-        $this->op_code = $converter->convert($op_code);
+        $this->op_code = $op_code;
         $this->recompileFlag();
     }
 
     /**
      * This function allows you to know if the datagram is an authoritative answer.
      *
-     * @return bool: True if it is an authoritative answer. False if not.
+     * @return int: 1 if it is an authoritative answer. 0 if not.
      */
-    public function getAuthoritativeAnswer(): bool
+    public function getAuthoritativeAnswer(): int
     {
         return $this->authoritative_answer;
     }
@@ -101,10 +101,14 @@ class DNSFlags
      * This function allows you to specify if the datagram is an authoritative answer.
      * The flag will be automatically changed according to the value of this field.
      *
-     * @param bool $authoritative_answer: True if it's an authoritative answer, false if not.
+     * @param int $authoritative_answer : 1 if it's an authoritative answer, 0 if not.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setAuthoritativeAnswer(bool $authoritative_answer): void
+    public function setAuthoritativeAnswer(int $authoritative_answer): void
     {
+        if ($authoritative_answer !== 0 && $authoritative_answer !== 1) {
+            throw new Exception("Invalid value for DNS authoritative answer: " . $authoritative_answer);
+        }
         $this->authoritative_answer = $authoritative_answer;
         $this->recompileFlag();
     }
@@ -112,9 +116,9 @@ class DNSFlags
     /**
      * This function allows you to know if the message has been truncated.
      *
-     * @return bool: True if it's truncated, false if it's not.
+     * @return int: 1 if it's truncated, 0 if it's not.
      */
-    public function getTruncated(): bool
+    public function getTruncated(): int
     {
         return $this->truncated;
     }
@@ -123,10 +127,14 @@ class DNSFlags
      * This function allows you to specify whether the message is truncated or not.
      * The flag will be automatically changed according to the value of this field.
      *
-     * @param bool $truncated: True if the message is truncated, false if it's not.
+     * @param int $truncated: 1 if the message is truncated, 0 if it's not.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setTruncated(bool $truncated): void
+    public function setTruncated(int $truncated): void
     {
+        if ($truncated !== 0 && $truncated !== 1) {
+            throw new Exception("Invalid value for DNS truncated: " . $truncated);
+        }
         $this->truncated = $truncated;
         $this->recompileFlag();
     }
@@ -134,9 +142,9 @@ class DNSFlags
     /**
      * This function allows you to know if the recursion is desired in the message.
      *
-     * @return bool: True if it's desired, 0 if it's not.
+     * @return int: 1 if it's desired, 0 if it's not.
      */
-    public function getRecursionDesired(): bool
+    public function getRecursionDesired(): int
     {
         return $this->recursion_desired;
     }
@@ -145,10 +153,14 @@ class DNSFlags
      * This function allows you to specify whether the recursion is desired or not.
      * The flag will be automatically changed according to the value of this field.
      *
-     * @param bool $recursion_desired
+     * @param int $recursion_desired : 1 if the recursion is desired, 0 if it's not.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setRecursionDesired(bool $recursion_desired): void
+    public function setRecursionDesired(int $recursion_desired): void
     {
+        if ($recursion_desired !== 0 && $recursion_desired !== 1) {
+            throw new Exception("Invalid value for DNS recursion desired: " . $recursion_desired);
+        }
         $this->recursion_desired = $recursion_desired;
         $this->recompileFlag();
     }
@@ -156,9 +168,9 @@ class DNSFlags
     /**
      * This function allows you to know if the recursion is available or not.
      *
-     * @return bool: True if it's available, 0 if it's not.
+     * @return int: 1 if it's available, 0 if it's not.
      */
-    public function getRecursionAvailable(): bool
+    public function getRecursionAvailable(): int
     {
         return $this->recursion_available;
     }
@@ -167,10 +179,14 @@ class DNSFlags
      * This function allows you to set if the recursion is available in the message.
      * The flag will be automatically changed according to the value of this field.
      *
-     * @param bool $recursion_available: True if it's available, false if not.
+     * @param int $recursion_available : 1 if it's available, 0 if not.
+     * @throws Exception : Throws an exception if the value isn't 0 or 1.
      */
-    public function setRecursionAvailable(bool $recursion_available): void
+    public function setRecursionAvailable(int $recursion_available): void
     {
+        if ($recursion_available !== 0 && $recursion_available !== 1) {
+            throw new Exception("Invalid value for DNS recursion available: " . $recursion_available);
+        }
         $this->recursion_available = $recursion_available;
         $this->recompileFlag();
     }
@@ -178,9 +194,9 @@ class DNSFlags
     /**
      * This function allows you to know the type of the response.
      *
-     * @return string: A 4 bit binary string.
+     * @return int : The response code as integer.
      */
-    public function getResponseCode(): string
+    public function getResponseCode(): int
     {
         return $this->response_code;
     }
@@ -197,10 +213,7 @@ class DNSFlags
         if ($response_code < 0 || $response_code > 15) {
             throw new Exception("RCode must be in the range of 0-15.");
         }
-
-        //The response type is encoded on 4 bits. Thus the max value will be 16.
-        $converter = new DecToBinConversion();
-        $this->response_code = $converter->convert($response_code);
+        $this->response_code = $response_code;
         $this->recompileFlag();
     }
 
@@ -219,16 +232,13 @@ class DNSFlags
      */
     private function recompileFlag(): void
     {
-        //TODO: Maybe cache the converters.
         //Init our binary string to work with. Convert the booleans to string to get the 0s and 1s.
-        $binary = (int)$this->getQueryResponse() . $this->getOpCode() . (int)$this->getAuthoritativeAnswer() .
-            (int)$this->getTruncated() . (int)$this->getRecursionDesired() . (int)$this->getRecursionAvailable() .
-            self::ZERO . $this->getResponseCode();
+        $binary = $this->getQueryResponse() . decbin($this->getOpCode()) . $this->getAuthoritativeAnswer() .
+            $this->getTruncated() . $this->getRecursionDesired() . $this->getRecursionAvailable() .
+            self::ZERO . decbin($this->getResponseCode());
 
-        //Initialize our converter from binary to hexadecimal. The highest value will be 65355.
-        $converter = new BinToHexConversion();
 
         //Convert the binary string to hexadecimal and set our flag according to this.
-        $this->flags = $converter->convert($binary);
+        $this->flags = convertAndFormatHexa(bindec($binary), 4);
     }
 }

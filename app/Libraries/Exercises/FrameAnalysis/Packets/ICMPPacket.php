@@ -16,6 +16,8 @@ class ICMPPacket extends FrameComponent
     private $identifier;
     private $sequence_num;
 
+    private $data;
+
     private $init_checksum;
 
     public function __construct()
@@ -56,7 +58,7 @@ class ICMPPacket extends FrameComponent
             throw new Exception("Invalid ICMP type");
         }
         $this->ICMP_type = $ICMP_type;
-        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
+        $this->rebuildChecksum();
     }
 
     /**
@@ -81,7 +83,7 @@ class ICMPPacket extends FrameComponent
             throw new Exception("Invalid ICMP error code");
         }
         $this->error_code = $error_code;
-        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
+        $this->rebuildChecksum();
     }
 
     /**
@@ -103,10 +105,22 @@ class ICMPPacket extends FrameComponent
      */
     public function setChecksum(int $checksum): void
     {
-        if ($checksum < 0 || $checksum > 65535) {
+        if ($checksum < 0 || $checksum > USHORT_MAXVALUE) {
             throw new Exception("Invalid ICMP checksum: " . $checksum);
         }
         $this->checksum = $checksum;
+    }
+
+    /**
+     * This function allows you to rebuild the checksum and to listen for potentiel exceptions.
+     */
+    private function rebuildChecksum() {
+        try {
+            $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
+        }
+        catch (Exception $exception) {
+            die($exception->getMessage());
+        }
     }
 
     /**
@@ -127,11 +141,11 @@ class ICMPPacket extends FrameComponent
      */
     public function setIdentifier(int $identifier): void
     {
-        if ($identifier < 0 || $identifier > 65535) {
+        if ($identifier < 0 || $identifier > USHORT_MAXVALUE) {
             throw new Exception("Invalid ICMP identifier: " . $identifier);
         }
         $this->identifier = $identifier;
-        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
+        $this->rebuildChecksum();
     }
 
     /**
@@ -152,11 +166,31 @@ class ICMPPacket extends FrameComponent
      */
     public function setSequenceNum(int $sequence_num): void
     {
-        if ($sequence_num < 0 || $sequence_num > 65535) {
+        if ($sequence_num < 0 || $sequence_num > USHORT_MAXVALUE) {
             throw new Exception("Invalid ICMP sequence num: " . $sequence_num);
         }
         $this->sequence_num = $sequence_num;
-        $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
+        $this->rebuildChecksum();
+    }
+
+    /**
+     * This function allows you to get the data of the ICMP packet.
+     *
+     * @return FrameComponent|null : The data as a FrameComponent or null if no data.
+     */
+    public function getData(): ?FrameComponent
+    {
+        return $this->data;
+    }
+
+    /**
+     * This function allows you to set the data of the ICMP packet.
+     *
+     * @param FrameComponent|null $data : The data as a FrameComponent or null if no data.
+     */
+    public function setData(?FrameComponent $data): void
+    {
+        $this->data = $data;
     }
 
     public function setDefaultBehaviour(): void
@@ -172,11 +206,16 @@ class ICMPPacket extends FrameComponent
             //All values are set so we can now calculate the checksum.
             $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
         }
-        catch (Exception $e) {
-            //TODO: An error happened during default values of ICMP.
+        catch (Exception $exception) {
+            die($exception->getMessage());
         }
     }
 
+    /**
+     * This function allows you to debug the ICMP packet.
+     *
+     * @return string : A string containing every information about the packet.
+     */
     public function __toString(): string
     {
         $str = "ICMP type: " . convertAndFormatHexa($this->getICMPType(), 2);
@@ -184,6 +223,11 @@ class ICMPPacket extends FrameComponent
         $str .= "\nChecksum: " . convertAndFormatHexa($this->getChecksum(), 4);
         $str .= "\nIdentifier: " . convertAndFormatHexa($this->getIdentifier(), 4);
         $str .= "\nSequence Num: " . convertAndFormatHexa($this->getSequenceNum(), 4) . "\n";
+
+        if ($this->getData() !== null) {
+            $str .= "\nData: " . $this->getData()->generate();
+        }
+
         return $str;
     }
 
