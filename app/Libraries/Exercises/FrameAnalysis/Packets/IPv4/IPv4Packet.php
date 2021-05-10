@@ -387,6 +387,7 @@ class IPv4Packet extends FrameComponent
     {
         try {
             //Initialize the header length to 0 since it's on 1 hex digits. Will be calculated later.
+            //There is thus no need to update it when changing basic TCP fields.
             $this->setHeaderLength(0);
             //As well, initialize the checksum to 0, will be calculated after the header length.
             $this->setCheckSum(0);

@@ -116,7 +116,7 @@ class ICMPPacket extends FrameComponent
      */
     private function rebuildChecksum() {
         try {
-            $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
+            $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
         }
         catch (Exception $exception) {
             die($exception->getMessage());
@@ -193,6 +193,9 @@ class ICMPPacket extends FrameComponent
         $this->data = $data;
     }
 
+    /**
+     * This function allows you to set the default behaviour of the IPv4 Packet. Initializing the values randomly.
+     */
     public function setDefaultBehaviour(): void
     {
         try {
@@ -204,7 +207,7 @@ class ICMPPacket extends FrameComponent
             //Init the checksum for the first time, otherwise it will never be called.
             $this->init_checksum = true;
             //All values are set so we can now calculate the checksum.
-            $this->setChecksum(recompileChecksum($this->getHeader(), $this->init_checksum));
+            $this->setChecksum(recompileChecksum($this->generate(), $this->init_checksum));
         }
         catch (Exception $exception) {
             die($exception->getMessage());
@@ -231,18 +234,18 @@ class ICMPPacket extends FrameComponent
         return $str;
     }
 
-    private function getHeader(): string
+    /**
+     * This function allows you to get the generated frame.
+     *
+     * @return string : The frame as hexadecimal numbers.
+     */
+    public function generate(): string
     {
         return convertAndFormatHexa($this->getICMPType(), 2) .
             convertAndFormatHexa($this->getErrorCode(), 2) .
             convertAndFormatHexa($this->getChecksum(), 4) .
             convertAndFormatHexa($this->getIdentifier(), 4) .
             convertAndFormatHexa($this->getSequenceNum(), 4);
-    }
-
-    public function generate(): string
-    {
-        return $this->getHeader();
     }
 }
 

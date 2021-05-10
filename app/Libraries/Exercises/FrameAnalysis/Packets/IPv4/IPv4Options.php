@@ -177,7 +177,6 @@ class IPv4Options
         $this->recompileFlags();
     }
 
-
     /**
      * This function allows you to get the the IPv4 options as hexadecimal.
      *

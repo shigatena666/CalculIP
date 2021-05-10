@@ -28,7 +28,7 @@ class IPv4DfMfOffset
         $this->more_fragment = 0;
         $this->offset = 0;
 
-        $this->flags = "0000000000000000";
+        $this->flags = self::RESERVED . $this->getDontfragment() . $this->getMorefragment() . "0000000000000";
     }
 
     /**

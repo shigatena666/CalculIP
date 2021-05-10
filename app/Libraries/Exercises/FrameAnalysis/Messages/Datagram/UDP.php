@@ -192,8 +192,8 @@ class UDP extends FrameComponent
 
             $this->setTotalLength($length);
 
-            //As long as it's IPv4 we can simplify it by adding this.
-            $this->setChecksum(0);
+            //For IPv4 and IPv6, randomly generate the checksum otherwise it will be too hard.
+            $this->setChecksum(generateRandomUShort());
         }
         catch (Exception $exception) {
             die($exception->getMessage());

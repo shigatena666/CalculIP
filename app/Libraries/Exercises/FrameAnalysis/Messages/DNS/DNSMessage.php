@@ -161,6 +161,9 @@ class DNSMessage extends FrameComponent
             convertAndFormatHexa($this->getAdditionalCount(), 4);
     }
 
+    /**
+     * This function allows you to debug the DNS data.
+     */
     public function __toString(): string
     {
         $str = "ID: " . convertAndFormatHexa($this->getID(), 4);
