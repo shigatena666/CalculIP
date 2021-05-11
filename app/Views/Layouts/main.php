@@ -13,7 +13,7 @@
     <!-- <script src="/CalculIP/js/npm.js"></script>-->
     <link href="../../../CalculIP/CSS/bootstrap.css" rel="stylesheet">
     <link href="../../../CalculIP/CSS/style_principal.css" rel="stylesheet">
-    <link rel="icon" type="/CalculIP/image/ico" href="../../../CalculIP/Pictures/favicon.ico"/>
+    <link rel="icon" type="/CalculIP/image/ico" href="/CalculIP/Pictures/favicon.ico"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="TCP/IP, Exercices, corrigés">
     <meta name="description"

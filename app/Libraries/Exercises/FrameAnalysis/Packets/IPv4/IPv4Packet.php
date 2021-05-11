@@ -2,12 +2,8 @@
 
 namespace App\Libraries\Exercises\FrameAnalysis\Packets\IPv4;
 
-use App\Libraries\Exercises\Conversions\Impl\BinToHexConversion;
-use App\Libraries\Exercises\Conversions\Impl\DecToHexConversion;
-use App\Libraries\Exercises\Conversions\Impl\HexToDecConversion;
 use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
-use App\Libraries\Exercises\FrameAnalysis\FrameDecorator;
-use App\Libraries\Exercises\IPclasses\IPAddress;
+use App\Libraries\Exercises\IPclasses\IPv4Address;
 use Exception;
 
 class IPv4Packet extends FrameComponent
@@ -58,8 +54,8 @@ class IPv4Packet extends FrameComponent
         $this->df_mf_offset = new IPv4DfMfOffset($this);
         $this->TTL = 0;
         $this->protocol = 0;
-        $this->emitter_ip = new IPAddress([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
-        $this->receiver_ip = new IPAddress([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
+        $this->emitter_ip = new IPv4Address([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
+        $this->receiver_ip = new IPv4Address([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
 
         //This is in order to prevent methods from calling check_sum when other values aren't already allocated.
         $this->init_checksum = false;
@@ -254,9 +250,9 @@ class IPv4Packet extends FrameComponent
     /**
      * This function allows you to get the emitter's IP address.
      *
-     * @return IPAddress : Representation of the IP address as an object.
+     * @return IPv4Address : Representation of the IP address as an object.
      */
-    public function getEmitterIp(): IPAddress
+    public function getEmitterIp(): IPv4Address
     {
         return $this->emitter_ip;
     }
@@ -264,10 +260,10 @@ class IPv4Packet extends FrameComponent
     /**
      * This function allows you to set the emitter's IP address.
      *
-     * @param IPAddress $emitter_ip : The IP address you want to set.
+     * @param IPv4Address $emitter_ip : The IP address you want to set.
      * @throws Exception: Throws an exception if the IP address bytes are not in the right range.
      */
-    public function setEmitterIp(IPAddress $emitter_ip): void
+    public function setEmitterIp(IPv4Address $emitter_ip): void
     {
         if ($emitter_ip->check_class() === "None") {
             throw new Exception("Invalid IP address in IPv4 for the emitter: " . $emitter_ip);
@@ -279,9 +275,9 @@ class IPv4Packet extends FrameComponent
     /**
      * This function allows you to get the receiver's IP address.
      *
-     * @return IPAddress : Representation of the IP address as an object.
+     * @return IPv4Address : Representation of the IP address as an object.
      */
-    public function getReceiverIp(): IPAddress
+    public function getReceiverIp(): IPv4Address
     {
         return $this->receiver_ip;
     }
@@ -289,10 +285,10 @@ class IPv4Packet extends FrameComponent
     /**
      * This function allows you to set the receiver's IP address.
      *
-     * @param IPAddress $receiver_ip : The IP address you want to set.
+     * @param IPv4Address $receiver_ip : The IP address you want to set.
      * @throws Exception: Throws an exception if the IP address bytes are not in the right range.
      */
-    public function setReceiverIp(IPAddress $receiver_ip): void
+    public function setReceiverIp(IPv4Address $receiver_ip): void
     {
         if ($receiver_ip->check_class() === "None") {
             throw new Exception("Invalid IP address in IPv4 for the receiver: " . $receiver_ip);
@@ -343,7 +339,8 @@ class IPv4Packet extends FrameComponent
      *
      * @param FrameComponent $data : A frame component which is an object of data.
      */
-    public function setData(FrameComponent $data) {
+    public function setData(FrameComponent $data): void
+    {
         $this->data = $data;
     }
 
@@ -410,8 +407,8 @@ class IPv4Packet extends FrameComponent
 
             $this->setTTL(generateRandomTTL());
             $this->setProtocol(array_rand(self::$Protocol_codes_builder));
-            $this->setEmitterIp(generateIpAddress());
-            $this->setReceiverIp(generateIpAddress());
+            $this->setEmitterIp(generateIPv4Address());
+            $this->setReceiverIp(generateIPv4Address());
 
             //Recalculate the header length based on the setters. Should basically be 5 as long as there are no options.
             $this->recompileHeaderLength();

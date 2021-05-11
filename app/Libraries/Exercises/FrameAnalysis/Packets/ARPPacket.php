@@ -5,7 +5,7 @@ namespace App\Libraries\Exercises\FrameAnalysis\Packets;
 use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
 use App\Libraries\Exercises\FrameAnalysis\Frames\EthernetFrame;
 use App\Libraries\Exercises\FrameAnalysis\MACAddress;
-use App\Libraries\Exercises\IPclasses\IPAddress;
+use App\Libraries\Exercises\IPclasses\IPv4Address;
 use Exception;
 
 class ARPPacket extends FrameComponent
@@ -23,6 +23,8 @@ class ARPPacket extends FrameComponent
     private $target_protocol_address;
 
     private $ethernetFrame;
+
+    private $data;
 
     public function __construct(EthernetFrame $ethernetFrame)
     {
@@ -188,9 +190,9 @@ class ARPPacket extends FrameComponent
     /**
      * This function allows you to get the sender protocol address of ARP.
      *
-     * @return IPAddress : The IP address as an object.
+     * @return IPv4Address : The IP address as an object.
      */
-    public function getSenderProtocolAddress(): IPAddress
+    public function getSenderProtocolAddress(): IPv4Address
     {
         return $this->sender_protocol_address;
     }
@@ -198,9 +200,9 @@ class ARPPacket extends FrameComponent
     /**
      * This function allows you to set the sender protocol address of ARP.
      *
-     * @param IPAddress $sender_protocol_address : The IP address as an object.
+     * @param IPv4Address $sender_protocol_address : The IP address as an object.
      */
-    public function setSenderProtocolAddress(IPAddress $sender_protocol_address): void
+    public function setSenderProtocolAddress(IPv4Address $sender_protocol_address): void
     {
         $this->sender_protocol_address = $sender_protocol_address;
     }
@@ -228,9 +230,9 @@ class ARPPacket extends FrameComponent
     /**
      * This function allows you to get the target protocol address of ARP.
      *
-     * @return IPAddress : The IP address as an object.
+     * @return IPv4Address : The IP address as an object.
      */
-    public function getTargetProtocolAddress(): IPAddress
+    public function getTargetProtocolAddress(): IPv4Address
     {
         return $this->target_protocol_address;
     }
@@ -238,11 +240,31 @@ class ARPPacket extends FrameComponent
     /**
      * This function allows you to set the target protocol of ARP.
      *
-     * @param IPAddress $target_protocol_address : The IP address as an object.
+     * @param IPv4Address $target_protocol_address : The IP address as an object.
      */
-    public function setTargetProtocolAddress(IPAddress $target_protocol_address): void
+    public function setTargetProtocolAddress(IPv4Address $target_protocol_address): void
     {
         $this->target_protocol_address = $target_protocol_address;
+    }
+
+    /**
+     * This function allows you to get the data of the ARP packet.
+     *
+     * @return FrameComponent : A frame component which is an object of data.
+     */
+    public function getData(): ?FrameComponent
+    {
+        return $this->data;
+    }
+
+    /**
+     * This function allows you to set the data of the ARP packet.
+     *
+     * @param FrameComponent $data : A frame component which is an object of data.
+     */
+    public function setData(FrameComponent $data): void
+    {
+        $this->data = $data;
     }
 
     /**
@@ -293,7 +315,7 @@ class ARPPacket extends FrameComponent
             //TODO: Create an object for default MACAddresses and IPAddresses.
 
             $this->setSenderHardwareAddress($this->getEthernetFrame()->getSa());
-            $this->setSenderProtocolAddress(generateIpAddress());
+            $this->setSenderProtocolAddress(generateIPv4Address());
 
             $mac_target = $this->getOpCode() === 1 ? new MACAddress(["00", "00", "00", "00", "00", "00"]) :
                 $this->getEthernetFrame()->getDa();
@@ -303,7 +325,7 @@ class ARPPacket extends FrameComponent
             }
 
             $this->setTargetHardwareAddress($mac_target);
-            $this->setTargetProtocolAddress(generateIpAddress());
+            $this->setTargetProtocolAddress(generateIPv4Address());
         }
         catch (Exception $exception) {
             die($exception->getMessage());

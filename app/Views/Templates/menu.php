@@ -31,7 +31,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">Exercices<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/CalculIP/Exercices/AnalyseTrame">Analyse de trame</a></li>
+                            <li><a href="/CalculIP/Exercices/AnalyseTrame">Analyse de trame (département info)</a></li>
+                            <li><a href="/CalculIP/Exercices/AnalyseTrame">Analyse de trame (département R&T)</a></li>
                             <li><a href="/CalculIP/Exercices/Conversion">Conversions <i><sub><small>Binaire,
                                                 Hexadécimal
                                                 et Décimal</small></sub></i></a></li>

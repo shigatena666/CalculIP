@@ -33,8 +33,8 @@ class TCPFlags
         $this->reset = 0;
         $this->syn = 0;
         $this->fin = 0;
-        $this->flags = self::ZEROS . $this->getEcn() . $this->getCwr() . $this->getEce() . $this->getUrgent() .
-            $this->getAcknowledge() . $this->getPush() . $this->getReset() . $this->getSyn() . $this->getFin();
+
+        $this->flags = "000";
     }
 
     /**

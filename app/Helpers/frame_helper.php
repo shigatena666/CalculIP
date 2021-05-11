@@ -1,6 +1,7 @@
 <?php
 
-use App\Libraries\Exercises\IPclasses\IPAddress;
+use App\Libraries\Exercises\FrameAnalysis\IPv6Address;
+use App\Libraries\Exercises\IPclasses\IPv4Address;
 
 const USHORT_MAXVALUE = 65535;
 
@@ -29,9 +30,16 @@ function generateBoolean() : bool
     return rand(0, 1) === 1;
 }
 
-function generateIpAddress() : IPAddress
+function generateIPv4Address() : IPv4Address
 {
-    return new IPAddress([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
+    return new IPv4Address([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
+}
+
+function generateIPv6Address() : IPv6Address
+{
+    return new IPv6Address([ generateRandomUShort(), generateRandomUShort(), generateRandomUShort(),
+        generateRandomUShort(), generateRandomUShort(), generateRandomUShort(), generateRandomUShort(),
+        generateRandomUShort(),]);
 }
 
 function convertAndFormatHexa(string $to_format, int $digits): string

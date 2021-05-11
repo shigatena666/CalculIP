@@ -33,7 +33,7 @@ class IPv4TypeOfService
         $this->reliability = 0;
         $this->cost = 0;
 
-        $this->flags = "00000000";
+        $this->flags = "00";
     }
 
     /**

@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Libraries\Exercises\FrameAnalysis\Packets\IPv6;
+
+
+use Exception;
 
 class IPv6Traffic
 {
@@ -7,6 +11,14 @@ class IPv6Traffic
     private $ecn;
 
     private $traffic;
+
+    public function __construct()
+    {
+        $this->differenciated_services = 0;
+        $this->ecn = 0;
+
+        $this->traffic = "00";
+    }
 
     /**
      * This function allows you to get the complete flag of the segment.
@@ -29,6 +41,7 @@ class IPv6Traffic
             throw new Exception("Invalid value for IPv6 traffic differenciated services: " . $differenciated_services);
         }
         $this->differenciated_services = $differenciated_services;
+        $this->recompileFlags();
     }
 
     public function setEcn(int $ecn): void
@@ -37,6 +50,7 @@ class IPv6Traffic
             throw new Exception("Invalid value for IPv6 traffic ecn: " . $ecn);
         }
         $this->ecn = $ecn;
+        $this->recompileFlags();
     }
 
     public function getEcn(): int

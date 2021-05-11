@@ -12,15 +12,94 @@ use App\Libraries\Exercises\FrameAnalysis\Packets\ARPPacket;
 use App\Libraries\Exercises\FrameAnalysis\Packets\ICMPPacket;
 use App\Libraries\Exercises\FrameAnalysis\Packets\IPv4\IPv4Options;
 use App\Libraries\Exercises\FrameAnalysis\Packets\IPv4\IPv4Packet;
+use App\Libraries\Exercises\FrameAnalysis\Packets\IPv6\IPv6Packet;
 
 class FrameAnalysisController extends BaseController
 {
+    public const IPV4_CODE = 0x0800;
+    public const IPV6_CODE = 0x86DD;
+    public const ARP_CODE = 0x0806;
+
     public function __construct()
     {
-        //TODO: Make a class for the generation ?
         //Let's generate a new frame.
+
+        //echo $this->ethernet;
+    }
+
+    private function generate(): EthernetFrame
+    {
         $ethernet = new EthernetFrame();
-        switch ($ethernet->getEtype()) {}
+
+        switch ($ethernet->getEtype()) {
+            case self::IPV4_CODE:
+
+                $ipv4 = new IPv4Packet();
+                $nextIPv4Frame = null;
+
+                switch ($ipv4->getProtocol()) {
+                    case 1:
+                        $nextIPv4Frame = new ICMPPacket();
+                        break;
+
+                    case 6:
+                        $nextIPv4Frame = new TCP();
+                        break;
+
+                    case 17:
+                        $nextIPv4Frame = new UDP();
+                        break;
+                }
+                $ipv4->setData($nextIPv4Frame);
+
+                //If our frame is either UDP or TCP and one of the port is DNS then append DNS to the list.
+                if ($nextIPv4Frame instanceof UDP || $nextIPv4Frame instanceof TCP &&
+                    ($nextIPv4Frame->getSourcePort() === 0x0035 || $nextIPv4Frame->getDestinationPort() === 0x0035)) {
+                    $dns = new DNSMessage();
+                    $nextIPv4Frame->setData($dns);
+                }
+
+                $ethernet->setData($ipv4);
+                break;
+
+            case self::ARP_CODE:
+                $arp = new ARPPacket($ethernet);
+                $ethernet->setData($arp);
+                break;
+
+            case self::IPV6_CODE:
+
+                $ipv6 = new IPv6Packet();
+                $nextIPv6Frame = null;
+
+                switch ($ipv6->getNextHeader()) {
+                    case 1:
+                        $nextIPv6Frame = new ICMPPacket();
+                        break;
+
+                    case 6:
+                        $nextIPv6Frame = new TCP();
+                        break;
+
+                    case 17:
+                        $nextIPv6Frame = new UDP();
+                        break;
+                }
+                $ipv6->setData($nextIPv6Frame);
+
+                //If our frame is either UDP or TCP and one of the port is DNS then append DNS to the list.
+                if ($nextIPv6Frame instanceof UDP || $nextIPv6Frame instanceof TCP &&
+                    ($nextIPv6Frame->getSourcePort() === 0x0035 || $nextIPv6Frame->getDestinationPort() === 0x0035)) {
+                    //TODO: Don't forget DNS here.
+                    $dns = new DNSMessage();
+                    $nextIPv6Frame->setData($dns);
+                }
+
+                $ethernet->setData($ipv6);
+                break;
+        }
+
+        return $ethernet;
     }
 
     private function handle_ethernet() {
@@ -29,25 +108,20 @@ class FrameAnalysisController extends BaseController
 
     public function index(): string
     {
-        // Il arrive qu'il y ai qq chose entre IP et Ethernet (LLC).
-        // TODO: Classe qui rassemble un objet adresse IP et la notation CIDR. Une adresse IP associée à son masque.
-        // Distinguer adresse IP sans masque et avec son masque. Outils de conversion, CIDR vers decimal... test appartient à
-        // tel ou tel réseau.
+        //TODO: DNS frame doesn't behave the same in TCP and UDP.
+        //TODO:
+        //TODO: Add LLC frame.
+        $ethernet = $this->generate();
+        echo $ethernet;
+        $ethernet_data = $ethernet->getData();
+        echo $ethernet_data;
+        if ($ethernet_data->getData() !== null) {
+            $ethernet_data_data = $ethernet_data->getData();
+            echo $ethernet_data_data;
+        }
 
-        // 2 niveaux de difficultés:
-        // - un pour le département info: avec liste d'empilements possibles. (rand dedans)
-        // - un pour le département R&T: liste un peu plus lourde/longue d'empilements.
-        // Chercher une implémentation ^. Stack pour empilement.
-
-        $ethernet = new EthernetFrame();
-        $ipv4 = new IPv4Packet();
-        $tcp = new TCP();
-        echo $tcp;
-
-
-        //Fill the data with our IP address.
         $data = [
-            "title" => "Analyse de trame Ethernet",
+            "title" => "Analyse de trame Ethernet (département info)",
             "menu_view" => view('templates/menu'),
             "arp_packet" => view('Exercises/FrameAnalysis/arppacket'),
             "ethernet_frame" => view('Exercises/FrameAnalysis/ethernetframe'),

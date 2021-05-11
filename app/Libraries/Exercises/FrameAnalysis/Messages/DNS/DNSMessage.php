@@ -7,6 +7,9 @@ use Exception;
 
 class DNSMessage extends FrameComponent
 {
+    //This field is only in case the previous frame is TCP.
+    private $length;
+
     private $ID;
 
     private $dnsFlags;
@@ -16,6 +19,8 @@ class DNSMessage extends FrameComponent
     private $authority_count;
     private $additional_count;
 
+    private $data;
+
     public function __construct()
     {
         //Load the frame helper so that we can access useful functions.
@@ -23,8 +28,39 @@ class DNSMessage extends FrameComponent
 
         $this->dnsFlags = new DNSFlags();
 
+        $this->length = null;
+
+        $this->queries_count = 0;
+        $this->answers_count = 0;
+        $this->authority_count = 0;
+        $this->additional_count = 0;
+
         //Now init the default values of DNS with common stuff.
         $this->setDefaultBehaviour();
+    }
+
+    /**
+     * This function allows you to get the length of DNS in case it's encapsulated in TCP.
+     *
+     * @return int : The length as integer.
+     */
+    public function getLength(): ?int
+    {
+        return $this->length;
+    }
+
+    /**
+     * This function allows you to set the length of DNS in case it's encapsulated in TCP.
+     *
+     * @param int $length :  The length as integer, in range 0-65535.
+     * @throws Exception : Throws an exception if the length value isn't in the right range.
+     */
+    public function setLength(int $length): void
+    {
+        if ($length < 0 || $length > USHORT_MAXVALUE) {
+            throw new Exception("Invalid value for DNS length: " . $length);
+        }
+        $this->length = $length;
     }
 
     /**
@@ -148,17 +184,39 @@ class DNSMessage extends FrameComponent
     }
 
     /**
+     * This function allows you to get the data of the DNS message.
+     *
+     * @return FrameComponent : A frame component which is an object of data.
+     */
+    public function getData(): ?FrameComponent
+    {
+        return $this->data;
+    }
+
+    /**
+     * This function allows you to set the data of the DNS message.
+     *
+     * @param FrameComponent $data : A frame component which is an object of data.
+     */
+    public function setData(FrameComponent $data): void
+    {
+        $this->data = $data;
+    }
+
+    /**
      * This function allows you to get the generated frame.
      *
      * @return string : The frame as hexadecimal numbers.
      */
     public function generate(): string
     {
-        return convertAndFormatHexa($this->getID(), 4) . $this->dnsFlags->getFlags() .
+        $str = $this->getLength() !== null ? convertAndFormatHexa($this->getLength(), 4) : "";
+        $str .= convertAndFormatHexa($this->getID(), 4) . $this->dnsFlags->getFlags() .
             convertAndFormatHexa($this->getQueriesCount(), 4) .
             convertAndFormatHexa($this->getAnswersCount(), 4) .
             convertAndFormatHexa($this->getAuthorityCount(), 4) .
             convertAndFormatHexa($this->getAdditionalCount(), 4);
+        return $str;
     }
 
     /**
@@ -166,7 +224,13 @@ class DNSMessage extends FrameComponent
      */
     public function __toString(): string
     {
-        $str = "ID: " . convertAndFormatHexa($this->getID(), 4);
+        if ($this->getLength() !== null) {
+            $str = "Length: " . convertAndFormatHexa($this->getLength(), 4);
+            $str .= "\nID: " . convertAndFormatHexa($this->getID(), 4);
+        }
+        else {
+            $str = "ID: " . convertAndFormatHexa($this->getID(), 4);
+        }
         $str .= "\nFlags: " . $this->dnsFlags->getFlags();
         $str .= "\nQueries count: " . convertAndFormatHexa($this->getQueriesCount(), 4);
         $str .= "\nAnswers count: " . convertAndFormatHexa($this->getAnswersCount(), 4);

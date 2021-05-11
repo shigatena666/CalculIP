@@ -300,7 +300,7 @@ class TCP extends FrameComponent
     /**
      * This function allows you to debug the TCP data.
      */
-    public function __toString()
+    public function __toString(): string
     {
         $str = "Source port: " . convertAndFormatHexa($this->getSourcePort(), 4);
         $str .= "\nDestination port: " . convertAndFormatHexa($this->getDestinationPort(), 4);

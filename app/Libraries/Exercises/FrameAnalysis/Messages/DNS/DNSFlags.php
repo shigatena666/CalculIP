@@ -26,13 +26,15 @@ class DNSFlags
     public function __construct()
     {
         //Init these values because otherwise we would get weird stuff happening because of the way it's recompiled.
-        $this->query_response = false;
-        $this->op_code = "0000";
-        $this->authoritative_answer = false;
-        $this->truncated = false;
-        $this->recursion_desired = false;
-        $this->recursion_available = false;
-        $this->response_code = "0000";
+        $this->query_response = 0;
+        $this->op_code = 0;
+        $this->authoritative_answer = 0;
+        $this->truncated = 0;
+        $this->recursion_desired = 0;
+        $this->recursion_available = 0;
+        $this->response_code = 0;
+
+        $this->flags = "0000";
     }
 
     /**

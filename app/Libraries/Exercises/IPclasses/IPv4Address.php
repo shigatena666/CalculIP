@@ -4,7 +4,7 @@ namespace App\Libraries\Exercises\IPclasses;
 
 use Exception;
 
-class IPAddress
+class IPv4Address
 {
     private $bytes;
 
@@ -15,13 +15,13 @@ class IPAddress
         try {
             $this->setBytes($bytes);
         }
-        catch (Exception $e) {
-            //TODO: An error happened when trying to set the bytes of the IP address.
+        catch (Exception $exception) {
+            die($exception->getMessage());
         }
     }
 
     /**
-     * This function allows you to get the bytes from the IP address.
+     * This function allows you to get the bytes from the IPv4 address.
      *
      * @return array: An array of integer.
      */
@@ -31,7 +31,7 @@ class IPAddress
     }
 
     /**
-     * This function allows you to set the bytes of an IP address.
+     * This function allows you to set the bytes of an IPv4 address.
      *
      * @throws Exception: Throws an exception if the length of the array isn't 4 and/or integers.
      */
@@ -39,7 +39,7 @@ class IPAddress
     {
         foreach ($bytes as $byte) {
             if (!is_integer($byte)) {
-                throw new Exception("Invalid IP address parameters: " . $bytes);
+                throw new Exception("Invalid IP address parameters: " . $byte);
             }
         }
         if (count($bytes) != 4) {
@@ -50,7 +50,7 @@ class IPAddress
     }
 
     /**
-     * This function is used to check the 2nd, 3rd and 4th byte of an IP address.
+     * This function is used to check the 2nd, 3rd and 4th byte of an IPv4 address.
      *
      * @param $val: The byte that needs to be checked
      * @return bool: True if the byte is ranged [0-255], false otherwise.
@@ -61,7 +61,7 @@ class IPAddress
     }
 
     /**
-     * This function is used to check the class of an IP address.
+     * This function is used to check the class of an IPv4 address.
      *
      * @return string: The IP address class. (A, B, C, D, E, None)
      */
@@ -102,7 +102,7 @@ class IPAddress
     /**
      * Convert the IP address bytes to hexadecimal.
      *
-     * @return string: The hexadecimal IP address with no spaces.
+     * @return string: The hexadecimal IPv4 address with no spaces.
      */
     public function toHexa() : string
     {
@@ -111,7 +111,7 @@ class IPAddress
     }
 
     /**
-     * This function allows you to get the IP address bytes.
+     * This function allows you to get the IPv4 address bytes.
      *
      * @return string: A string with the following format: x.x.x.x where x is a byte.
      */
