@@ -21,26 +21,30 @@
                 attention tous les chiffres sont significatifs !</BR>
                 <b> Pour les s2: analysez que jusqu'à la couche transport incluse, pas au dessus.</b>
 
-                <div class="sl"> 1 bug connu : le cas très particulier de DNS encapsulé dans TCP (transfert de zone)
-                    est ici incorrect.</div>
                 <p align="right">
                     <A href="http://www-info.iutv.univ-paris13.fr/~butelle/Polys/FormatsTramesPaquetsSansDHCP.pdf">
                         Format des trames et paquets</A></p>
             </div>
 
-            <?= $arp_packet ?>
-            <?= $ethernet_frame ?>
-            <?= $ipv4_packet ?>
-            <?= $udp_datagram ?>
-            <?= $icmp_packet ?>
-            <?= $tcp_packet ?>
-            <?= $dns_message ?>
+            <form class="" method="post">
 
-            <div class="form-group">
-                <input type="button" class="btn btn-success col-md-4 col-md-offset-4 col-xs-12" id="valider" value="Valider"/><!-- Bouton permettant la validation du formulaire -->
-                <a id="button" href='' hidden><input type='button' class='btn btn-warning  col-md-4 col-md-offset-4 col-xs-12' id='recommencer' value='Recommencer'/></a> <!-- Bouton permettant de recommencer l'exercice -->
-            </div>
+                <?= $frame_viewer ?>
 
+                <?= $ethernet_frame ?>
+                <?= $arp_packet ?>
+                <?= $ipv4_packet ?>
+                <?= $ipv6_packet ?>
+                <?= $udp_datagram ?>
+                <?= $icmp_packet ?>
+                <?= $tcp_segment ?>
+                <?= $dns_message ?>
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success col-md-4 col-md-offset-4 col-xs-12" id="valider" value="Valider"/><!-- Bouton permettant la validation du formulaire -->
+                    <a id="button" href='' hidden><input type='submit' class='btn btn-warning  col-md-4 col-md-offset-4 col-xs-12' id='recommencer' value='Recommencer'/></a> <!-- Bouton permettant de recommencer l'exercice -->
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

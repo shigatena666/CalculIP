@@ -3,6 +3,7 @@
 namespace App\Libraries\Exercises\FrameAnalysis\Messages\DNS;
 
 use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
+use App\Libraries\Exercises\FrameAnalysis\Messages\Segment\TCP;
 use Exception;
 
 class DNSMessage extends FrameComponent
@@ -19,21 +20,26 @@ class DNSMessage extends FrameComponent
     private $authority_count;
     private $additional_count;
 
+    private $dnsQuery;
+
     private $data;
 
-    public function __construct()
+    public function __construct(FrameComponent $frame)
     {
         //Load the frame helper so that we can access useful functions.
         helper('frame');
 
         $this->dnsFlags = new DNSFlags();
 
-        $this->length = null;
+        //If the previous frame is TCP then init our length so that we can modify it, else set it to null.
+        $this->length = $frame instanceof TCP ? 0 : null;
 
         $this->queries_count = 0;
         $this->answers_count = 0;
         $this->authority_count = 0;
         $this->additional_count = 0;
+
+        $this->dnsQuery = new DNSQuery();
 
         //Now init the default values of DNS with common stuff.
         $this->setDefaultBehaviour();
@@ -42,7 +48,7 @@ class DNSMessage extends FrameComponent
     /**
      * This function allows you to get the length of DNS in case it's encapsulated in TCP.
      *
-     * @return int : The length as integer.
+     * @return int : The length as integer or null if it's not TCP.
      */
     public function getLength(): ?int
     {
@@ -210,13 +216,26 @@ class DNSMessage extends FrameComponent
      */
     public function generate(): string
     {
-        $str = $this->getLength() !== null ? convertAndFormatHexa($this->getLength(), 4) : "";
-        $str .= convertAndFormatHexa($this->getID(), 4) . $this->dnsFlags->getFlags() .
+        //If it's TCP then add then add the length.
+        $frame_bytes = $this->getLength() !== null ? convertAndFormatHexa($this->getLength(), 4) : "";
+
+        //Append our frame.
+        $frame_bytes .= convertAndFormatHexa($this->getID(), 4) . $this->dnsFlags->getFlags() .
             convertAndFormatHexa($this->getQueriesCount(), 4) .
             convertAndFormatHexa($this->getAnswersCount(), 4) .
             convertAndFormatHexa($this->getAuthorityCount(), 4) .
             convertAndFormatHexa($this->getAdditionalCount(), 4);
-        return $str;
+
+        //If it's a query, then append it at the end.
+        $frame_bytes .= ($this->dnsFlags->getQueryResponse() === 0) ? $this->dnsQuery->getQuery() : "";
+
+        //Check if the DNS message has some data set.
+        if ($this->getData() !== null) {
+            //Append the data frame to the current one.
+            $frame_bytes .= $this->getData()->generate();
+        }
+
+        return $frame_bytes;
     }
 
     /**
@@ -232,11 +251,15 @@ class DNSMessage extends FrameComponent
             $str = "ID: " . convertAndFormatHexa($this->getID(), 4);
         }
         $str .= "\nFlags: " . $this->dnsFlags->getFlags();
+
         $str .= "\nQueries count: " . convertAndFormatHexa($this->getQueriesCount(), 4);
         $str .= "\nAnswers count: " . convertAndFormatHexa($this->getAnswersCount(), 4);
         $str .= "\nAuthority count: " . convertAndFormatHexa($this->getAuthorityCount(), 4);
         $str .= "\nAdditional count: " . convertAndFormatHexa($this->getAdditionalCount(), 4);
 
+        if ($this->dnsFlags->getQueryResponse() === 0) {
+            $str .= "\nQuery: " . $this->dnsQuery->getQuery();
+        }
         return $str;
     }
 
@@ -251,16 +274,26 @@ class DNSMessage extends FrameComponent
 
             $this->dnsFlags->setQueryResponse(generateBoolean());
             $this->dnsFlags->setOpCode(0);
-            $this->dnsFlags->setAuthoritativeAnswer(generateBoolean());
+            $this->dnsFlags->setAuthoritativeAnswer(($this->dnsFlags->getQueryResponse() === 1) ? 1 : 0);
             $this->dnsFlags->setTruncated(true);
             $this->dnsFlags->setRecursionDesired(generateBoolean());
             $this->dnsFlags->setRecursionAvailable(!$this->dnsFlags->getRecursionDesired() && generateBoolean());
             $this->dnsFlags->setResponseCode(0);
 
-            $this->setQueriesCount(1);
-            $this->setAnswersCount($this->dnsFlags->getQueryResponse() ? 1 : 0);
-            $this->setAuthorityCount($this->dnsFlags->getAuthoritativeAnswer() ? 1 : 0);
+            $this->setQueriesCount($this->dnsFlags->getQueryResponse() === 1 ? 0 : 1);
+            $this->setAnswersCount($this->dnsFlags->getQueryResponse() === 1 ? 1 : 0);
+            $this->setAuthorityCount($this->dnsFlags->getAuthoritativeAnswer() === 1 ? 1 : 0);
             $this->setAdditionalCount(0);
+
+            if ($this->dnsFlags->getQueryResponse() === 0) {
+                $this->dnsQuery->setName("g1.p13.fr"); //Random gen here?
+                $this->dnsQuery->setType(252); //AXFR
+                $this->dnsQuery->setClass(1); //IN
+            }
+
+            if ($this->length !== null) {
+                $this->setLength(strlen($this->generate()) / 2);
+            }
         }
         catch (Exception $exception) {
             die($exception->getMessage());

@@ -22,12 +22,9 @@ class FrameAnalysisController extends BaseController
 
     public function __construct()
     {
-        //Let's generate a new frame.
-
-        //echo $this->ethernet;
     }
 
-    private function generate(): EthernetFrame
+    private function getFrame(): EthernetFrame
     {
         $ethernet = new EthernetFrame();
 
@@ -53,9 +50,9 @@ class FrameAnalysisController extends BaseController
                 $ipv4->setData($nextIPv4Frame);
 
                 //If our frame is either UDP or TCP and one of the port is DNS then append DNS to the list.
-                if ($nextIPv4Frame instanceof UDP || $nextIPv4Frame instanceof TCP &&
+                if ($nextIPv4Frame instanceof TCP &&
                     ($nextIPv4Frame->getSourcePort() === 0x0035 || $nextIPv4Frame->getDestinationPort() === 0x0035)) {
-                    $dns = new DNSMessage();
+                    $dns = new DNSMessage($nextIPv4Frame);
                     $nextIPv4Frame->setData($dns);
                 }
 
@@ -88,10 +85,10 @@ class FrameAnalysisController extends BaseController
                 $ipv6->setData($nextIPv6Frame);
 
                 //If our frame is either UDP or TCP and one of the port is DNS then append DNS to the list.
-                if ($nextIPv6Frame instanceof UDP || $nextIPv6Frame instanceof TCP &&
+                if ($nextIPv6Frame instanceof TCP &&
                     ($nextIPv6Frame->getSourcePort() === 0x0035 || $nextIPv6Frame->getDestinationPort() === 0x0035)) {
-                    //TODO: Don't forget DNS here.
-                    $dns = new DNSMessage();
+                    //We pass the frame to DNS in case we need to check if it's TCP.
+                    $dns = new DNSMessage($nextIPv6Frame);
                     $nextIPv6Frame->setData($dns);
                 }
 
@@ -108,24 +105,20 @@ class FrameAnalysisController extends BaseController
 
     public function index(): string
     {
-        //TODO: DNS frame doesn't behave the same in TCP and UDP.
-        //TODO:
-        //TODO: Add LLC frame.
-        $ethernet = $this->generate();
-        echo $ethernet;
-        $ethernet_data = $ethernet->getData();
-        echo $ethernet_data;
-        if ($ethernet_data->getData() !== null) {
-            $ethernet_data_data = $ethernet_data->getData();
-            echo $ethernet_data_data;
-        }
+        $frame = $this->getFrame()->generate();
+        $frame = strtoupper($frame);
+
+        $arr = str_split($frame, 2);
+        $frame_viewer_data = [ "bytes" => $arr ];
 
         $data = [
             "title" => "Analyse de trame Ethernet (département info)",
             "menu_view" => view('templates/menu'),
-            "arp_packet" => view('Exercises/FrameAnalysis/arppacket'),
+            "frame_viewer" => view('Exercises/FrameAnalysis/frame_viewer', $frame_viewer_data),
             "ethernet_frame" => view('Exercises/FrameAnalysis/ethernetframe'),
+            "arp_packet" => view('Exercises/FrameAnalysis/arppacket'),
             "ipv4_packet" => view('Exercises/FrameAnalysis/ipv4packet'),
+            "ipv6_packet" => view('Exercises/FrameAnalysis/ipv6packet'),
             "udp_datagram" => view('Exercises/FrameAnalysis/udpdatagram'),
             "icmp_packet" => view('Exercises/FrameAnalysis/icmppacket'),
             "tcp_segment" => view('Exercises/FrameAnalysis/tcpsegment'),
