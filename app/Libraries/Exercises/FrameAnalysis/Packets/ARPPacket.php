@@ -10,6 +10,18 @@ use Exception;
 
 class ARPPacket extends FrameComponent
 {
+    public const HARDWARE_ADDRESS_SPACE = "ARPhardwareAddressSpace";
+    public const PROTOCOL_ADDRESS_SPACE = "ARPprotocolAddressSpace";
+    public const HLEN = "ARPhlen";
+    public const PLEN = "ARPplen";
+    public const OP_CODE = "ARPopcode";
+    public const SENDER_HARDWARE_ADDRESS = "ARPsenderHardwareAddress";
+    public const SENDER_PROTOCOL_ADDRESS = "ARPsenderProtocolAddress";
+    public const TARGET_HARDWARE_ADDRESS = "ARPtargetHardwareAddress";
+    public const TARGET_PROTOCOL_ADDRESS = "ARPtargetProtocolAddress";
+
+    public static $Fields;
+
     public static $ARP_builder;
 
     private $hardware_address_space;
@@ -334,3 +346,7 @@ class ARPPacket extends FrameComponent
 }
 
 ARPPacket::$ARP_builder = [ 1, 2 ];
+ARPPacket::$Fields = [ ARPPacket::HARDWARE_ADDRESS_SPACE, ARPPacket::PROTOCOL_ADDRESS_SPACE, ARPPacket::HLEN,
+    ARPPacket::PLEN, ARPPacket::OP_CODE, ARPPacket::SENDER_HARDWARE_ADDRESS, ARPPacket::SENDER_PROTOCOL_ADDRESS,
+    ARPPacket::TARGET_HARDWARE_ADDRESS, ARPPacket::TARGET_PROTOCOL_ADDRESS
+];

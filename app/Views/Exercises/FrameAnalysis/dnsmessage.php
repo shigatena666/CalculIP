@@ -9,13 +9,13 @@
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="transID">
                             <div class="input-group-addon">Trans ID : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="DNSTransID">
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="flags">
                             <div class="input-group-addon">Drapeaux : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="DNSflags">
                         </div>
                     </div>
                 </td>
@@ -25,13 +25,13 @@
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="nbReq">
                             <div class="input-group-addon">Nb req(S1) : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="DNSrequestsNumber">
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="nbRep">
                             <div class="input-group-addon">Nb réponses(S2) : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="DNSanswersNumber">
                         </div>
                     </div>
                 </td>
@@ -41,13 +41,13 @@
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="nbAut">
                             <div class="input-group-addon">Nb autorité(S3) : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="DNSauthorityNumber">
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="nbSupp">
                             <div class="input-group-addon">Nb supp(S4) : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="DNSadditionalNumber">
                         </div>
                     </div>
                 </td>
@@ -65,37 +65,37 @@
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="qr">
                                                 <div class="input-group-addon">QR : </div>
-                                                <input type="text" class="form-control" placeholder="b">
+                                                <input type="text" class="form-control" placeholder="b" name="DNSflagQr">
                                             </div>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="opcodeDNS">
                                                 <div class="input-group-addon">Opcode : </div>
-                                                <input type="text" class="form-control" placeholder="bbbb">
+                                                <input type="text" class="form-control" placeholder="bbbb" name="DNSflagOpCode">
                                             </div>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="aa">
                                                 <div class="input-group-addon">AA : </div>
-                                                <input type="text" class="form-control" placeholder="b">
+                                                <input type="text" class="form-control" placeholder="b" name="DNSflagAa">
                                             </div>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="tc">
                                                 <div class="input-group-addon">TC : </div>
-                                                <input type="text" class="form-control" placeholder="b">
+                                                <input type="text" class="form-control" placeholder="b" name="DNSflagTc">
                                             </div>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="rd">
                                                 <div class="input-group-addon">RD : </div>
-                                                <input type="text" class="form-control" placeholder="b">
+                                                <input type="text" class="form-control" placeholder="b" name="DNSflagRd">
                                             </div>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="ra">
                                                 <div class="input-group-addon">RA : </div>
-                                                <input type="text" class="form-control" placeholder="b">
+                                                <input type="text" class="form-control" placeholder="b" name="DNSflagRa">
                                             </div>
                                         </div>
                                     </td>
@@ -105,13 +105,13 @@
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="000DNS">
                                                 <div class="input-group-addon">000 : </div>
-                                                <input type="text" class="form-control" placeholder="bbb">
+                                                <input type="text" class="form-control" placeholder="bbb" name="DNSflagZeros">
                                             </div>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
                                             <div class="col-xs-12 col-md-12 input-group" id="rcode">
                                                 <div class="input-group-addon">RCODE : </div>
-                                                <input type="text" class="form-control" placeholder="bbbb">
+                                                <input type="text" class="form-control" placeholder="bbbb" name="DNSflagRcode">
                                             </div>
                                         </div>
                                     </td>

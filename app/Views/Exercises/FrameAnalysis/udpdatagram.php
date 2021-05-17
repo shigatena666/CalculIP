@@ -9,13 +9,13 @@
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="portSUDP">
                             <div class="input-group-addon">Port source : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="UDPsourcePort">
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="portDUDP">
                             <div class="input-group-addon">Port destination : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="UDPdestinationPort">
                         </div>
                     </div>
                 </td>
@@ -25,13 +25,13 @@
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="longTotUDP">
                             <div class="input-group-addon">Long. tot. en octets : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="UDPtotalLength">
                         </div>
                     </div>
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="checksumUDP">
                             <div class="input-group-addon">Checksum : </div>
-                            <input type="text" class="form-control" placeholder="XXXX">
+                            <input type="text" class="form-control" placeholder="XXXX" name="UDPchecksum">
                         </div>
                     </div>
                 </td>

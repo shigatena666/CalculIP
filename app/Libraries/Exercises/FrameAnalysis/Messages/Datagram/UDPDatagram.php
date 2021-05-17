@@ -5,8 +5,15 @@ namespace App\Libraries\Exercises\FrameAnalysis\Messages\Datagram;
 use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
 use Exception;
 
-class UDP extends FrameComponent
+class UDPDatagram extends FrameComponent
 {
+    public const SOURCE_PORT = "UDPsourcePort";
+    public const DESTINATION_PORT = "UDPdestinationPort";
+    public const TOTAL_LENGTH = "UDPtotalLength";
+    public const CHECKSUM = "UDPchecksum";
+
+    public static $Fields;
+
     public static $UDP_services_builder;
 
     //These fields are all encoded on 4 digits.
@@ -220,10 +227,16 @@ class UDP extends FrameComponent
     }
 }
 
-UDP::$UDP_services_builder = [
+UDPDatagram::$UDP_services_builder = [
     7 => "echo",
     13 => "daytime",
     25 => "SMTP",
     37 => "Time",
     53 => "DNS"
+];
+UDPDatagram::$Fields = [
+    UDPDatagram::SOURCE_PORT,
+    UDPDatagram::DESTINATION_PORT,
+    UDPDatagram::TOTAL_LENGTH,
+    UDPDatagram::CHECKSUM
 ];

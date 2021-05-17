@@ -8,6 +8,14 @@ use Exception;
 
 class ICMPPacket extends FrameComponent
 {
+    public const TYPE = "ICMPtype";
+    public const ERROR_CODE = "ICMPerrorCode";
+    public const CHECKSUM = "ICMPchecksum";
+    public const IDENTIFIER = "ICMPidentifier";
+    public const SEQUENCE_NUMBER = "ICMPsequenceNumber";
+
+    public static $Fields;
+
     public static $ICMP_type_builder;
 
     private $ICMP_type;
@@ -257,3 +265,5 @@ ICMPPacket::$ICMP_type_builder = [
     15 => 'F',
     16 => '10'
 ];
+ICMPPacket::$Fields = [ ICMPPacket::TYPE, ICMPPacket::ERROR_CODE, ICMPPacket::CHECKSUM, ICMPPacket::IDENTIFIER,
+    ICMPPacket::SEQUENCE_NUMBER ];

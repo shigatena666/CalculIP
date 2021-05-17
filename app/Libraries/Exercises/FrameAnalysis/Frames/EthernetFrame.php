@@ -8,6 +8,12 @@ use Exception;
 
 class EthernetFrame extends FrameComponent
 {
+    public const DESTINATION_ADDRESS = "EthernetDestinationAddress";
+    public const SENDER_ADDRESS = "EthernetSenderAddress";
+    public const ETYPE = "EthernetEtype";
+
+    public static $Fields;
+
     public static $MAC_builder;
     public static $Etype_builder;
 
@@ -130,7 +136,7 @@ class EthernetFrame extends FrameComponent
             $sa_bytes = str_split($rand_sa, 2);
 
             //Build our SA from the bytes and another part. Cast to int otherwise it will be a string.
-            $this->setSa(new MACAddress([ $sa_bytes[0], $sa_bytes[1], $sa_bytes[2], "01", "12", "45" ]));
+            $this->setSa(new MACAddress([ $sa_bytes[0], $sa_bytes[1], $sa_bytes[2], "01", "23", "45" ]));
 
             $this->setEtype(array_rand(self::$Etype_builder));
         }
@@ -181,3 +187,4 @@ EthernetFrame::$Etype_builder = [
     2054 => 0x0806,
     34525 => 0x86dd
 ];
+EthernetFrame::$Fields = [ EthernetFrame::DESTINATION_ADDRESS , EthernetFrame::SENDER_ADDRESS, EthernetFrame::ETYPE ];

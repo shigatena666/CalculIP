@@ -44,7 +44,7 @@ function generateIPv6Address() : IPv6Address
 
 function convertAndFormatHexa(string $to_format, int $digits): string
 {
-    return sprintf('%0' . $digits . 'x', $to_format);
+    return sprintf('%0' . $digits . 'X', $to_format);
 }
 
 function convertAndFormatBin(string $to_format, int $digits): string

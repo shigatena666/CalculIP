@@ -9,19 +9,19 @@
                     <div class="col-xs-4 col-md-4">
                         <div class="col-xs-12 col-md-12 input-group" id="da">
                             <div class="input-group-addon">DA : </div>
-                            <input type="text" class="form-control" placeholder="XX:XX:XX:XX:XX:XX" name="destinationAddress">
+                            <input type="text" class="form-control" placeholder="XX:XX:XX:XX:XX:XX" name="EthernetDestinationAddress">
                         </div>
                     </div>
                     <div class="col-xs-4 col-md-4">
                         <div class="col-xs-12 col-md-12 input-group" id="sa">
                             <div class="input-group-addon">SA : </div>
-                            <input type="text" class="form-control" placeholder="XX:XX:XX:XX:XX:XX" name="senderAddress">
+                            <input type="text" class="form-control" placeholder="XX:XX:XX:XX:XX:XX" name="EthernetSenderAddress">
                         </div>
                     </div>
                     <div class="col-xs-4 col-md-4">
                         <div class="col-xs-12 col-md-12 input-group" id="etype">
                             <div class="input-group-addon">DL/ETYPE : </div>
-                            <input type="text" class="form-control" placeholder="XXXX" name="etype">
+                            <input type="text" class="form-control" placeholder="XXXX" name="EthernetEtype">
                         </div>
                     </div>
                 </td>
