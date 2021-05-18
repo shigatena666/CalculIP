@@ -3,7 +3,7 @@
 namespace App\Libraries\Exercises\FrameAnalysis\Messages\DNS;
 
 use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
-use App\Libraries\Exercises\FrameAnalysis\Messages\Segment\TCP;
+use App\Libraries\Exercises\FrameAnalysis\Messages\Segment\TCPSegment;
 use Exception;
 
 class DNSMessage extends FrameComponent
@@ -49,7 +49,7 @@ class DNSMessage extends FrameComponent
         $this->dnsFlags = new DNSFlags();
 
         //If the previous frame is TCP then init our length so that we can modify it, else set it to null.
-        $this->length = $frame instanceof TCP ? 0 : null;
+        $this->length = $frame instanceof TCPSegment ? 0 : null;
 
         $this->queries_count = 0;
         $this->answers_count = 0;
@@ -286,7 +286,7 @@ class DNSMessage extends FrameComponent
         $str .= "\nAdditional count: " . convertAndFormatHexa($this->getAdditionalCount(), 4);
 
         if ($this->dnsFlags->getQueryResponse() === 0) {
-            $str .= "\nQuery: " . $this->getDnsFlags()->getQuery();
+            $str .= "\nQuery: " . $this->dnsQuery->getQuery();
         }
         return $str;
     }

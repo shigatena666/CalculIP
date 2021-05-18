@@ -13,6 +13,7 @@ class IPv6Address
     public function __construct(array $bytes)
     {
         helper('frame');
+        helper('ipv6');
 
         try {
             $this->setBytes($bytes);
@@ -89,6 +90,6 @@ class IPv6Address
             $str .= convertAndFormatHexa($this->bytes[$i], 4) . ":";
         }
         $str .= convertAndFormatHexa($this->bytes[count($this->bytes) - 1], 4);
-        return $str;
+        return compress($str);
     }
 }

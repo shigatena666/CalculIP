@@ -76,3 +76,4 @@ function recompileChecksum($str, $initiated) : int
     //0xFFFF is needed because otherwise we get negative numbers.
     return 0xFFFF & ~$sum;
 }
+

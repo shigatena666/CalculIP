@@ -4,7 +4,6 @@
 namespace App\Libraries\Exercises\FrameAnalysis\Messages\DNS;
 
 
-use App\Libraries\Exercises\Conversions\Impl\BinToHexConversion;
 use Exception;
 
 class DNSFlags

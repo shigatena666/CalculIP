@@ -8,6 +8,23 @@ use Exception;
 
 class IPv4Packet extends FrameComponent
 {
+    public const VERSION = "IPv4version";
+    public const HEADER_LENGTH = "IPv4headerLength";
+    public const SERVICE_TYPE = "IPv4serviceType";
+    public const TOTAL_LENGTH = "IPv4totalLength";
+    public const IDENTIFICATION = "IPv4identification";
+    public const ZERO = "IPv4zero";
+    public const DONT_FRAGMENT = "IPv4dontFragment";
+    public const MORE_FRAGMENT = "IPv4moreFragment";
+    public const OFFSET = "IPv4offset";
+    public const TTL = "IPv4ttl";
+    public const PROTOCOL = "IPv4protocol";
+    public const HEADER_CHECKSUM = "IPv4headerChecksum";
+    public const EMITTER = "IPv4Emitter";
+    public const RECEIVER = "IPv4Receiver";
+
+    public static $Fields;
+
     public const VERSION_IP = "4";
 
     public static $Protocol_codes_builder;
@@ -486,3 +503,7 @@ IPv4Packet::$Protocol_codes_builder = [
     6 => "06",
     17 => "11"
 ];
+IPv4Packet::$Fields = [ IPv4Packet::VERSION, IPv4Packet::HEADER_LENGTH, IPv4Packet::SERVICE_TYPE,
+    IPv4Packet::TOTAL_LENGTH, IPv4Packet::IDENTIFICATION, IPv4Packet::ZERO, IPv4Packet::DONT_FRAGMENT,
+    IPv4Packet::MORE_FRAGMENT, IPv4Packet::OFFSET, IPv4Packet::TTL, IPv4Packet::PROTOCOL, IPv4Packet::HEADER_CHECKSUM,
+    IPv4Packet::EMITTER, IPv4Packet::RECEIVER ];

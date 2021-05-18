@@ -5,8 +5,30 @@ namespace App\Libraries\Exercises\FrameAnalysis\Messages\Segment;
 use App\Libraries\Exercises\FrameAnalysis\FrameComponent;
 use Exception;
 
-class TCP extends FrameComponent
+class TCPSegment extends FrameComponent
 {
+    public const SOURCE_PORT = "TCPsourcePort";
+    public const DESTINATION_PORT = "TCPdestinationPort";
+    public const SEQUENCE_NUMBER = "TCPsequenceNumber";
+    public const ACK_NUMBER = "TCPackNumber";
+    public const HEADER_LENGTH = "TCPheaderLength";
+    public const ZEROS = "TCPzeros";
+    public const FLAGS = "TCPflags";
+    public const WINDOW_LENGTH = "TCPwindowLength";
+    public const CHECKSUM = "TCPchecksum";
+    public const POINTER = "TCPpointer";
+    public const FLAG_NS = "TCPflagNs";
+    public const FLAG_CWR = "TCPflagCwr";
+    public const FLAG_ECE = "TCPflagEce";
+    public const FLAG_URG = "TCPflagUrgent";
+    public const FLAG_ACK = "TCPflagAck";
+    public const FLAG_PSH = "TCPflagPsh";
+    public const FLAG_RST = "TCPflagRst";
+    public const FLAG_SYN = "TCPflagSyn";
+    public const FLAG_FIN = "TCPflagFin";
+
+    public static $Fields;
+
     public static $TCP_services_builder;
 
     private $source_port;
@@ -153,6 +175,16 @@ class TCP extends FrameComponent
     }
 
     /**
+     * This function allows you to get the flags of TCP.
+     *
+     * @return TCPFlags: The flags as an object.
+     */
+    public function getTcpflags(): TCPFlags
+    {
+        return $this->tcpflags;
+    }
+
+    /**
      * This function allows you to get the window length of TCP.
      *
      * @return int : The window length as integer.
@@ -282,8 +314,8 @@ class TCP extends FrameComponent
 
             $this->setNumAck(1);
             $this->setNumSequence(2);
-            $this->tcpflags->setSyn(1);
-            $this->tcpflags->setFin(1);
+            $this->getTcpflags()->setSyn(1);
+            $this->getTcpflags()->setFin(1);
             $this->setWindowLength(rand(1, USHORT_MAXVALUE));
             $this->setChecksum(generateRandomUShort());
             $this->setUrgentPointer(0);
@@ -307,7 +339,7 @@ class TCP extends FrameComponent
         $str .= "\nSequence number: " . convertAndFormatHexa($this->getNumSequence(), 8);
         $str .= "\nAcknowledgment number: " . convertAndFormatHexa($this->getNumAck(), 8);
         $str .= "\nOffset: " . convertAndFormatHexa($this->getOffset(), 1);
-        $str .= "\nTCP flags: " . $this->tcpflags->getFlags();
+        $str .= "\nTCP flags: " . $this->getTcpflags()->getFlags();
         $str .= "\nWindow length: " . convertAndFormatHexa($this->getWindowLength(), 4);
         $str .= "\nChecksum: " . convertAndFormatHexa($this->getChecksum(), 4);
         $str .= "\nUrgent pointer: " . convertAndFormatHexa($this->getUrgentPointer(), 4);
@@ -332,7 +364,7 @@ class TCP extends FrameComponent
             convertAndFormatHexa($this->getNumSequence(), 8) .
             convertAndFormatHexa($this->getNumAck(), 8) .
             convertAndFormatHexa($this->getOffset(), 1) .
-            $this->tcpflags->getFlags() .
+            $this->getTcpflags()->getFlags() .
             convertAndFormatHexa($this->getWindowLength(), 4) .
             convertAndFormatHexa($this->getChecksum(), 4) .
             convertAndFormatHexa($this->getUrgentPointer(), 4);
@@ -346,7 +378,7 @@ class TCP extends FrameComponent
     }
 }
 
-TCP::$TCP_services_builder = [
+TCPSegment::$TCP_services_builder = [
     7 => "echo",
     13 => "daytime",
     21 => "FTP",
@@ -357,3 +389,9 @@ TCP::$TCP_services_builder = [
     80 => "HTTP",
     443 => "HTTPS"
 ];
+TCPSegment::$Fields = [ TCPSegment::SOURCE_PORT, TCPSegment::DESTINATION_PORT, TCPSegment::SEQUENCE_NUMBER,
+    TCPSegment::ACK_NUMBER, TCPSegment::HEADER_LENGTH, TCPSegment::ZEROS, TCPSegment::FLAGS, TCPSegment::WINDOW_LENGTH,
+    TCPSegment::CHECKSUM, TCPSegment::POINTER, TCPSegment::FLAG_NS, TCPSegment::FLAG_CWR, TCPSegment::FLAG_ECE,
+    TCPSegment::FLAG_URG, TCPSegment::FLAG_ACK, TCPSegment::FLAG_PSH, TCPSegment::FLAG_RST, TCPSegment::FLAG_SYN,
+    TCPSegment::FLAG_FIN
+    ];

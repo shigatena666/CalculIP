@@ -8,10 +8,6 @@ use Exception;
 
 class EthernetFrame extends FrameComponent
 {
-    public const DESTINATION_ADDRESS = "EthernetDestinationAddress";
-    public const SENDER_ADDRESS = "EthernetSenderAddress";
-    public const ETYPE = "EthernetEtype";
-
     public static $Fields;
 
     public static $MAC_builder;
