@@ -2,9 +2,8 @@
 
 namespace App\Controllers\Exercises;
 
-use App\Libraries\Exercises\IPclasses\IPv4Address;
+use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
 use CodeIgniter\Controller;
-use Exception;
 
 class IPClassesReverseController extends Controller
 {

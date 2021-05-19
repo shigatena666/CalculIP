@@ -1,7 +1,7 @@
 <?php
 
-use App\Libraries\Exercises\FrameAnalysis\IPv6Address;
-use App\Libraries\Exercises\IPclasses\IPv4Address;
+use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
+use App\Libraries\Exercises\IPclasses\Impl\IPv6Address;
 
 const USHORT_MAXVALUE = 65535;
 
