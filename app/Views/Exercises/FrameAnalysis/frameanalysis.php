@@ -2,6 +2,8 @@
 
 <?= $this->section("content") ?>
 
+<script src="../../../../CalculIP/JavaScript/Views/Exercises/FrameAnalysis/frameanalysis.js"></script>
+
 <div class="container">
     <h1>Analyse de trame Ethernet</h1>
     <div class="panel panel-default" id="exercice">
@@ -24,27 +26,24 @@
                 <p align="right">
                     <A href="http://www-info.iutv.univ-paris13.fr/~butelle/Polys/FormatsTramesPaquetsSansDHCP.pdf">
                         Format des trames et paquets</A></p>
+        </div>
+
+            <?= $frame_viewer ?>
+
+            <?= $ethernet_frame ?>
+            <?= $arp_packet ?>
+            <?= $ipv4_packet ?>
+            <?= $ipv6_packet ?>
+            <?= $udp_datagram ?>
+            <?= $icmp_packet ?>
+            <?= $tcp_segment ?>
+            <?= $dns_message ?>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-success col-md-4 col-md-offset-4 col-xs-12" id="valider" value="Valider"/><!-- Bouton permettant la validation du formulaire -->
+                <a id="button" href='' hidden><input type='submit' class='btn btn-warning  col-md-4 col-md-offset-4 col-xs-12' id='recommencer' value='Recommencer'/></a> <!-- Bouton permettant de recommencer l'exercice -->
             </div>
 
-            <form class="" method="post">
-
-                <?= $frame_viewer ?>
-
-                <?= $ethernet_frame ?>
-                <?= $arp_packet ?>
-                <?= $ipv4_packet ?>
-                <?= $ipv6_packet ?>
-                <?= $udp_datagram ?>
-                <?= $icmp_packet ?>
-                <?= $tcp_segment ?>
-                <?= $dns_message ?>
-
-                <div class="form-group">
-                    <input type="submit" class="btn btn-success col-md-4 col-md-offset-4 col-xs-12" id="valider" value="Valider"/><!-- Bouton permettant la validation du formulaire -->
-                    <a id="button" href='' hidden><input type='submit' class='btn btn-warning  col-md-4 col-md-offset-4 col-xs-12' id='recommencer' value='Recommencer'/></a> <!-- Bouton permettant de recommencer l'exercice -->
-                </div>
-
-            </form>
         </div>
     </div>
 </div>

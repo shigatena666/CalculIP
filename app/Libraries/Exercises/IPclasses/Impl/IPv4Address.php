@@ -11,7 +11,7 @@ class IPv4Address extends Address
      *
      * @return int: The amount of supposed bytes in the IP address (4).
      */
-    protected function getBytesCountLimit(): int
+    protected function getWordsCountLimit(): int
     {
         return 4;
     }
@@ -35,27 +35,27 @@ class IPv4Address extends Address
     public function check_class(): string
     {
         //Let's check if all the other bytes are in the right range.
-        if ($this->check_range($this->getBytes()[1]) && $this->check_range($this->getBytes()[2]) &&
-            $this->check_range($this->getBytes()[3])) {
+        if ($this->check_range($this->getWords()[1]) && $this->check_range($this->getWords()[2]) &&
+            $this->check_range($this->getWords()[3])) {
 
             //Now let's check our first byte.
             //Small trick because if we use the first byte in switch and its value is 0, PHP will think it's false.
             switch (true) {
 
                 //The first byte needs to be strictly greeter than 0.
-                case $this->getBytes()[0] > 0 && $this->getBytes()[0] <= 127:
+                case $this->getWords()[0] > 0 && $this->getWords()[0] <= 127:
                     return "A";
 
-                case $this->getBytes()[0] <= 191:
+                case $this->getWords()[0] <= 191:
                     return "B";
 
-                case $this->getBytes()[0] <= 223:
+                case $this->getWords()[0] <= 223:
                     return "C";
 
-                case $this->getBytes()[0] <= 239:
+                case $this->getWords()[0] <= 239:
                     return "D";
 
-                case $this->getBytes()[0] <= 255:
+                case $this->getWords()[0] <= 255:
                     return "E";
 
                 default:
@@ -73,10 +73,10 @@ class IPv4Address extends Address
      */
     public function toHexa(): string
     {
-        return convertAndFormatHexa($this->getBytes()[0], 2) .
-            convertAndFormatHexa($this->getBytes()[1], 2) .
-            convertAndFormatHexa($this->getBytes()[2], 2) .
-            convertAndFormatHexa($this->getBytes()[3], 2);
+        return convertAndFormatHexa($this->getWords()[0], 2) .
+            convertAndFormatHexa($this->getWords()[1], 2) .
+            convertAndFormatHexa($this->getWords()[2], 2) .
+            convertAndFormatHexa($this->getWords()[3], 2);
     }
 
     /**
@@ -86,7 +86,7 @@ class IPv4Address extends Address
      */
     public function __toString(): string
     {
-        return $this->getBytes()[0] . "." . $this->getBytes()[1] . "." . $this->getBytes()[2] . "." .
-            $this->getBytes()[3];
+        return $this->getWords()[0] . "." . $this->getWords()[1] . "." . $this->getWords()[2] . "." .
+            $this->getWords()[3];
     }
 }

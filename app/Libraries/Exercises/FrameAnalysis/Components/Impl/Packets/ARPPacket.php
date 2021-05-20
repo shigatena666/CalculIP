@@ -7,8 +7,8 @@ use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Frames\EthernetFrame;
 use App\Libraries\Exercises\FrameAnalysis\FrameTypes;
 use App\Libraries\Exercises\FrameAnalysis\Handlers\FrameHandlerManager;
 use App\Libraries\Exercises\FrameAnalysis\Handlers\Impl\ARPHandler;
-use App\Libraries\Exercises\FrameAnalysis\MACAddress;
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
+use App\Libraries\Exercises\IPclasses\Impl\MACAddress;
 use Exception;
 
 class ARPPacket extends FrameComponent
@@ -319,16 +319,15 @@ class ARPPacket extends FrameComponent
             $this->setHlen(6);
             $this->setPlen(4);
             $this->setOpCode(self::$ARP_builder[generateRandomIndex(self::$ARP_builder)]);
-            //TODO: Create an object for default MACAddresses and IPAddresses.
 
             $this->setSenderHardwareAddress($this->getEthernetFrame()->getSa());
             $this->setSenderProtocolAddress(generateIPv4Address());
 
-            $mac_target = $this->getOpCode() === 1 ? new MACAddress(["00", "00", "00", "00", "00", "00"]) :
+            $mac_target = $this->getOpCode() === 1 ? new MACAddress([ 0, 0, 0, 0, 0, 0]) :
                 $this->getEthernetFrame()->getDa();
 
             if ($this->getOpCode() === 1) {
-                $this->getEthernetFrame()->setDa(new MACAddress(["FF", "FF", "FF", "FF", "FF", "FF"]));
+                $this->getEthernetFrame()->setDa(new MACAddress([ 255, 255, 255, 255, 255, 255 ]));
             }
 
             $this->setTargetHardwareAddress($mac_target);
@@ -339,3 +338,5 @@ class ARPPacket extends FrameComponent
         }
     }
 }
+
+ARPPacket::$ARP_builder = [ 1, 2 ];

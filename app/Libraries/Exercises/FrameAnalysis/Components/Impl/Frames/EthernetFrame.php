@@ -121,24 +121,8 @@ class EthernetFrame extends FrameComponent
     public function setDefaultBehaviour(): void
     {
         try {
-            //Randomly generate the 3 first bytes of the DA as a string.
-            $rand_da = self::$MAC_builder[generateRandomIndex(self::$MAC_builder)];
-
-            //Split the string every 2 characters into an array so that we can grab the bytes.
-            $da_bytes = str_split($rand_da, 2);
-
-            //Build our DA from the bytes and another part. Cast to int otherwise it will be a string.
-            $this->setDa(new MACAddress([ (int)$da_bytes[0], (int)$da_bytes[1], (int)$da_bytes[2], 67, 89, 10 ]));
-
-            //Randomly generate the 3 first bytes of the DA as a string.
-            $rand_sa = self::$MAC_builder[generateRandomIndex(self::$MAC_builder)];
-
-            //Split the string every 2 characters into an array so that we can grab the bytes.
-            $sa_bytes = str_split($rand_sa, 2);
-
-            //Build our SA from the bytes and another part. Cast to int otherwise it will be a string.
-            $this->setSa(new MACAddress([ (int)$sa_bytes[0], (int)$sa_bytes[1], (int)$sa_bytes[2], 01, 23, 45 ]));
-
+            $this->setDa(generateMACAddress());
+            $this->setSa(generateMACAddress());
             $this->setEtype(array_rand(self::$Etype_builder));
         }
         catch (Exception $exception) {
@@ -182,7 +166,6 @@ class EthernetFrame extends FrameComponent
     }
 }
 
-EthernetFrame::$MAC_builder = [ '00000C', '0000A2','0000AA', '00AA00', '08002B','080046' ];
 EthernetFrame::$Etype_builder = [
     2048 => 0x0800,
     2054 => 0x0806,

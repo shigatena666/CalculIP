@@ -7,7 +7,7 @@ use Exception;
 
 class IPv4DfMfOffset
 {
-    private const RESERVED = 0;
+    public const RESERVED = 0;
 
     private $packet;
 

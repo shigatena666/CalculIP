@@ -191,7 +191,7 @@ class UDPDatagram extends FrameComponent
             $length = 8; //UDP header length in bytes
             if ($this->getData() !== null) {
                 if (strlen($this->getData()->generate()) % 2 !== 0) {
-                    //TODO: Error.
+                    throw new Exception("Odd UDP header length: " . strlen($this->getData()->generate()));
                 } else {
                     $length += strlen($this->getData()->generate()) / 2; //Total hex / 2 because we want it in bytes.
                 }

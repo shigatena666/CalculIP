@@ -22,7 +22,6 @@ class FrameAnalysisController extends BaseController
     public const ARP_CODE = 0x0806;
 
     private $session;
-    private $handlers;
 
     public function __construct()
     {
@@ -31,15 +30,16 @@ class FrameAnalysisController extends BaseController
         helper('ipv6');
 
         $this->session = session();
-        $this->session->destroy();
 
         //If our session doesn't contain any frame.
         if (!isset($_SESSION["frame"])) {
             $frame = $this->buildFrame();
-            $this->handlers = $this->getHandlersFromFrame($frame);
 
             //Since frame is an object, we need to serialize it.
             $this->session->set("frame", serialize($frame));
+
+            //The same goes for the handlers.
+            $this->session->set("handlers", serialize($this->getHandlersFromFrame($frame)));
         }
     }
 
@@ -120,9 +120,9 @@ class FrameAnalysisController extends BaseController
 
     private function getHandlersFromFrame(FrameComponent $frameComponent) : array
     {
-        $handlers = array();
+        $handlers = [];
 
-        while ($frameComponent->getData() !== null) {
+        while ($frameComponent !== null) {
             $handlers[] = FrameHandlerManager::find($frameComponent->getFrameType());
             $frameComponent = $frameComponent->getData();
         }
@@ -131,15 +131,21 @@ class FrameAnalysisController extends BaseController
 
     public function index(): string
     {
+        //Basically, only handlers that are within the frame are loaded.
+
         $frame = unserialize($this->session->get("frame"));
         $arr = str_split($frame->generate(), 2);
         $frame_viewer_data = [ "bytes" => $arr ];
 
+        $handlers = unserialize($this->session->get("handlers"));
 
-        /*foreach ($this->handlers as $handler) {
-            echo $handler->getFrameType();
-            $handler->handle();
-        }*/
+        //TODO: Need to find a way to return when request and not when needs update.
+        //Maybe check instead if fields are set here, instead of delegating to handlers.
+        foreach ($handlers as $handler) {
+            if (!$handler->handle()) {
+                return "";
+            }
+        }
 
         $data = [
             "title" => "Analyse de trame Ethernet (département info)",

@@ -2,6 +2,7 @@
 
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
 use App\Libraries\Exercises\IPclasses\Impl\IPv6Address;
+use App\Libraries\Exercises\IPclasses\Impl\MACAddress;
 
 const USHORT_MAXVALUE = 65535;
 
@@ -40,6 +41,11 @@ function generateIPv6Address() : IPv6Address
     return new IPv6Address([ generateRandomUShort(), generateRandomUShort(), generateRandomUShort(),
         generateRandomUShort(), generateRandomUShort(), generateRandomUShort(), generateRandomUShort(),
         generateRandomUShort(),]);
+}
+
+function generateMACAddress() : MACAddress
+{
+    return new MACAddress([ rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), ]);
 }
 
 function convertAndFormatHexa(string $to_format, int $digits): string

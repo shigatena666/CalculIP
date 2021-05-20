@@ -14,7 +14,7 @@ class IPv6Address extends Address
      *
      * @return int: The amount of supposed bytes in the IPv6 address (8).
      */
-    protected function getBytesCountLimit(): int
+    protected function getWordsCountLimit(): int
     {
         return 8;
     }
@@ -48,11 +48,11 @@ class IPv6Address extends Address
      */
     public function toHexa(): string
     {
-        $str = convertAndFormatHexa($this->getBytes()[0], 4);
-        for ($i = 1; $i < count($this->getBytes()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getBytes()[$i], 4);
+        $str = convertAndFormatHexa($this->getWords()[0], 4);
+        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
+            $str .= convertAndFormatHexa($this->getWords()[$i], 4);
         }
-        $str .= convertAndFormatHexa($this->getBytes()[count($this->getBytes()) - 1], 4);
+        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 4);
         return $str;
     }
 
@@ -63,11 +63,11 @@ class IPv6Address extends Address
      */
     public function __toString(): string
     {
-        $str = convertAndFormatHexa($this->getBytes()[0], 4) . ":";
-        for ($i = 1; $i < count($this->getBytes()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getBytes()[$i], 4) . ":";
+        $str = convertAndFormatHexa($this->getWords()[0], 4) . ":";
+        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
+            $str .= convertAndFormatHexa($this->getWords()[$i], 4) . ":";
         }
-        $str .= convertAndFormatHexa($this->getBytes()[count($this->getBytes()) - 1], 4);
+        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 4);
         return compress($str);
     }
 }

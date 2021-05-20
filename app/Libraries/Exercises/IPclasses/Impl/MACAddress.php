@@ -15,11 +15,11 @@ class MACAddress extends Address
      */
     public function toHexa(): string
     {
-        $str = convertAndFormatHexa($this->getBytes()[0], 2);
-        for ($i = 1; $i < count($this->getBytes()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getBytes()[$i], 2);
+        $str = convertAndFormatHexa($this->getWords()[0], 2);
+        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
+            $str .= convertAndFormatHexa($this->getWords()[$i], 2);
         }
-        $str .= convertAndFormatHexa($this->getBytes()[count($this->getBytes()) - 1], 2);
+        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 2);
         return $str;
     }
 
@@ -30,11 +30,11 @@ class MACAddress extends Address
      */
     public function __toString(): string
     {
-        $str = convertAndFormatHexa($this->getBytes()[0], 2) . ":";
-        for ($i = 1; $i < count($this->getBytes()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getBytes()[$i], 2) . ":";
+        $str = convertAndFormatHexa($this->getWords()[0], 2) . ":";
+        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
+            $str .= convertAndFormatHexa($this->getWords()[$i], 2) . ":";
         }
-        $str .= convertAndFormatHexa($this->getBytes()[count($this->getBytes()) - 1], 2);
+        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 2);
         return $str;
     }
 
@@ -65,7 +65,7 @@ class MACAddress extends Address
      *
      * @return int: The amount of supposed bytes in the MAC address (6).
      */
-    protected function getBytesCountLimit(): int
+    protected function getWordsCountLimit(): int
     {
         return 6;
     }

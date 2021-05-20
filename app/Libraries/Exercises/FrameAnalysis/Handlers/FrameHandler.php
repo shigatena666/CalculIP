@@ -13,54 +13,52 @@ abstract class FrameHandler
 
     public function __construct(FrameComponent $frameComponent, int $frameType)
     {
+        $this->frameType = $frameType;
         $this->frameComponent = $frameComponent;
         $this->response = service('response');
-        $this->frameType = $frameType;
     }
 
     protected abstract function getData(): array;
 
-    public function handle(): void
+    public function handle(): bool
     {
+        $notSet_fields = $this->getNotSetFields();
+        if (count($notSet_fields) !== 0) {
+            return true;
+        }
+
         //Check if the frame has the right data in the POST request, if not, stop there.
-        //The check_data method already send an exception
-        $empty_fields = $this->get_empty_not_set();
-        if (count($empty_fields) !== 0) {
-            //Send the response as JSON.
-            $this->response->setHeader("Content-Type", "application/json")
-                ->setJSON([ "empty" => $empty_fields ])
-                ->send();
-            return;
-        }
-
-        //Check if the user input is equal to the stored frame's result. If it's not correct, append it to a list.
-        $empty_fields = array();
-        foreach ($this->getData() as $field => $correct) {
-            if (!$correct) {
-                $empty_fields[] = $field;
-            }
-        }
-
-        //If the list isn't empty, send it to the client so that he can know where he did something wrong.
+        $empty_fields = $this->getEmptyFields();
         if (count($empty_fields) !== 0) {
             $this->response->setHeader("Content-Type", "application/json")
-                ->setJSON([ "errorsAt" => $empty_fields ])
+                ->setJSON([ "data" => $this->getData(), "empty" => $empty_fields ])
                 ->send();
+            return false;
         }
-        //Otherwise, tell the client he is right on the specified frame.
-        else {
-            $this->response->setHeader("Content-Type", "application/json")
-                ->setJSON([ "success" => true ])
-                ->send();
-        }
+
+        $this->response->setHeader("Content-Type", "application/json")
+            ->setJSON([ "data" => $this->getData() ])
+            ->send();
+        return false;
     }
 
-    private function get_empty_not_set() : array
+    private function getNotSetFields() : array
     {
-        $empty = array();
-        foreach ($this->getData() as $field) {
-            if (!isset($_POST[$field]) || empty($_POST[$field])) {
-                $empty[] = $field;
+        $notSet = [];
+        foreach ($this->getData() as $fieldName => $value) {
+            if (!isset($_POST[$fieldName])) {
+                $notSet[] = $fieldName;
+            }
+        }
+        return $notSet;
+    }
+
+    private function getEmptyFields() : array
+    {
+        $empty = [];
+        foreach ($this->getData() as $fieldName => $value) {
+            if (empty($_POST[$fieldName])) {
+                $empty[] = $fieldName;
             }
         }
         return $empty;
