@@ -54,20 +54,20 @@ class DNSHandler extends FrameHandler
         $user_rcodeFlag = strtoupper($_POST[self::FLAG_RCODE]);
 
         return [
-            self::TRANS_ID => $user_transID === convertAndFormatHexa($this->frameComponent->getID(), 4),
-            self::FLAGS => $user_flags === $this->frameComponent->getDnsFlags()->getFlags(),
-            self::REQUESTS_NUMBER => $user_queriesCount === convertAndFormatHexa($this->frameComponent->getQueriesCount(), 4),
-            self::ANSWERS_NUMBER => $user_answersCount === convertAndFormatHexa($this->frameComponent->getAnswersCount(), 4),
-            self::AUTHORITY_NUMBER => $user_authoritiesCount === convertAndFormatHexa($this->frameComponent->getAuthorityCount(), 4),
-            self::ADDITIONAL_NUMBER => $user_additionalCount === convertAndFormatHexa($this->frameComponent->getAdditionalCount(), 4),
-            self::FLAG_QR => $user_qrFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getQueryResponse(), 1),
-            self::FLAG_OPCODE =>  $user_opcodeFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getOpCode(), 4),
-            self::FLAG_AA =>  $user_aaFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getAuthoritativeAnswer(), 1),
-            self::FLAG_TC => $user_tcFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getTruncated(), 1),
-            self::FLAG_RD => $user_rdFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getRecursionDesired(), 1),
-            self::FLAG_RA => $user_raFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getRecursionAvailable(), 1),
-            self::FLAG_ZEROS => $user_zerosFlag === $this->frameComponent->getDnsFlags()::ZERO,
-            self::FLAG_RCODE => $user_rcodeFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getResponseCode(), 4)
+            self::TRANS_ID => $user_transID === convertAndFormatHexa($this->frameComponent->getID(), 4) ? 1 : 0,
+            self::FLAGS => $user_flags === $this->frameComponent->getDnsFlags()->getFlags() ? 1 : 0,
+            self::REQUESTS_NUMBER => $user_queriesCount === convertAndFormatHexa($this->frameComponent->getQueriesCount(), 4) ? 1 : 0,
+            self::ANSWERS_NUMBER => $user_answersCount === convertAndFormatHexa($this->frameComponent->getAnswersCount(), 4) ? 1 : 0,
+            self::AUTHORITY_NUMBER => $user_authoritiesCount === convertAndFormatHexa($this->frameComponent->getAuthorityCount(), 4) ? 1 : 0,
+            self::ADDITIONAL_NUMBER => $user_additionalCount === convertAndFormatHexa($this->frameComponent->getAdditionalCount(), 4) ? 1 : 0,
+            self::FLAG_QR => $user_qrFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getQueryResponse(), 1) ? 1 : 0,
+            self::FLAG_OPCODE =>  $user_opcodeFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getOpCode(), 4) ? 1 : 0,
+            self::FLAG_AA =>  $user_aaFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getAuthoritativeAnswer(), 1) ? 1 : 0,
+            self::FLAG_TC => $user_tcFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getTruncated(), 1) ? 1 : 0,
+            self::FLAG_RD => $user_rdFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getRecursionDesired(), 1) ? 1 : 0,
+            self::FLAG_RA => $user_raFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getRecursionAvailable(), 1) ? 1 : 0,
+            self::FLAG_ZEROS => $user_zerosFlag === $this->frameComponent->getDnsFlags()::ZERO ? 1 : 0,
+            self::FLAG_RCODE => $user_rcodeFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getResponseCode(), 4) ? 1 : 0
         ];
     }
 }

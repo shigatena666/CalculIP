@@ -42,14 +42,14 @@ class IPv6Handler extends FrameHandler
         $user_destinationAddress = strtoupper($_POST[self::DESTINATION_ADDRESS]);
 
         return [
-            self::VERSION => $user_version === $this->frameComponent::VERSION_IP,
-            self::TRAFFIC_CLASS => $user_traffic === $this->frameComponent->getTrafficClass()->getTraffic(),
-            self::FLOW_LABEL => $user_flowLabel === convertAndFormatHexa($this->frameComponent->getFlowLabel(), 4),
-            self::PAYLOAD_LENGTH => $user_payloadLength === convertAndFormatHexa($this->frameComponent->getPayloadLength(), 4),
-            self::NEXT_HEADER => $user_nextHeader === convertAndFormatHexa($this->frameComponent->getNextHeader(), 2),
-            self::HOP_LIMIT => $user_hopLimit === convertAndFormatHexa($this->frameComponent->getHopLimit(), 2),
-            self::SOURCE_ADDRESS => $user_sourceAddress === $this->frameComponent->getSourceAddress()->__toString(),
-            self::DESTINATION_ADDRESS => $user_destinationAddress === $this->frameComponent->getDestinationAddress()->__toString()
+            self::VERSION => $user_version === $this->frameComponent::VERSION_IP ? 1 : 0,
+            self::TRAFFIC_CLASS => $user_traffic === $this->frameComponent->getTrafficClass()->getTraffic() ? 1 : 0,
+            self::FLOW_LABEL => $user_flowLabel === convertAndFormatHexa($this->frameComponent->getFlowLabel(), 4) ? 1 : 0,
+            self::PAYLOAD_LENGTH => $user_payloadLength === convertAndFormatHexa($this->frameComponent->getPayloadLength(), 4) ? 1 : 0,
+            self::NEXT_HEADER => $user_nextHeader === convertAndFormatHexa($this->frameComponent->getNextHeader(), 2) ? 1 : 0,
+            self::HOP_LIMIT => $user_hopLimit === convertAndFormatHexa($this->frameComponent->getHopLimit(), 2) ? 1 : 0,
+            self::SOURCE_ADDRESS => $user_sourceAddress === $this->frameComponent->getSourceAddress()->__toString() ? 1 : 0,
+            self::DESTINATION_ADDRESS => $user_destinationAddress === $this->frameComponent->getDestinationAddress()->__toString() ? 1 : 0
         ];
     }
 }

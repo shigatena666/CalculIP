@@ -53,20 +53,20 @@ class IPv4Handler extends FrameHandler
         $user_receiver = strtoupper($_POST[self::RECEIVER]);
 
         return [
-            self::VERSION => $user_version === $this->frameComponent::VERSION_IP,
-            self::HEADER_LENGTH => $user_headerLength === convertAndFormatHexa($this->frameComponent->getHeaderLength(), 1),
-            self::SERVICE_TYPE => $user_typeOfService === $this->frameComponent->getTypeOfService()->getFlags(),
-            self::TOTAL_LENGTH => $user_totalLength === convertAndFormatHexa($this->frameComponent->getTotalLength(), 4),
-            self::IDENTIFICATION => $user_identification === convertAndFormatHexa($this->frameComponent->getIdentification(), 4),
-            self::ZERO => $user_zero === (string)IPv4DfMfOffset::RESERVED,
-            self::DONT_FRAGMENT => $user_dontFragment === convertAndFormatBin($this->frameComponent->getDfMfOffset()->getDontfragment(), 1),
-            self::MORE_FRAGMENT => $user_moreFragment === convertAndFormatBin($this->frameComponent->getDfMfOffset()->getMorefragment(), 1),
-            self::OFFSET => $user_offset === convertAndFormatHexa($this->frameComponent->getDfMfOffset()->getOffset(), 2),
-            self::TTL => $user_ttl === convertAndFormatHexa($this->frameComponent->getTTL(), 2),
-            self::PROTOCOL => $user_protocol === convertAndFormatHexa($this->frameComponent->getProtocol(), 2),
-            self::HEADER_CHECKSUM => $user_checksum === convertAndFormatHexa($this->frameComponent->getCheckSum(), 4),
-            self::EMITTER => $user_emitter === $this->frameComponent->getEmitterIp()->__toString(),
-            self::RECEIVER => $user_receiver === $this->frameComponent->getReceiverIp()->__toString()
+            self::VERSION => $user_version === $this->frameComponent::VERSION_IP ? 1 : 0,
+            self::HEADER_LENGTH => $user_headerLength === convertAndFormatHexa($this->frameComponent->getHeaderLength(), 1) ? 1 : 0,
+            self::SERVICE_TYPE => $user_typeOfService === $this->frameComponent->getTypeOfService()->getFlags() ? 1 : 0,
+            self::TOTAL_LENGTH => $user_totalLength === convertAndFormatHexa($this->frameComponent->getTotalLength(), 4) ? 1 : 0,
+            self::IDENTIFICATION => $user_identification === convertAndFormatHexa($this->frameComponent->getIdentification(), 4) ? 1 : 0,
+            self::ZERO => $user_zero === (string)IPv4DfMfOffset::RESERVED ? 1 : 0,
+            self::DONT_FRAGMENT => $user_dontFragment === convertAndFormatBin($this->frameComponent->getDfMfOffset()->getDontfragment(), 1) ? 1 : 0,
+            self::MORE_FRAGMENT => $user_moreFragment === convertAndFormatBin($this->frameComponent->getDfMfOffset()->getMorefragment(), 1) ? 1 : 0,
+            self::OFFSET => $user_offset === convertAndFormatHexa($this->frameComponent->getDfMfOffset()->getOffset(), 2) ? 1 : 0,
+            self::TTL => $user_ttl === convertAndFormatHexa($this->frameComponent->getTTL(), 2) ? 1 : 0,
+            self::PROTOCOL => $user_protocol === convertAndFormatHexa($this->frameComponent->getProtocol(), 2) ? 1 : 0,
+            self::HEADER_CHECKSUM => $user_checksum === convertAndFormatHexa($this->frameComponent->getCheckSum(), 4)? 1 : 0,
+            self::EMITTER => $user_emitter === $this->frameComponent->getEmitterIp()->__toString() ? 1 : 0,
+            self::RECEIVER => $user_receiver === $this->frameComponent->getReceiverIp()->__toString() ? 1 : 0
         ];
     }
 }

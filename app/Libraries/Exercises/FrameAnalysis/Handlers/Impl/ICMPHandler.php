@@ -36,11 +36,11 @@ class ICMPHandler extends FrameHandler
         $user_sequenceNumber = strtoupper($_POST[self::SEQUENCE_NUMBER]);
 
         return [
-            self::TYPE => $user_type === convertAndFormatHexa($this->frameComponent->getICMPType(), 2),
-            self::ERROR_CODE => $user_errorCode === convertAndFormatHexa($this->frameComponent->getErrorCode(), 2),
-            self::CHECKSUM => $user_checksum === convertAndFormatHexa($this->frameComponent->getChecksum(), 4),
-            self::IDENTIFIER => $user_identifier === convertAndFormatHexa($this->frameComponent->getIdentifier(), 4),
-            self::SEQUENCE_NUMBER => $user_sequenceNumber === convertAndFormatHexa($this->frameComponent->getSequenceNum(), 4)
+            self::TYPE => $user_type === convertAndFormatHexa($this->frameComponent->getICMPType(), 2) ? 1 : 0,
+            self::ERROR_CODE => $user_errorCode === convertAndFormatHexa($this->frameComponent->getErrorCode(), 2) ? 1 : 0,
+            self::CHECKSUM => $user_checksum === convertAndFormatHexa($this->frameComponent->getChecksum(), 4) ? 1 : 0,
+            self::IDENTIFIER => $user_identifier === convertAndFormatHexa($this->frameComponent->getIdentifier(), 4) ? 1 : 0,
+            self::SEQUENCE_NUMBER => $user_sequenceNumber === convertAndFormatHexa($this->frameComponent->getSequenceNum(), 4) ? 1 : 0
         ];
     }
 }

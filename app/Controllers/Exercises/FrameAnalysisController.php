@@ -30,6 +30,7 @@ class FrameAnalysisController extends BaseController
         helper('ipv6');
 
         $this->session = session();
+        $this->session->destroy();
 
         //If our session doesn't contain any frame.
         if (!isset($_SESSION["frame"])) {
@@ -131,20 +132,30 @@ class FrameAnalysisController extends BaseController
 
     public function index(): string
     {
-        //Basically, only handlers that are within the frame are loaded.
-
+        //Basically, only handlers that are within the frame are loaded
         $frame = unserialize($this->session->get("frame"));
         $arr = str_split($frame->generate(), 2);
         $frame_viewer_data = [ "bytes" => $arr ];
 
         $handlers = unserialize($this->session->get("handlers"));
 
-        //TODO: Need to find a way to return when request and not when needs update.
-        //Maybe check instead if fields are set here, instead of delegating to handlers.
+        //Create a list to send all the data in one time, it won't work if we delegate this part to the handler.
+        $toSendData = [];
+
+        //Add the handlers data to it if it's not empty.
         foreach ($handlers as $handler) {
-            if (!$handler->handle()) {
-                return "";
+            if (count($handler->handle()) !== 0) {
+                $toSendData[] = $handler->handle();
             }
+        }
+
+        //If the global data isn't empty, send it back to the client and return an empty string to avoid loading
+        //the views.
+        if (count($toSendData) !== 0) {
+            $this->response->setHeader("Content-Type", "application/json")
+                ->setJSON($toSendData)
+                ->send();
+            return "";
         }
 
         $data = [

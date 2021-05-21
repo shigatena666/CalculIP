@@ -20,26 +20,20 @@ abstract class FrameHandler
 
     protected abstract function getData(): array;
 
-    public function handle(): bool
+    public function handle(): array
     {
         $notSet_fields = $this->getNotSetFields();
         if (count($notSet_fields) !== 0) {
-            return true;
+            return [];
         }
 
         //Check if the frame has the right data in the POST request, if not, stop there.
         $empty_fields = $this->getEmptyFields();
-        if (count($empty_fields) !== 0) {
-            $this->response->setHeader("Content-Type", "application/json")
-                ->setJSON([ "data" => $this->getData(), "empty" => $empty_fields ])
-                ->send();
-            return false;
-        }
 
-        $this->response->setHeader("Content-Type", "application/json")
-            ->setJSON([ "data" => $this->getData() ])
-            ->send();
-        return false;
+        //Return the data to append in the controller.
+        return count($empty_fields) !== 0 ?
+            [ "data" => $this->getData(), "empty" => $empty_fields ] :
+            [ "data" => $this->getData() ];
     }
 
     private function getNotSetFields() : array

@@ -34,10 +34,10 @@ class UDPHandler extends FrameHandler
         $user_checksum = strtoupper($_POST[self::CHECKSUM]);
 
         return [
-            self::SOURCE_PORT => $user_sourcePort === convertAndFormatHexa($this->frameComponent->getSourcePort(), 4),
-            self::DESTINATION_PORT => $user_destinationPort === convertAndFormatHexa($this->frameComponent->getDestinationPort(), 4),
-            self::TOTAL_LENGTH => $user_totalLength === convertAndFormatHexa($this->frameComponent->getTotalLength(), 4),
-            self::CHECKSUM => $user_checksum === convertAndFormatHexa($this->frameComponent->getChecksum(), 4)
+            self::SOURCE_PORT => $user_sourcePort === convertAndFormatHexa($this->frameComponent->getSourcePort(), 4) ? 1 : 0,
+            self::DESTINATION_PORT => $user_destinationPort === convertAndFormatHexa($this->frameComponent->getDestinationPort(), 4) ? 1 : 0,
+            self::TOTAL_LENGTH => $user_totalLength === convertAndFormatHexa($this->frameComponent->getTotalLength(), 4) ? 1 : 0,
+            self::CHECKSUM => $user_checksum === convertAndFormatHexa($this->frameComponent->getChecksum(), 4) ? 1 : 0
         ];
     }
 }

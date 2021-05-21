@@ -44,15 +44,15 @@ class ARPHandler extends FrameHandler
         $user_tpa = strtoupper($_POST[self::TARGET_PROTOCOL_ADDRESS]);
 
         return [
-            self::HARDWARE_ADDRESS_SPACE => $user_has === convertAndFormatHexa($this->frameComponent->getHardwareAddressSpace(), 4),
-            self::PROTOCOL_ADDRESS_SPACE => $user_pas === convertAndFormatHexa($this->frameComponent->getProtocolAddressSpace(), 4),
-            self::HLEN => $user_hlen === convertAndFormatHexa($this->frameComponent->getHlen(), 2),
-            self::PLEN => $user_plen === convertAndFormatHexa($this->frameComponent->getPlen(), 2),
-            self::OP_CODE => $user_opcode === convertAndFormatHexa($this->frameComponent->getOpCode(), 4),
-            self::SENDER_HARDWARE_ADDRESS => $user_sha === $this->frameComponent->getSenderHardwareAddress()->toHexa(),
-            self::SENDER_PROTOCOL_ADDRESS => $user_spa === $this->frameComponent->getSenderProtocolAddress()->__toString(),
-            self::TARGET_HARDWARE_ADDRESS => $user_tha === $this->frameComponent->getTargetHardwareAddress()->toHexa(),
-            self::TARGET_PROTOCOL_ADDRESS => $user_tpa === $this->frameComponent->getTargetProtocolAddress()->__toString()
+            self::HARDWARE_ADDRESS_SPACE => $user_has === convertAndFormatHexa($this->frameComponent->getHardwareAddressSpace(), 4) ? 1 : 0,
+            self::PROTOCOL_ADDRESS_SPACE => $user_pas === convertAndFormatHexa($this->frameComponent->getProtocolAddressSpace(), 4) ? 1 : 0,
+            self::HLEN => $user_hlen === convertAndFormatHexa($this->frameComponent->getHlen(), 2) ? 1 : 0,
+            self::PLEN => $user_plen === convertAndFormatHexa($this->frameComponent->getPlen(), 2) ? 1 : 0,
+            self::OP_CODE => $user_opcode === convertAndFormatHexa($this->frameComponent->getOpCode(), 4) ? 1 : 0,
+            self::SENDER_HARDWARE_ADDRESS => $user_sha === $this->frameComponent->getSenderHardwareAddress()->toHexa() ? 1 : 0,
+            self::SENDER_PROTOCOL_ADDRESS => $user_spa === $this->frameComponent->getSenderProtocolAddress()->__toString() ? 1 : 0,
+            self::TARGET_HARDWARE_ADDRESS => $user_tha === $this->frameComponent->getTargetHardwareAddress()->toHexa() ? 1 : 0,
+            self::TARGET_PROTOCOL_ADDRESS => $user_tpa === $this->frameComponent->getTargetProtocolAddress()->__toString() ? 1 : 0
         ];
     }
 }
