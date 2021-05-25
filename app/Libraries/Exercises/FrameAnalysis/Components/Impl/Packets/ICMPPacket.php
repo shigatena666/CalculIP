@@ -20,6 +20,8 @@ class ICMPPacket extends FrameComponent
     private $identifier;
     private $sequence_num;
 
+    private $handlers;
+
     private $data;
 
     private $init_checksum;
@@ -28,7 +30,7 @@ class ICMPPacket extends FrameComponent
     {
         parent::__construct(FrameTypes::ICMP);
 
-        FrameHandlerManager::add(new ICMPHandler($this));
+        $this->handlers = [ new ICMPHandler($this) ];
 
         //Load the frame helper so that we can access useful functions.
         helper('frame');
@@ -254,6 +256,11 @@ class ICMPPacket extends FrameComponent
             convertAndFormatHexa($this->getChecksum(), 4) .
             convertAndFormatHexa($this->getIdentifier(), 4) .
             convertAndFormatHexa($this->getSequenceNum(), 4);
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
 

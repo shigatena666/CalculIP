@@ -17,11 +17,6 @@ class UDPHandler extends FrameHandler
     public const TOTAL_LENGTH = "UDPtotalLength";
     public const CHECKSUM = "UDPchecksum";
 
-    public function __construct(FrameComponent $frameComponent)
-    {
-        parent::__construct($frameComponent, FrameTypes::UDP);
-    }
-
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof UDPDatagram) {

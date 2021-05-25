@@ -22,11 +22,6 @@ class ARPHandler extends FrameHandler
     public const TARGET_HARDWARE_ADDRESS = "ARPtargetHardwareAddress";
     public const TARGET_PROTOCOL_ADDRESS = "ARPtargetProtocolAddress";
 
-    public function __construct(FrameComponent $frameComponent)
-    {
-        parent::__construct($frameComponent, FrameTypes::ARP);
-    }
-
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof ARPPacket) {
@@ -42,6 +37,10 @@ class ARPHandler extends FrameHandler
         $user_spa = strtoupper($_POST[self::SENDER_PROTOCOL_ADDRESS]);
         $user_tha = strtoupper($_POST[self::TARGET_HARDWARE_ADDRESS]);
         $user_tpa = strtoupper($_POST[self::TARGET_PROTOCOL_ADDRESS]);
+
+        //In case he did or didn't put : between MAC addresses.
+        $user_sha = str_replace(":", "", $user_sha);
+        $user_tha = str_replace(":", "", $user_tha);
 
         return [
             self::HARDWARE_ADDRESS_SPACE => $user_has === convertAndFormatHexa($this->frameComponent->getHardwareAddressSpace(), 4) ? 1 : 0,

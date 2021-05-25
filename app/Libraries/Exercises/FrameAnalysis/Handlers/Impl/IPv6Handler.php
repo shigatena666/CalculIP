@@ -13,18 +13,13 @@ use Exception;
 class IPv6Handler extends FrameHandler
 {
     public const VERSION = "IPv6version";
-    public const TRAFFIC_CLASS = "IPv6version";
+    public const TRAFFIC_CLASS = "IPv6trafficClass";
     public const FLOW_LABEL = "IPv6flowLabel";
     public const PAYLOAD_LENGTH = "IPv6payloadLength";
     public const NEXT_HEADER = "IPv6nextHeader";
     public const HOP_LIMIT = "IPv6hopLimit";
     public const SOURCE_ADDRESS = "IPv6sourceAddress";
     public const DESTINATION_ADDRESS = "IPv6destinationAddress";
-
-    public function __construct(FrameComponent $frameComponent)
-    {
-        parent::__construct($frameComponent, FrameTypes::IPV6);
-    }
 
     protected function getData(): array
     {
@@ -41,15 +36,19 @@ class IPv6Handler extends FrameHandler
         $user_sourceAddress = strtoupper($_POST[self::SOURCE_ADDRESS]);
         $user_destinationAddress = strtoupper($_POST[self::DESTINATION_ADDRESS]);
 
+        //In case he did or didn't put : between IPv6 addresses.
+        $user_sourceAddress = str_replace(":", "", $user_sourceAddress);
+        $user_destinationAddress = str_replace(":", "", $user_destinationAddress);
+
         return [
             self::VERSION => $user_version === $this->frameComponent::VERSION_IP ? 1 : 0,
             self::TRAFFIC_CLASS => $user_traffic === $this->frameComponent->getTrafficClass()->getTraffic() ? 1 : 0,
-            self::FLOW_LABEL => $user_flowLabel === convertAndFormatHexa($this->frameComponent->getFlowLabel(), 4) ? 1 : 0,
+            self::FLOW_LABEL => $user_flowLabel === convertAndFormatHexa($this->frameComponent->getFlowLabel(), 5) ? 1 : 0,
             self::PAYLOAD_LENGTH => $user_payloadLength === convertAndFormatHexa($this->frameComponent->getPayloadLength(), 4) ? 1 : 0,
             self::NEXT_HEADER => $user_nextHeader === convertAndFormatHexa($this->frameComponent->getNextHeader(), 2) ? 1 : 0,
             self::HOP_LIMIT => $user_hopLimit === convertAndFormatHexa($this->frameComponent->getHopLimit(), 2) ? 1 : 0,
-            self::SOURCE_ADDRESS => $user_sourceAddress === $this->frameComponent->getSourceAddress()->__toString() ? 1 : 0,
-            self::DESTINATION_ADDRESS => $user_destinationAddress === $this->frameComponent->getDestinationAddress()->__toString() ? 1 : 0
+            self::SOURCE_ADDRESS => $user_sourceAddress === $this->frameComponent->getSourceAddress()->toHexa() ? 1 : 0,
+            self::DESTINATION_ADDRESS => $user_destinationAddress === $this->frameComponent->getDestinationAddress()->toHexa() ? 1 : 0
         ];
     }
 }

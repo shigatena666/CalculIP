@@ -39,6 +39,7 @@ class IPv4Packet extends FrameComponent
 
     //32 bits, optional.
     private $options;
+    private $handlers;
 
     private $data;
 
@@ -46,7 +47,7 @@ class IPv4Packet extends FrameComponent
     {
         parent::__construct(FrameTypes::IPV4);
 
-        FrameHandlerManager::add(new IPv4Handler($this));
+        $this->handlers = [ new IPv4Handler($this) ];
 
         //Load the frame helper so that we can access useful functions.
         helper('frame');
@@ -485,6 +486,11 @@ class IPv4Packet extends FrameComponent
         }
 
         return $frame_bytes;
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
 

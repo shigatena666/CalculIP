@@ -17,13 +17,15 @@ class EthernetFrame extends FrameComponent
     private $da;
     private $sa;
     private $etype;
+    private $handlers;
+
     private $data;
 
     public function __construct()
     {
         parent::__construct(FrameTypes::ETHERNET);
 
-        FrameHandlerManager::add(new EthernetHandler($this));
+        $this->handlers = [ new EthernetHandler($this) ];
 
         //Load the frame helper so that we can access useful functions.
         helper('frame');
@@ -163,6 +165,11 @@ class EthernetFrame extends FrameComponent
         }
 
         return $str;
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
 

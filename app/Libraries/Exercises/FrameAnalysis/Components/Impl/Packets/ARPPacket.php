@@ -27,13 +27,15 @@ class ARPPacket extends FrameComponent
 
     private $ethernetFrame;
 
+    private $handlers;
+
     private $data;
 
     public function __construct(EthernetFrame $ethernetFrame)
     {
         parent::__construct(FrameTypes::ARP);
 
-        FrameHandlerManager::add(new ARPHandler($this));
+        $this->handlers = [ new ARPHandler($this) ];
 
         //Load the frame helper so that we can access useful functions.
         helper('frame');
@@ -336,6 +338,11 @@ class ARPPacket extends FrameComponent
         catch (Exception $exception) {
             die($exception->getMessage());
         }
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
 

@@ -18,13 +18,15 @@ class UDPDatagram extends FrameComponent
     private $total_length;
     private $checksum;
 
+    private $handlers;
+
     private $data;
 
     public function __construct()
     {
         parent::__construct(FrameTypes::UDP);
 
-        FrameHandlerManager::add(new UDPHandler($this));
+        $this->handlers = [ new UDPHandler($this) ];
 
         //Load the frame helper so that we can access useful functions.
         helper('frame');
@@ -224,6 +226,11 @@ class UDPDatagram extends FrameComponent
             $frame_bytes .= $this->getData()->generate();
         }
         return $frame_bytes;
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
 

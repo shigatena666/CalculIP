@@ -18,11 +18,6 @@ class ICMPHandler extends FrameHandler
     public const IDENTIFIER = "ICMPidentifier";
     public const SEQUENCE_NUMBER = "ICMPsequenceNumber";
 
-    public function __construct(FrameComponent $frameComponent)
-    {
-        parent::__construct($frameComponent, FrameTypes::ICMP);
-    }
-
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof ICMPPacket) {

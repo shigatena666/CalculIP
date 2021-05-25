@@ -21,7 +21,7 @@
                     <div class="col-xs-6 col-md-6">
                         <div class="col-xs-12 col-md-12 input-group" id="flowLabel">
                             <div class="input-group-addon">Flow label : </div>
-                            <input type="text" class="form-control" placeholder="XXXX" name="IPv6flowLabel">
+                            <input type="text" class="form-control" placeholder="XXXXX" name="IPv6flowLabel">
                         </div>
                     </div>
                 </td>

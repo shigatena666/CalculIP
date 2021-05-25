@@ -14,11 +14,6 @@ class EthernetHandler extends FrameHandler
     public const SENDER_ADDRESS = "EthernetSenderAddress";
     public const ETYPE = "EthernetEtype";
 
-    public function __construct(FrameComponent $frameComponent)
-    {
-        parent::__construct($frameComponent, FrameTypes::ETHERNET);
-    }
-
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof EthernetFrame) {
@@ -30,7 +25,7 @@ class EthernetHandler extends FrameHandler
         $user_sa = strtoupper($_POST[self::SENDER_ADDRESS]);
         $user_etype = strtoupper($_POST[self::ETYPE]);
 
-        //In case he did or didn't put : between hex numbers.
+        //In case he did or didn't put : between MAC addresses.
         $user_da = str_replace(":", "", $user_da);
         $user_sa = str_replace(":", "", $user_sa);
 

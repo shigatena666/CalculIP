@@ -2,7 +2,7 @@
 
 <?= $this->section("content") ?>
 
-<script src="../../../../CalculIP/JavaScript/Views/Exercises/FrameAnalysis/frameanalysis.js"></script>
+<script src="../../../../CalculIP/JavaScript/Views/Exercises/FrameAnalysis/frameanalysis.js?2"></script>
 
 <div class="container">
     <h1>Analyse de trame Ethernet</h1>
@@ -25,7 +25,8 @@
 
                 <p align="right">
                     <A href="http://www-info.iutv.univ-paris13.fr/~butelle/Polys/FormatsTramesPaquetsSansDHCP.pdf">
-                        Format des trames et paquets</A></p>
+                        Format des trames et paquets</A>
+                </p>
         </div>
 
             <?= $frame_viewer ?>
@@ -40,8 +41,10 @@
             <?= $dns_message ?>
 
             <div class="form-group">
-                <input type="submit" class="btn btn-success col-md-4 col-md-offset-4 col-xs-12" id="valider" value="Valider"/><!-- Bouton permettant la validation du formulaire -->
-                <a id="button" href='' hidden><input type='submit' class='btn btn-warning  col-md-4 col-md-offset-4 col-xs-12' id='recommencer' value='Recommencer'/></a> <!-- Bouton permettant de recommencer l'exercice -->
+                <input type="submit" class="btn btn-success col-md-4 col-md-offset-4 col-xs-12" id="valider" name="confirm" value="Valider"/>
+                <form action="" method="post">
+                    <input type='submit' class='btn btn-warning col-md-4 col-md-offset-4 col-xs-12' id='recommencer' name="retry" value='Recommencer'/>
+                </form>
             </div>
 
         </div>

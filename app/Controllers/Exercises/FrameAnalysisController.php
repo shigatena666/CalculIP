@@ -13,7 +13,6 @@ use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\ARPPacket;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\ICMPPacket;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\IPv4\IPv4Packet;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\IPv6\IPv6Packet;
-use App\Libraries\Exercises\FrameAnalysis\Handlers\FrameHandlerManager;
 
 class FrameAnalysisController extends BaseController
 {
@@ -30,7 +29,7 @@ class FrameAnalysisController extends BaseController
         helper('ipv6');
 
         $this->session = session();
-        $this->session->destroy();
+        //$this->session->destroy();
 
         //If our session doesn't contain any frame.
         if (!isset($_SESSION["frame"])) {
@@ -38,9 +37,6 @@ class FrameAnalysisController extends BaseController
 
             //Since frame is an object, we need to serialize it.
             $this->session->set("frame", serialize($frame));
-
-            //The same goes for the handlers.
-            $this->session->set("handlers", serialize($this->getHandlersFromFrame($frame)));
         }
     }
 
@@ -124,7 +120,9 @@ class FrameAnalysisController extends BaseController
         $handlers = [];
 
         while ($frameComponent !== null) {
-            $handlers[] = FrameHandlerManager::find($frameComponent->getFrameType());
+            foreach ($frameComponent->getHandlers() as $handler) {
+                $handlers[] = $handler;
+            }
             $frameComponent = $frameComponent->getData();
         }
         return $handlers;
@@ -132,17 +130,28 @@ class FrameAnalysisController extends BaseController
 
     public function index(): string
     {
-        //Basically, only handlers that are within the frame are loaded
+        //In case the user asked another frame.
+        if (isset($_POST["retry"])) {
+            $this->session->destroy();
+            //Maybe reset the handlers.
+        }
+
+        //Unserialize the frame in the session.
         $frame = unserialize($this->session->get("frame"));
-        $arr = str_split($frame->generate(), 2);
-        $frame_viewer_data = [ "bytes" => $arr ];
 
-        $handlers = unserialize($this->session->get("handlers"));
+        //Get an array for every byte in the frame.
+        $bytes = str_split($frame->generate(), 2);
 
-        //Create a list to send all the data in one time, it won't work if we delegate this part to the handler.
+        //Load the data for the view using the array we just generated.
+        $frame_viewer_data = [ "bytes" => $bytes ];
+
+        //Basically, only handlers that are within the frame are loaded, retrieve them using this method.
+        $handlers = $this->getHandlersFromFrame($frame);
+
+        //Create a list to send all the data in one time, it won't work if we delegate this part to the handlers.
         $toSendData = [];
 
-        //Add the handlers data to it if it's not empty.
+        //Add the handlers data to it as long as it's not empty.
         foreach ($handlers as $handler) {
             if (count($handler->handle()) !== 0) {
                 $toSendData[] = $handler->handle();
@@ -150,13 +159,15 @@ class FrameAnalysisController extends BaseController
         }
 
         //If the global data isn't empty, send it back to the client and return an empty string to avoid loading
-        //the views.
+        //the views in the response data.
         if (count($toSendData) !== 0) {
             $this->response->setHeader("Content-Type", "application/json")
                 ->setJSON($toSendData)
                 ->send();
             return "";
         }
+
+        //TODO: Don't forget to give a point when the user is logged in.
 
         $data = [
             "title" => "Analyse de trame Ethernet (département info)",

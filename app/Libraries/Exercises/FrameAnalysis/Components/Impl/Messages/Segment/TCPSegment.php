@@ -5,6 +5,7 @@ namespace App\Libraries\Exercises\FrameAnalysis\Components\Impl\Messages\Segment
 use App\Libraries\Exercises\FrameAnalysis\Components\FrameComponent;
 use App\Libraries\Exercises\FrameAnalysis\FrameTypes;
 use App\Libraries\Exercises\FrameAnalysis\Handlers\FrameHandlerManager;
+use App\Libraries\Exercises\FrameAnalysis\Handlers\Impl\TCPFlagsHandler;
 use App\Libraries\Exercises\FrameAnalysis\Handlers\Impl\TCPHandler;
 use Exception;
 
@@ -22,6 +23,7 @@ class TCPSegment extends FrameComponent
     private $checksum;
     private $urgent_pointer;
     private $options;
+    private $handlers;
 
     private $data;
 
@@ -29,7 +31,7 @@ class TCPSegment extends FrameComponent
     {
         parent::__construct(FrameTypes::TCP);
 
-        FrameHandlerManager::add(new TCPHandler($this));
+        $this->handlers = [ new TCPHandler($this), new TCPFlagsHandler($this) ];
 
         //Load the frame helper so that we can access useful functions.
         helper('frame');
@@ -360,6 +362,11 @@ class TCPSegment extends FrameComponent
             $frame_bytes .= $this->getData()->generate();
         }
         return $frame_bytes;
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
 

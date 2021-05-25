@@ -12,7 +12,8 @@ $(document).ready(function() {
         "IPv4zero", "IPv4dontFragment", "IPv4moreFragment", "IPv4offset", "IPv4ttl", "IPv4protocol",
         "IPv4headerChecksum", "IPv4Emitter", "IPv4Receiver" ];
 
-    //TODO: Missing IPv6 fields.
+    let ipv6 = [ "IPv6version", "IPv6trafficClass", "IPv6flowLabel", "IPv6payloadLength", "IPv6nextHeader",
+        "IPv6hopLimit", "IPv6sourceAddress", "IPv6destinationAddress" ];
 
     //UDP fields in view.
     let udp = [ "UDPsourcePort", "UDPdestinationPort", "UDPtotalLength", "UDPchecksum" ];
@@ -45,6 +46,7 @@ $(document).ready(function() {
         getAnswers(ethernet, answers);
         getAnswers(arp, answers);
         getAnswers(ipv4, answers);
+        getAnswers(ipv6, answers);
         getAnswers(udp, answers);
         getAnswers(icmp, answers);
         getAnswers(tcp, answers);
@@ -52,10 +54,10 @@ $(document).ready(function() {
         getAnswers(dns, answers);
         getAnswers(DNSflags, answers);
 
+        console.log(answers);
+
         $.post("", answers,
             function(response) {
-
-                //First let's reset glyphicons.
 
                 //Go through the server response data.
                 for (let i = 0; i < response.length; i++) {

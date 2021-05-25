@@ -7,13 +7,11 @@ use App\Libraries\Exercises\FrameAnalysis\Components\FrameComponent;
 
 abstract class FrameHandler
 {
-    private $frameType;
     protected $frameComponent;
     protected $response;
 
-    public function __construct(FrameComponent $frameComponent, int $frameType)
+    public function __construct(FrameComponent $frameComponent)
     {
-        $this->frameType = $frameType;
         $this->frameComponent = $frameComponent;
         $this->response = service('response');
     }
@@ -22,6 +20,8 @@ abstract class FrameHandler
 
     public function handle(): array
     {
+        //TODO: Maybe it could be useful to send only the fields that are completed.
+
         $notSet_fields = $this->getNotSetFields();
         if (count($notSet_fields) !== 0) {
             return [];
@@ -51,14 +51,12 @@ abstract class FrameHandler
     {
         $empty = [];
         foreach ($this->getData() as $fieldName => $value) {
-            if (empty($_POST[$fieldName])) {
+            //We check if the value is !== 0 because in PHP a 0 is evaled false. If you read carefully the
+            //empty function documentation, if the value equals false, then it's considered empty.
+            if (empty($_POST[$fieldName]) && $_POST[$fieldName] !== "0") {
                 $empty[] = $fieldName;
             }
         }
         return $empty;
-    }
-
-    public function getFrameType() : int {
-        return $this->frameType;
     }
 }

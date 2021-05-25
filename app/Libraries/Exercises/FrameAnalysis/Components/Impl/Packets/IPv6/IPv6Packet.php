@@ -23,6 +23,7 @@ class IPv6Packet extends FrameComponent
     private $hop_limit;
     private $source_address;
     private $destination_address;
+    private $handlers;
 
     private $data;
 
@@ -30,7 +31,7 @@ class IPv6Packet extends FrameComponent
     {
         parent::__construct(FrameTypes::IPV6);
 
-        FrameHandlerManager::add(new IPv6Handler($this));
+        $this->handlers = [ new IPv6Handler($this) ];
 
         $this->setDefaultBehaviour();
     }
@@ -295,6 +296,11 @@ class IPv6Packet extends FrameComponent
         }
 
         return $str;
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
 

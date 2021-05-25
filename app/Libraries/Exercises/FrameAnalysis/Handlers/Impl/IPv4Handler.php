@@ -26,11 +26,6 @@ class IPv4Handler extends FrameHandler
     public const EMITTER = "IPv4Emitter";
     public const RECEIVER = "IPv4Receiver";
 
-    public function __construct(FrameComponent $frameComponent)
-    {
-        parent::__construct($frameComponent, FrameTypes::IPV4);
-    }
-
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof IPv4Packet) {

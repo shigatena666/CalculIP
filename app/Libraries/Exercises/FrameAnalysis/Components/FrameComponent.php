@@ -23,6 +23,8 @@ abstract class FrameComponent
 
     public abstract function __toString(): string;
 
+    public abstract function getHandlers() : array;
+
     public function getFrameType(): int
     {
         return $this->frameType;

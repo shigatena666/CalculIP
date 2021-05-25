@@ -6,6 +6,7 @@ use App\Libraries\Exercises\FrameAnalysis\Components\FrameComponent;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Messages\Segment\TCPSegment;
 use App\Libraries\Exercises\FrameAnalysis\FrameTypes;
 use App\Libraries\Exercises\FrameAnalysis\Handlers\FrameHandlerManager;
+use App\Libraries\Exercises\FrameAnalysis\Handlers\Impl\DNSFlagsHandler;
 use App\Libraries\Exercises\FrameAnalysis\Handlers\Impl\DNSHandler;
 use Exception;
 
@@ -25,13 +26,15 @@ class DNSMessage extends FrameComponent
 
     private $dnsQuery;
 
+    private $handlers;
+
     private $data;
 
     public function __construct(FrameComponent $frame)
     {
         parent::__construct(FrameTypes::DNS);
 
-        FrameHandlerManager::add(new DNSHandler($this));
+        $this->handlers = [ new DNSHandler($this), new DNSFlagsHandler($this) ];
 
         //Load the frame helper so that we can access useful functions.
         helper('frame');
@@ -316,5 +319,10 @@ class DNSMessage extends FrameComponent
         catch (Exception $exception) {
             die($exception->getMessage());
         }
+    }
+
+    public function getHandlers(): array
+    {
+        return $this->handlers;
     }
 }
