@@ -14,7 +14,7 @@ class IPv6Address extends Address
      *
      * @return int: The amount of supposed bytes in the IPv6 address (8).
      */
-    protected function getWordsCountLimit(): int
+    public function getWordsCountLimit(): int
     {
         return 8;
     }
@@ -42,21 +42,6 @@ class IPv6Address extends Address
     }
 
     /**
-     * Convert the IPv6 address bytes to hexadecimal.
-     *
-     * @return string: The hexadecimal IP address with no spaces.
-     */
-    public function toHexa(): string
-    {
-        $str = convertAndFormatHexa($this->getWords()[0], 4);
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getWords()[$i], 4);
-        }
-        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 4);
-        return $str;
-    }
-
-    /**
      * This function allows you to get the IPv6 address bytes.
      *
      * @return string: A string with the following format: x.x.x.x where x is a byte.
@@ -69,5 +54,35 @@ class IPv6Address extends Address
         }
         $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 4);
         return compress($str);
+    }
+
+    /**
+     * Convert the IPv6 address words to hexadecimal.
+     *
+     * @return string: The hexadecimal address with no spaces.
+     */
+    public function toHexa(): string
+    {
+        $str = convertAndFormatHexa($this->getWords()[0], 4);
+        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
+            $str .= convertAndFormatHexa($this->getWords()[$i], 4);
+        }
+        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 4);
+        return $str;
+    }
+
+    /**
+     * Convert the IPv6 address words to binary.
+     *
+     * @return string: The binary address with no spaces.
+     */
+    public function toBin() : string
+    {
+        $str = convertAndFormatBin($this->getWords()[0], 16);
+        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
+            $str .= convertAndFormatBin($this->getWords()[$i], 16);
+        }
+        $str .= convertAndFormatBin($this->getWords()[count($this->getWords()) - 1], 16);
+        return $str;
     }
 }

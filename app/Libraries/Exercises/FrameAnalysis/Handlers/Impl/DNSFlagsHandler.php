@@ -15,7 +15,7 @@ class DNSFlagsHandler extends FrameHandler
     public const FLAG_QR = "DNSflagQr";
     public const FLAG_OPCODE = "DNSflagOpCode";
     public const FLAG_AA = "DNSflagAa";
-    public const FLAG_TC = "DNSflagcTc";
+    public const FLAG_TC = "DNSflagTc";
     public const FLAG_RD = "DNSflagRd";
     public const FLAG_RA = "DNSflagRa";
     public const FLAG_ZEROS = "DNSflagZeros";
@@ -41,7 +41,7 @@ class DNSFlagsHandler extends FrameHandler
             self::FLAG_OPCODE =>  $user_opcodeFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getOpCode(), 4) ? 1 : 0,
             self::FLAG_AA =>  $user_aaFlag === $this->frameComponent->getDnsFlags()->getAuthoritativeAnswer() ? 1 : 0,
             self::FLAG_TC => $user_tcFlag === $this->frameComponent->getDnsFlags()->getTruncated() ? 1 : 0,
-            self::FLAG_RD => $user_rdFlag === $this->frameComponent->getDnsFlags()->getRecursionDesired()? 1 : 0,
+            self::FLAG_RD => $user_rdFlag === $this->frameComponent->getDnsFlags()->getRecursionDesired() ? 1 : 0,
             self::FLAG_RA => $user_raFlag === $this->frameComponent->getDnsFlags()->getRecursionAvailable() ? 1 : 0,
             self::FLAG_ZEROS => $user_zerosFlag === $this->frameComponent->getDnsFlags()::ZERO ? 1 : 0,
             self::FLAG_RCODE => $user_rcodeFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getResponseCode(), 4) ? 1 : 0

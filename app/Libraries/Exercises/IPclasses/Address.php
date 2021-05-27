@@ -9,7 +9,6 @@ use Exception;
 abstract class Address
 {
     private $words;
-    private $check_words;
 
     public function __construct(array $words, bool $check_words = false)
     {
@@ -17,8 +16,7 @@ abstract class Address
         helper('ipv6');
 
         try {
-            $this->setWords($words);
-            $this->check_words = $check_words;
+            $this->setWords($words, $check_words);
         }
         catch (Exception $exception) {
             die($exception->getMessage());
@@ -39,9 +37,9 @@ abstract class Address
      *
      * @throws Exception: Throws an exception if the length of the array isn't right and/or integers.
      */
-    public function setWords(array $words): void {
+    public function setWords(array $words, bool $check_words): void {
         foreach ($words as $word) {
-            if ($this->check_words) {
+            if ($check_words) {
                 if (!is_integer($word) && !$this->check_range($word)) {
                     throw new Exception("Invalid IP address parameter: " . $word);
                 }
@@ -64,7 +62,7 @@ abstract class Address
      *
      * @return int: The amount of supposed bytes in the address.
      */
-    protected abstract function getWordsCountLimit() : int;
+    public abstract function getWordsCountLimit() : int;
 
     /**
      * This function is used to check the words of an IP address.
@@ -86,7 +84,14 @@ abstract class Address
      *
      * @return string: The hexadecimal address with no spaces.
      */
-    public abstract function toHexa() : string;
+    public abstract function toHexa(): string;
+
+    /**
+     * Convert the address words to binary.
+     *
+     * @return string: The binary address with no spaces.
+     */
+    public abstract function toBin() : string;
 
     /**
      * This function allows you to get the address words.

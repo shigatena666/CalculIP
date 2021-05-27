@@ -45,7 +45,7 @@
                             <li><a href="/CalculIP/Exercices/Masque.php">Masque (niveau S3)</a></li>
                             <li><a href="/CalculIP/Exercices/NotationCIDRS2.php">Notation CIDR (niveau S2)</a></li>
                             <li><a href="/CalculIP/Exercices/NotationCIDR.php">Notation CIDR (niveau S3)</a></li>
-                            <li><a href="/CalculIP/Exercices/PrefixeMaxFacile.php">Préfixe max (S3)<i>
+                            <li><a href="/CalculIP/Exercices/PrefixeMax">Préfixe max (S3)<i>
                                         <sub><small>Presque Facile</small></sub></i></a></li>
                             <li><a href="/CalculIP/Exercices/PrefixeMaxDifficile.php">Préfixe max (S3) <i><sub><small>plus
                                                 Difficile</small></sub></i></a></li>

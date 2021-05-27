@@ -27,6 +27,7 @@ class FrameAnalysisController extends BaseController
         //Used because otherwise we get an exception because it's not found. Weird behaviour of CI4.
         helper('frame');
         helper('ipv6');
+        helper('url');
 
         $this->session = session();
         //$this->session->destroy();
@@ -128,12 +129,12 @@ class FrameAnalysisController extends BaseController
         return $handlers;
     }
 
-    public function index(): string
+    public function index()
     {
-        //In case the user asked another frame.
+        //In case the user asked for another frame.
         if (isset($_POST["retry"])) {
-            $this->session->destroy();
-            //Maybe reset the handlers.
+            $this->session->remove('frame');
+            return redirect()->to(current_url());
         }
 
         //Unserialize the frame in the session.

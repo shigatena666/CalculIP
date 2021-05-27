@@ -2,7 +2,7 @@
 
 <?= $this->section("content") ?>
 
-<script src="../../../../CalculIP/JavaScript/Views/Exercises/FrameAnalysis/frameanalysis.js?2"></script>
+<script src="../../../../CalculIP/JavaScript/Views/Exercises/FrameAnalysis/frameanalysis.js?3"></script>
 
 <div class="container">
     <h1>Analyse de trame Ethernet</h1>
@@ -27,7 +27,13 @@
                     <A href="http://www-info.iutv.univ-paris13.fr/~butelle/Polys/FormatsTramesPaquetsSansDHCP.pdf">
                         Format des trames et paquets</A>
                 </p>
-        </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div id="commentaire"></div>
+                </div>
+            </div>
 
             <?= $frame_viewer ?>
 

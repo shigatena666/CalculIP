@@ -4,6 +4,7 @@
 namespace App\Libraries\Exercises\FrameAnalysis\Handlers;
 
 use App\Libraries\Exercises\FrameAnalysis\Components\FrameComponent;
+use App\Libraries\Exercises\FrameAnalysis\Handlers\Impl\DNSFlagsHandler;
 
 abstract class FrameHandler
 {

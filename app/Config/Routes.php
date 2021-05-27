@@ -50,6 +50,10 @@ $routes->post("/Exercices/TrouverClasseInverse", "Exercises/IPClassesReverseCont
 $routes->get("/Exercices/AnalyseTrame", "Exercises/FrameAnalysisController::index");
 $routes->post("/Exercices/AnalyseTrame", "Exercises/FrameAnalysisController::index");
 
+// Accept GET and POST requests for max common prefix.
+$routes->get("/Exercices/PrefixeMax", "Exercises/MaxCommonPrefixController::index");
+$routes->post("/Exercices/PrefixeMax", "Exercises/MaxCommonPrefixController::index");
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

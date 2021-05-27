@@ -34,7 +34,7 @@ $(document).ready(function() {
         "DNSadditionalNumber" ];
 
     //DNS flags fields in view.
-    let DNSflags = [ "DNSflagQr", "DNSflagOpCode", "DNSflagAa", "DNSflagcTc", "DNSflagRd", "DNSflagRa", "DNSflagZeros",
+    let DNSflags = [ "DNSflagQr", "DNSflagOpCode", "DNSflagAa", "DNSflagTc", "DNSflagRd", "DNSflagRa", "DNSflagZeros",
         "DNSflagRcode" ];
 
     $("#valider").on('click',function(event) {
@@ -54,10 +54,11 @@ $(document).ready(function() {
         getAnswers(dns, answers);
         getAnswers(DNSflags, answers);
 
-        console.log(answers);
-
         $.post("", answers,
             function(response) {
+
+                let commentary_error = false;
+                let commentary_warning = false;
 
                 //Go through the server response data.
                 for (let i = 0; i < response.length; i++) {
@@ -129,15 +130,48 @@ $(document).ready(function() {
                         //Set the panel to the right color depending on the counter's value and if there are warning.
                         if (errors_count !== 0 && !("empty" in response[i])) {
                             panel.addClass("panel-danger");
+                            commentary_error = true;
                         } else {
                             if ("empty" in response[i]) {
                                 panel.addClass("panel-warning");
+                                commentary_warning = true;
                             } else {
                                 panel.addClass("panel-success");
                             }
                         }
                     }
                 }
+
+                //Avoid look-up through JQuery everytime.
+                let commentary = $('#commentaire');
+
+                //Remove the previous commentaries.
+                commentary.children().remove();
+
+                //Create the alert div.
+                let alert = $("<div class='alert alert-dismissible text-center' role='alert'></div>");
+                //Create close button
+                let close_button = $("<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'></span></button>").text("×");
+
+                //Add them altogether.
+                alert.append(close_button)
+                commentary.append(alert);
+
+                //Could have used .eq(0) as well.
+                let div_to_add_into = commentary.children(":first");
+
+                //Set the right color and message accordingly to the user answers.
+                if (commentary_error) {
+                    div_to_add_into.append("Il y a une ou plusieurs erreur(s) !");
+                    div_to_add_into.addClass("alert-danger");
+                } else if (commentary_warning) {
+                    div_to_add_into.append("Il faut remplir les champs vides !");
+                    div_to_add_into.addClass("alert-warning");
+                } else {
+                    div_to_add_into.append("Bravo ! L'exercice a bien été réussi !");
+                    div_to_add_into.addClass("alert-success");
+                }
+
             }, "json"
         );
     });
@@ -149,4 +183,6 @@ $(document).ready(function() {
             dic_to_add[array[i]] = current;
         }
     }
+
+
 });
