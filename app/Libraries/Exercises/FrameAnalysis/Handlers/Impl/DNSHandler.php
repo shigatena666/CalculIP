@@ -32,6 +32,7 @@ class DNSHandler extends FrameHandler
         $user_authoritiesCount = strtoupper($_POST[self::AUTHORITY_NUMBER]);
         $user_additionalCount = strtoupper($_POST[self::ADDITIONAL_NUMBER]);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::TRANS_ID => $user_transID === convertAndFormatHexa($this->frameComponent->getID(), 4) ? 1 : 0,
             self::FLAGS => $user_flags === $this->frameComponent->getDnsFlags()->getFlags() ? 1 : 0,

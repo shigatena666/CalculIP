@@ -36,6 +36,7 @@ class DNSFlagsHandler extends FrameHandler
         $user_zerosFlag = strtoupper($_POST[self::FLAG_ZEROS]);
         $user_rcodeFlag = strtoupper($_POST[self::FLAG_RCODE]);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::FLAG_QR => $user_qrFlag === $this->frameComponent->getDnsFlags()->getQueryResponse() ? 1 : 0,
             self::FLAG_OPCODE =>  $user_opcodeFlag === convertAndFormatBin($this->frameComponent->getDnsFlags()->getOpCode(), 4) ? 1 : 0,

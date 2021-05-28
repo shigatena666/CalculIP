@@ -38,6 +38,7 @@ class TCPFlagsHandler extends FrameHandler
         $user_flagSyn = strtoupper($_POST[self::FLAG_SYN]);
         $user_flagFin = strtoupper($_POST[self::FLAG_FIN]);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::FLAG_NS => $user_flagNs === $this->frameComponent->getTcpflags()->getEcn() ? 1 : 0,
             self::FLAG_CWR => $user_flagCwr === $this->frameComponent->getTcpflags()->getEcn() ? 1 : 0,

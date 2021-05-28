@@ -30,6 +30,7 @@ class ICMPHandler extends FrameHandler
         $user_identifier = strtoupper($_POST[self::IDENTIFIER]);
         $user_sequenceNumber = strtoupper($_POST[self::SEQUENCE_NUMBER]);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::TYPE => $user_type === convertAndFormatHexa($this->frameComponent->getICMPType(), 2) ? 1 : 0,
             self::ERROR_CODE => $user_errorCode === convertAndFormatHexa($this->frameComponent->getErrorCode(), 2) ? 1 : 0,

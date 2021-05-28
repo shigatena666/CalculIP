@@ -29,7 +29,7 @@ class EthernetHandler extends FrameHandler
         $user_da = str_replace(":", "", $user_da);
         $user_sa = str_replace(":", "", $user_sa);
 
-        //Check if the user input is equal to the stored frame's result and return it as an array.
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::DESTINATION_ADDRESS => $user_da === $this->frameComponent->getDa()->toHexa() ? 1 : 0,
             self::SENDER_ADDRESS => $user_sa === $this->frameComponent->getSa()->toHexa() ? 1 : 0,

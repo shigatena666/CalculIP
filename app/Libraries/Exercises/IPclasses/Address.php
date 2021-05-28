@@ -37,7 +37,7 @@ abstract class Address
      *
      * @throws Exception: Throws an exception if the length of the array isn't right and/or integers.
      */
-    public function setWords(array $words, bool $check_words): void {
+    public function setWords(array $words, bool $check_words = false): void {
         foreach ($words as $word) {
             if ($check_words) {
                 if (!is_integer($word) && !$this->check_range($word)) {
@@ -54,6 +54,28 @@ abstract class Address
         }
 
         $this->words = $words;
+    }
+
+    /**
+     * This function allows you to set the word of an address.
+     *
+     * @throws Exception: Throws an exception if the length of the array isn't right and/or integers.
+     */
+    public function setWord(int $word, int $index, bool $check_words = false): void {
+        if ($check_words) {
+            if (!is_integer($word) && !$this->check_range($word)) {
+                throw new Exception("Invalid IP address parameter: " . $word);
+            }
+        } else {
+            if (!is_integer($word)) {
+                throw new Exception("Invalid IP address parameter: " . $word);
+            }
+        }
+        if ($index < 0 || $index >= $this->getWordsCountLimit()) {
+            throw new Exception("Invalid IP address index: " . $index);
+        }
+
+        $this->words[$index] = $word;
     }
 
     /**

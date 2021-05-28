@@ -54,6 +54,14 @@ $routes->post("/Exercices/AnalyseTrame", "Exercises/FrameAnalysisController::ind
 $routes->get("/Exercices/PrefixeMax", "Exercises/MaxCommonPrefixController::index");
 $routes->post("/Exercices/PrefixeMax", "Exercises/MaxCommonPrefixController::index");
 
+// Accept GET and POST requests for max common prefix hard.
+$routes->get("/Exercices/PrefixeMaxDifficile", "Exercises/MaxCommonPrefixHardController::index");
+$routes->post("/Exercices/PrefixeMaxDifficile", "Exercises/MaxCommonPrefixHardController::index");
+
+// Accept GET and POST requests for CIDR notation.
+$routes->get("/Exercices/NotationCIDRS2", "Exercises/CIDRNotationController::index");
+$routes->post("/Exercices/NotationCIDRS2", "Exercises/CIDRNotationController::index");
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

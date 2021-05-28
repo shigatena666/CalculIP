@@ -40,6 +40,7 @@ class TCPHandler extends FrameHandler
         $user_checksum = strtoupper($_POST[self::CHECKSUM]);
         $user_pointer = strtoupper($_POST[self::POINTER]);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::SOURCE_PORT => $user_sourcePort === convertAndFormatHexa($this->frameComponent->getSourcePort(), 4) ? 1 : 0,
             self::DESTINATION_PORT => $user_destinationPort === convertAndFormatHexa($this->frameComponent->getDestinationPort(), 4) ? 1 : 0,

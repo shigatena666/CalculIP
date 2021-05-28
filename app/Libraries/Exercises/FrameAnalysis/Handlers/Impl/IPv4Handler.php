@@ -47,6 +47,7 @@ class IPv4Handler extends FrameHandler
         $user_emitter = strtoupper($_POST[self::EMITTER]);
         $user_receiver = strtoupper($_POST[self::RECEIVER]);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::VERSION => $user_version === $this->frameComponent::VERSION_IP ? 1 : 0,
             self::HEADER_LENGTH => $user_headerLength === convertAndFormatHexa($this->frameComponent->getHeaderLength(), 1) ? 1 : 0,

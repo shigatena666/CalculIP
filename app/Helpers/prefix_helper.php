@@ -17,15 +17,15 @@ function get2RandIPs_long($cidr): array
 {
     $adresse1 = aleaAdIP_long();
     $mask = masque_long($cidr);
-    $bit = 1<<(31-$cidr);
-    $adresse2 = ($adresse1 & $mask) + rand(1,$bit-1) ;
+    $bit = 1 << (31 - $cidr);
+    $adresse2 = ($adresse1 & $mask) + rand(1, $bit-1) ;
     if (($adresse1 & $bit)== 0) {
         $adresse2 |= $bit;
     }
     else {
         $adresse2 &= ~($bit);
     }
-    return array($adresse1,$adresse2);
+    return [ $adresse1, $adresse2 ];
 }
 
 // ******************************************

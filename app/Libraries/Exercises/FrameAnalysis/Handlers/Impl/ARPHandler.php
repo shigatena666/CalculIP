@@ -42,6 +42,7 @@ class ARPHandler extends FrameHandler
         $user_sha = str_replace(":", "", $user_sha);
         $user_tha = str_replace(":", "", $user_tha);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::HARDWARE_ADDRESS_SPACE => $user_has === convertAndFormatHexa($this->frameComponent->getHardwareAddressSpace(), 4) ? 1 : 0,
             self::PROTOCOL_ADDRESS_SPACE => $user_pas === convertAndFormatHexa($this->frameComponent->getProtocolAddressSpace(), 4) ? 1 : 0,

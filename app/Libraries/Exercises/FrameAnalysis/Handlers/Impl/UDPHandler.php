@@ -28,6 +28,7 @@ class UDPHandler extends FrameHandler
         $user_totalLength = strtoupper($_POST[self::TOTAL_LENGTH]);
         $user_checksum = strtoupper($_POST[self::CHECKSUM]);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::SOURCE_PORT => $user_sourcePort === convertAndFormatHexa($this->frameComponent->getSourcePort(), 4) ? 1 : 0,
             self::DESTINATION_PORT => $user_destinationPort === convertAndFormatHexa($this->frameComponent->getDestinationPort(), 4) ? 1 : 0,

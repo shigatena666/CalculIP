@@ -40,6 +40,7 @@ class IPv6Handler extends FrameHandler
         $user_sourceAddress = str_replace(":", "", $user_sourceAddress);
         $user_destinationAddress = str_replace(":", "", $user_destinationAddress);
 
+        //We force it with the ternary operator because in case it's not equal PHP returns nothing instead of false.
         return [
             self::VERSION => $user_version === $this->frameComponent::VERSION_IP ? 1 : 0,
             self::TRAFFIC_CLASS => $user_traffic === $this->frameComponent->getTrafficClass()->getTraffic() ? 1 : 0,
