@@ -35,7 +35,7 @@
     <div class="form-group">
         <div class="row">
             <div class="col-xs-12 col-md-offset-3 col-md-6">
-                <label for="adrReseau" class="">Quelle est l'adresse réseau de <?= $ip ?>/<?= $cidr ?> ?</label>
+                <label for="adrReseau" class="">Quelle est l'adresse réseau de <?= $ip ?>/<?= $ip->getCidr() ?> ?</label>
             </div>
         </div>
         <div class="row">
@@ -50,15 +50,34 @@
 
     <div class="form-group">
         <div class="row">
-            <div class="col-md-offset-4 col-xs-12 col-md-4">
-                <input type="submit" name="submit" class="btn btn-success col-xs-12" name=""/>
+            <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <label for="adrReseau" class="">Quelle est l'adresse de diffusion de <?= $ip ?>/<?= $ip->getCidr() ?> ?</label>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-offset-3 col-md-6">
+                <div class="input-group col-md-12 col-xs-12 ">
+                    <input type="text" class="form-control" id="adrDiffusion" name="adrDiffusion" placeholder="0.0.0.0" value="">
+                    <span class="glyphicon glyphicon- form-control-feedback" aria-hidden="true"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-offset-4 col-xs-12 col-md-4">
+            <input type="submit" name="submit" class="btn btn-success col-xs-12" name=""/>
+        </div>
+    </div>
+
+    <form class="" action="" method="post">
         <div class="row">
             <div class="col-md-offset-4 col-xs-12 col-md-4">
                 <input type="submit" name="retry" value="Nouvelle IP" class="btn btn-warning col-xs-12" />
             </div>
             <div class="row  form-group"></div>
         </div>
-    </div>
-</form>
+    </form>
+</div>

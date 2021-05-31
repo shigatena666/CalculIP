@@ -17,25 +17,27 @@ class IPClassesController extends Controller
 
     private function handle_answer() : string
     {
+        $ip = unserialize($this->session->get("ip"));
+
         //Special view, check if the class doesn't exist and the user has succeeded.
-        if ($this->session->get("ip")->check_class() === $_POST["classe"] &&
-            $this->session->get("ip")->check_class() === "None") {
+        if ($ip->getClass() === $_POST["classe"] &&
+            $ip->getClass() === "None") {
 
             return view("Exercises/IPClasses/ipclasses_success_none");
         }
         //Special view, check if the class doesn't exist and the user has failed.
-        else if ($this->session->get("ip")->check_class() !== $_POST["classe"] &&
-            $this->session->get("ip")->check_class() === "None") {
+        else if ($ip->getClass() !== $_POST["classe"] &&
+            $ip->getClass() === "None") {
 
             return view("Exercises/IPClasses/ipclasses_fail_none");
         }
 
         //Let's compare the class of the IP in the session to the one he submitted.
-        $state = $this->session->get("ip")->check_class() === $_POST["classe"] ? "success" : "fail";
+        $state = $ip->getClass() === $_POST["classe"] ? "success" : "fail";
 
         //Generate our result view data to display the result.
         $result_data = [
-            "type" => $this->session->get("ip")->check_class()
+            "type" => $ip->getClass()
         ];
 
         //Return our result view, the result view depends on if the user succeeded or not.
@@ -64,14 +66,14 @@ class IPClassesController extends Controller
 
         //If there is no IP set in the session, set one. This avoid the user having access to the IP.
         if (!isset($_SESSION["ip"])) {
-            $this->session->set("ip", $this->generate_random_ip());
+            $this->session->set("ip", serialize($this->generate_random_ip()));
         }
 
         //Fill the data with our IP address.
         $data = [
             "title" => "Classe de l'IP : Trouver la classe correspondante",
             "menu_view" => view('templates/menu'),
-            "ip" => $this->session->get("ip")
+            "ip" => unserialize($this->session->get("ip"))
         ];
 
         //If the user has submitted his answer.

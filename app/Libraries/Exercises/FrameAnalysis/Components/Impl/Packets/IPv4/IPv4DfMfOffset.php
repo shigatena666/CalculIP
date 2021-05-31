@@ -9,18 +9,14 @@ class IPv4DfMfOffset
 {
     public const RESERVED = 0;
 
-    private $packet;
-
     private $dont_fragment;
     private $more_fragment;
     private $offset;
 
     private $flags;
 
-    public function __construct(IPv4Packet $packet)
+    public function __construct()
     {
-        $this->packet = $packet;
-
         $this->dont_fragment = 0;
         $this->more_fragment = 0;
         $this->offset = 0;
@@ -117,10 +113,10 @@ class IPv4DfMfOffset
 
     /**
      * This function allows you to recompile the flags to an hexadecimal value.
+     * Don't forget to recompile the flags otherwise it won't work.
      */
     private function recompileFlags(): void
     {
-        //TODO: Maybe cache the converters.
         //Since offset is a decimal number, convert it to binary.
         $offset_bin = convertAndFormatBin($this->getOffset(), 13);
 
@@ -129,13 +125,5 @@ class IPv4DfMfOffset
 
         //Convert our flags from binary to hexadecimal.
         $this->flags = convertAndFormatHexa(bindec($bin), 4);
-
-        try {
-            //Recompile our checksum since the values have changed.
-            $this->packet->setCheckSum(recompileChecksum($this->packet->generate(), $this->packet->getInitChecksum()));
-        }
-        catch (Exception $exception) {
-            die($exception->getMessage());
-        }
     }
 }

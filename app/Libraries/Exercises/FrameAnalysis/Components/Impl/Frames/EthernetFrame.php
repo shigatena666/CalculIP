@@ -173,8 +173,11 @@ class EthernetFrame extends FrameComponent
     }
 }
 
+// 3 chances over 4 to have IPv4.
 EthernetFrame::$Etype_builder = [
-    2048 => 0x0800,
-    2054 => 0x0806,
-    34525 => 0x86dd
+    0x0800, //IPv4
+    0x0800, //IPv4
+    0x0800, //IPv4
+    0x0806, //ARP
+    //0x86dd This is used only in specific cases.
 ];

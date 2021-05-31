@@ -3,36 +3,16 @@
 namespace App\Libraries\Exercises\IPclasses\Impl;
 
 use App\Libraries\Exercises\IPclasses\Address;
+use Exception;
 
 class IPv4Address extends Address
 {
-    /**
-     * This funtion allows you to set the amount of bytes for the IPv4 address.
-     *
-     * @return int: The amount of supposed bytes in the IP address (4).
-     */
-    public function getWordsCountLimit(): int
-    {
-        return 4;
-    }
-
-    /**
-     * This function is used to check the bytes of an IPv4 address.
-     *
-     * @param $val: The byte that needs to be checked
-     * @return bool: True if the byte is ranged [0-255], false otherwise.
-     */
-    public function check_range($val): bool
-    {
-        return $val >= 0 && $val <= 255;
-    }
-
     /**
      * This function is used to check the class of an IPv4 address.
      *
      * @return string: The IPv4 address class. (A, B, C, D, E, None)
      */
-    public function check_class(): string
+    public function getClass(): string
     {
         //Let's check if all the other bytes are in the right range.
         if ($this->check_range($this->getWords()[1]) && $this->check_range($this->getWords()[2]) &&
@@ -97,13 +77,89 @@ class IPv4Address extends Address
      *
      * @return string: The binary address with no spaces.
      */
-    public function toBin() : string
+    public function toBin(): string
     {
-        $str = convertAndFormatBin($this->getWords()[0], 8);
+        $str = convertAndFormatBin($this->getWords()[0], $this->getBitsPerWord());
         for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatBin($this->getWords()[$i], 8);
+            $str .= convertAndFormatBin($this->getWords()[$i], $this->getBitsPerWord());
         }
-        $str .= convertAndFormatBin($this->getWords()[count($this->getWords()) - 1], 8);
+        $str .= convertAndFormatBin($this->getWords()[count($this->getWords()) - 1], $this->getBitsPerWord());
         return $str;
+    }
+
+    /**
+     * This funtion allows you to set the amount of bits in a word for the address.
+     *
+     * @return int: The amount of supposed bits in a word of the IPv4 address. (8)
+     */
+    public function getBitsPerWord(): int
+    {
+        return 8;
+    }
+
+    /**
+     * This function allows you to get the network address of the current IPv4 address.
+     *
+     * @return Address : An IPv4 address with the values of the network address.
+     */
+    public function getNetworkAddress(): Address
+    {
+        //Get the mask as a byte array.
+        $mask_bytes = $this->getMaskBytes();
+
+        //Create an IP address with the mask data.
+        $mask_address = new IPv4Address($mask_bytes);
+
+        //Initialize our network address.
+        $network_address = new IPv4Address($this->getWords());
+
+        try {
+            //Now let's apply the mask using the AND bitwise operator to get the network address of the IP.
+            for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
+                $network_address->setWord($network_address->getWords()[$i] & $mask_address->getWords()[$i], $i);
+            }
+
+            return $network_address;
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
+    }
+
+    /**
+     * This funtion allows you to set the amount of bytes for the IPv4 address.
+     *
+     * @return int: The amount of supposed bytes in the IPv4 address (4).
+     */
+    public function getWordsCountLimit(): int
+    {
+        return 4;
+    }
+
+    /**
+     * This function allows you to get the broadcast address of the current IPv4 address.
+     *
+     * @return Address : An IPv4 address with the values of the broadcast address.
+     */
+    public function getBroadcastAddress(): Address
+    {
+        //Get the mask as a byte array.
+        $mask_bytes = $this->getMaskBytes();
+
+        //Create an IP address with the mask data.
+        $mask_address = new IPv4Address($mask_bytes);
+
+        //Initialize our broadcast address.
+        $network_address = new IPv4Address($this->getWords());
+
+        try {
+            //Now let's apply the inverted mask using XOR 255 bitwise operator to get the broadcast address of the IP.
+            for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
+                $network_address->setWord($network_address->getWords()[$i] | ($mask_address->getWords()[$i] ^ (2 ** $this->getBitsPerWord()) - 1), $i);
+            }
+
+            return $network_address;
+        } catch (Exception $e) {
+            die($e->getMessage());
+        }
     }
 }

@@ -109,7 +109,7 @@ class MaxCommonPrefixController extends Controller
                     $user_ip = new IPv4Address([ (int)$bytes[1], (int)$bytes[2], (int)$bytes[3], (int)$bytes[4] ]);
 
                     //Check if the IP address has one of its byte incorrect.
-                    if ($user_ip->check_class() !== "None") {
+                    if ($user_ip->getClass() !== "None") {
 
                         //Generate the right data to show the answer view.
                         $answer_data = [

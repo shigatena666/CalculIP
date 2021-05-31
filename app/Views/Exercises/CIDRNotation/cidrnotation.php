@@ -2,6 +2,8 @@
 
 <?= $this->section("content") ?>
 
+<script src="../../../../CalculIP/JavaScript/Views/Exercises/CIDRNotation/cidrnotation.js?2"></script>
+
 <div class="container">
     <h1>Notation CIDR (niveau S2)</h1>
     <div class="panel panel-default">
@@ -12,7 +14,7 @@
 
         <div class="panel-body">
             <div class="lead bg-info well">
-                Adresse IP : <b><?= $ip ?> /<?= $cidr ?></b><br/>
+                Adresse IP : <b><?= $ip ?> /<?= $ip->getCidr() ?></b><br/>
             </div>
             <div class="col-md-12">
 

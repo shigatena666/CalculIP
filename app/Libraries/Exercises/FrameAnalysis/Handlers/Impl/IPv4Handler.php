@@ -51,7 +51,7 @@ class IPv4Handler extends FrameHandler
         return [
             self::VERSION => $user_version === $this->frameComponent::VERSION_IP ? 1 : 0,
             self::HEADER_LENGTH => $user_headerLength === convertAndFormatHexa($this->frameComponent->getHeaderLength(), 1) ? 1 : 0,
-            self::SERVICE_TYPE => $user_typeOfService === $this->frameComponent->getTypeOfService()->getFlags() ? 1 : 0,
+            self::SERVICE_TYPE => $user_typeOfService === $this->frameComponent->getDiffserver()->getFlags() ? 1 : 0,
             self::TOTAL_LENGTH => $user_totalLength === convertAndFormatHexa($this->frameComponent->getTotalLength(), 4) ? 1 : 0,
             self::IDENTIFICATION => $user_identification === convertAndFormatHexa($this->frameComponent->getIdentification(), 4) ? 1 : 0,
             self::ZERO => $user_zero === (string)IPv4DfMfOffset::RESERVED ? 1 : 0,

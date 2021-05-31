@@ -38,7 +38,7 @@ class IPClassesReverseController extends Controller
             $result_data["ip_class"] = $this->session->get("ip_class");
 
             //Check the user input and compare it to the IP class.
-            $state = $ip->check_class() === $this->session->get("ip_class") ? "success" : "fail";
+            $state = $ip->getClass() === $this->session->get("ip_class") ? "success" : "fail";
         }
         //If it doesn't match an IP address.
         else {

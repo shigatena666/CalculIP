@@ -17,7 +17,7 @@ class IPv4Packet extends FrameComponent
 
     //32 bits.
     private $header_length;
-    private $type_of_service; //DiffServer.
+    private $diff_server;
     private $total_length;
 
     //32 bits.
@@ -54,12 +54,10 @@ class IPv4Packet extends FrameComponent
 
         //Some values must be initialized before.
         $this->header_length = 0;
-        //We pass this packet as parameter because we need to recompile the checksum when some values have changed.
-        $this->type_of_service = new IPv4TypeOfService($this);
+        $this->diff_server = new IPv4DiffServer();
         $this->total_length = 0;
-        //We pass this packet as parameter because we need to recompile the checksum when some values have changed.
         $this->identification = 0;
-        $this->df_mf_offset = new IPv4DfMfOffset($this);
+        $this->df_mf_offset = new IPv4DfMfOffset();
         $this->TTL = 0;
         $this->protocol = 0;
         $this->emitter_ip = new IPv4Address([ rand(1, 223), rand(0, 254), rand(0, 254), rand(0, 254) ]);
@@ -101,11 +99,11 @@ class IPv4Packet extends FrameComponent
     /**
      * This function allows you to access the type of service informations.
      *
-     * @return IPv4TypeOfService: A class containing the flags.
+     * @return IPv4DiffServer: A class containing the flags.
      */
-    public function getTypeOfService(): IPv4TypeOfService
+    public function getDiffserver(): IPv4DiffServer
     {
-        return $this->type_of_service;
+        return $this->diff_server;
     }
 
     /**
@@ -273,7 +271,7 @@ class IPv4Packet extends FrameComponent
      */
     public function setEmitterIp(IPv4Address $emitter_ip): void
     {
-        if ($emitter_ip->check_class() === "None") {
+        if ($emitter_ip->getClass() === "None") {
             throw new Exception("Invalid IP address in IPv4 for the emitter: " . $emitter_ip);
         }
         $this->emitter_ip = $emitter_ip;
@@ -298,7 +296,7 @@ class IPv4Packet extends FrameComponent
      */
     public function setReceiverIp(IPv4Address $receiver_ip): void
     {
-        if ($receiver_ip->check_class() === "None") {
+        if ($receiver_ip->getClass() === "None") {
             throw new Exception("Invalid IP address in IPv4 for the receiver: " . $receiver_ip);
         }
         $this->receiver_ip = $receiver_ip;
@@ -399,16 +397,15 @@ class IPv4Packet extends FrameComponent
             //Again, initialize the total length, will be calculated after.
             $this->setTotalLength(0);
 
-            //TODO: Maybe set random values here ?
-            $this->getTypeOfService()->setPriority(0);
-            $this->getTypeOfService()->setDelay(0);
-            $this->getTypeOfService()->setThroughput(0);
-            $this->getTypeOfService()->setReliability(0);
-            $this->getTypeOfService()->setCost(0);
+            //No need to recalculate checksum right after this, it's done later.
+            //In easy mode the values are always set to 0.
+            $this->getDiffserver()->setDifferenciatedServices(0);
+            $this->getDiffserver()->setEcn(0);
 
             setlocale(LC_ALL, 'fr_FR.UTF-8');
             $this->setIdentification((int)strftime('%m%d'));
 
+            //No need to recalculate checksum right after this, it's done later.
             $this->getDfMfOffset()->setDontfragment(1);
             $this->getDfMfOffset()->setMorefragment(0);
             $this->getDfMfOffset()->setOffset(0);
@@ -445,7 +442,7 @@ class IPv4Packet extends FrameComponent
     {
         $str = "VerIP: " . self::VERSION_IP;
         $str .= "\nHeader length: " . convertAndFormatHexa($this->getHeaderLength(), 1);
-        $str .= "\nDiffServer: " . $this->getTypeOfService()->getFlags();
+        $str .= "\nDiffServer: " . $this->getDiffserver()->getFlags();
         $str .= "\nTotal length: " . convertAndFormatHexa($this->getTotalLength() , 4);
         $str .= "\nIdentification: " . convertAndFormatHexa($this->getIdentification(), 4);
         $str .= "\nDF,MF,Offset: " . $this->getDfMfOffset()->getFlags();
@@ -472,7 +469,7 @@ class IPv4Packet extends FrameComponent
     {
         $frame_bytes = self::VERSION_IP .
             convertAndFormatHexa($this->getHeaderLength(), 1) .
-            $this->getTypeOfService()->getFlags() . convertAndFormatHexa($this->getTotalLength() , 4) .
+            $this->getDiffserver()->getFlags() . convertAndFormatHexa($this->getTotalLength() , 4) .
             convertAndFormatHexa($this->getIdentification(), 4) .
             $this->getDfMfOffset()->getFlags() .
             convertAndFormatHexa($this->getTTL(), 2) . convertAndFormatHexa($this->getProtocol(), 2) .
