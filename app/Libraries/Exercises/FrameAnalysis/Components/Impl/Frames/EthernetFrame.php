@@ -125,7 +125,7 @@ class EthernetFrame extends FrameComponent
         try {
             $this->setDa(generateMACAddress());
             $this->setSa(generateMACAddress());
-            $this->setEtype(array_rand(self::$Etype_builder));
+            $this->setEtype(generateRandomIndex(self::$Etype_builder));
         }
         catch (Exception $exception) {
             die($exception->getMessage());

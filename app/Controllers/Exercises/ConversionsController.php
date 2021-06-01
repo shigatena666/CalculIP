@@ -2,7 +2,7 @@
 
 namespace App\Controllers\Exercises;
 
-use App\Controllers\BaseController;
+use App\Controllers\ExerciseController;
 use App\Libraries\Exercises\Conversions\ConversionType;
 use App\Libraries\Exercises\Conversions\Impl\BinToDecConversion;
 use App\Libraries\Exercises\Conversions\Impl\BinToHexConversion;
@@ -12,33 +12,38 @@ use App\Libraries\Exercises\Conversions\Impl\HexToBinConversion;
 use App\Libraries\Exercises\Conversions\Impl\HexToDecConversion;
 use App\Models\ExerciseDoneModel;
 
-class ConversionsController extends BaseController
+class ConversionsController extends ExerciseController
 {
     //To later give an user some points.
-    const TITLE = "Conversions : Binaire - Hexadécimal - Décimal";
+    private const TITLE = "Conversions : Binaire - Hexadécimal - Décimal";
 
     //Const to access our converters.
-    const BINARY_TO_DECIMAL = "BinToDec";
-    const BINARY_TO_HEXADECIMAL = "BinToHex";
-    const DECIMAL_TO_BINARY = "DecToBin";
-    const DECIMAL_TO_HEXADECIMAL = "DecToHex";
-    const HEXADECIMAL_TO_BINARY = "HexToBin";
-    const HEXADECIMAL_TO_DECIMAL = "HexToDec";
+    private const BINARY_TO_DECIMAL = "BinToDec";
+    private const BINARY_TO_HEXADECIMAL = "BinToHex";
+    private const DECIMAL_TO_BINARY = "DecToBin";
+    private const DECIMAL_TO_HEXADECIMAL = "DecToHex";
+    private const HEXADECIMAL_TO_BINARY = "HexToBin";
+    private const HEXADECIMAL_TO_DECIMAL = "HexToDec";
 
     //Const related to the HTML.
-    const REQUESTED_CONV_1 = "requested_conv_1";
-    const REQUESTED_CONV_2 = "requested_conv_2";
-    const ANSWER = "reponse";
+    private const REQUESTED_CONV_1 = "requested_conv_1";
+    private const REQUESTED_CONV_2 = "requested_conv_2";
+    private const ANSWER = "reponse";
 
     //Const for the exercise state.
-    const SUCCESS = "success";
-    const FAILED = "fail";
-    const ERROR = "error";
+    private const SUCCESS = "success";
+    private const FAILED = "fail";
+    private const ERROR = "error";
 
-    //Const for the session.
-    const SESSION_CONVERTER = "converter";
-    const SESSION_RANDOM = "random_number";
-    const SESSION_CONNECT = "connect";
+    //These fields are consts for the session variable defined in the base controller.
+    private const SESSION_CONVERTER = "converter";
+    private const SESSION_RANDOM = "random_number";
+    private const SESSION_CONNECT = "connect";
+
+    //Add into an array so that we can easily reset the exercise from base controller.
+    protected $session_fields = [
+        self::SESSION_CONVERTER, self::SESSION_RANDOM, self::SESSION_CONNECT
+    ];
 
     //These are our arrays containing all the possible conversions.
     private $types;
@@ -47,41 +52,6 @@ class ConversionsController extends BaseController
     //These are our converters that we use to convert a number to another format.
     private $converter;
     private $decimalConverter;
-
-    //This is used so that we can throw an error if the user submitted a wrong input.
-    private $session;
-
-    /**
-     * ConversionsController constructor.
-     */
-    public function __construct()
-    {
-        //Types array contains all the possible types. It's initialized as static in its own class.
-        $this->types = [
-            ConversionType::DECIMAL => ConversionType::$decimal,
-            ConversionType::HEXADECIMAL => ConversionType::$hexadecimal,
-            ConversionType::BINARY => ConversionType::$binary
-        ];
-
-        //TODO: Check if there is no way to build the converter from the type instead of storing them into a list.
-        //Converters array contains all the possible converters.
-        $this->converters = [
-            self::BINARY_TO_DECIMAL => new BinToDecConversion(),
-            self::BINARY_TO_HEXADECIMAL => new BinToHexConversion(),
-            self::DECIMAL_TO_BINARY => new DecToBinConversion(),
-            self::DECIMAL_TO_HEXADECIMAL => new DecToHexConversion(),
-            self::HEXADECIMAL_TO_BINARY => new HexToBinConversion(),
-            self::HEXADECIMAL_TO_DECIMAL => new HexToDecConversion()
-        ];
-
-        //Init our converter to decimal to hexadecimal conversion.
-        $this->converter = $this->converters[self::DECIMAL_TO_HEXADECIMAL];
-        //Now in case the first base will be different of decimal we will need to convert it later.
-        $this->decimalConverter = $this->converters[self::DECIMAL_TO_HEXADECIMAL];
-
-        //Declare the session, we will need it later to retrieve some variables.
-        $this->session = session();
-    }
 
     /**
      * This is our conversion controller. Basically what is called when we are on Exercises/Conversions.
@@ -209,7 +179,7 @@ class ConversionsController extends BaseController
             $this->converter;
 
         //Prepare the data.
-        $answer_data = [ "converter" => $this->converter ];
+        $answer_data = ["converter" => $this->converter];
 
         $data = [
             "title" => self::TITLE,
@@ -236,6 +206,7 @@ class ConversionsController extends BaseController
             //Don't use strict comparison for the first check otherwise it will create an exception.
             if ($this->converter->getSecondFormat() != $this->types[ConversionType::DECIMAL] &&
                 strpos($answer, $this->converter->getSecondFormat()->getPrefix()) === 0) {
+
                 $answer = substr($answer, 2);
             }
 
@@ -272,9 +243,35 @@ class ConversionsController extends BaseController
                 );
             }
 
-            //Destroy the session if the user leaves.
-            $this->session->destroy();
+            //Reset the exercice.
+            $this->reset_exercice();
         }
         return $data;
+    }
+
+    protected function generateExercise(): void
+    {
+        //Types array contains all the possible types. It's initialized as static in its own class.
+        $this->types = [
+            ConversionType::DECIMAL => ConversionType::$decimal,
+            ConversionType::HEXADECIMAL => ConversionType::$hexadecimal,
+            ConversionType::BINARY => ConversionType::$binary
+        ];
+
+        //TODO: Check if there is no way to build the converter from the type instead of storing them into a list.
+        //Converters array contains all the possible converters.
+        $this->converters = [
+            self::BINARY_TO_DECIMAL => new BinToDecConversion(),
+            self::BINARY_TO_HEXADECIMAL => new BinToHexConversion(),
+            self::DECIMAL_TO_BINARY => new DecToBinConversion(),
+            self::DECIMAL_TO_HEXADECIMAL => new DecToHexConversion(),
+            self::HEXADECIMAL_TO_BINARY => new HexToBinConversion(),
+            self::HEXADECIMAL_TO_DECIMAL => new HexToDecConversion()
+        ];
+
+        //Init our converter to decimal to hexadecimal conversion.
+        $this->converter = $this->converters[self::DECIMAL_TO_HEXADECIMAL];
+        //Now in case the first base will be different of decimal we will need to convert it later.
+        $this->decimalConverter = $this->converters[self::DECIMAL_TO_HEXADECIMAL];
     }
 }

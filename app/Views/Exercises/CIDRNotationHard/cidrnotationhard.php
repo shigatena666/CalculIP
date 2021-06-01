@@ -5,7 +5,7 @@
 <script src="../../../../CalculIP/JavaScript/Views/Exercises/CIDRNotation/cidrnotation.js?3"></script>
 
 <div class="container">
-    <h1>Notation CIDR (niveau S2)</h1>
+    <h1>Notation CIDR (niveau S3)</h1>
     <div class="panel panel-default">
 
         <div class="panel-heading">

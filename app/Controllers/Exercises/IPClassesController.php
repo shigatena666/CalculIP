@@ -3,29 +3,57 @@
 
 namespace App\Controllers\Exercises;
 
+use App\Controllers\ExerciseController;
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
-use CodeIgniter\Controller;
 
-class IPClassesController extends Controller
+class IPClassesController extends ExerciseController
 {
-    private $session;
+    //These fields are consts for the session variable defined in the base controller.
+    private const SESSION_IP = "ip_ipclasses";
 
-    public function __construct()
+    //Add into an array so that we can easily reset the exercise from base controller.
+    protected $session_fields = [self::SESSION_IP];
+
+    public function index()
     {
-        $this->session = session();
+        //Let's look if the user didn't click on retry and if our session doesn't contain an IP.
+        if (isset($_POST["retry"]) && isset($_SESSION[self::SESSION_IP])) {
+            $this->reset_exercice();
+            return redirect()->to(current_url());
+        }
+
+        //Fill the data with our IP address.
+        $data = [
+            "title" => "Classe de l'IP : Trouver la classe correspondante",
+            "menu_view" => view('templates/menu'),
+            "ip" => unserialize($this->session->get(self::SESSION_IP))
+        ];
+
+        //If the user has submitted his answer.
+        if (isset($_POST["submit"])) {
+
+            //Add the user result to the result view.
+            $data["result_view"] = $this->handle_answer();
+        } //If the user hasn't sent his answer send him the form.
+        else {
+
+            //Show the form to the user by appending this view to our general view.
+            $data["form_view"] = view("Exercises/IPClasses/ipclasses_form");
+        }
+
+        return view('Exercises/IPClasses/ipclasses', $data);
     }
 
-    private function handle_answer() : string
+    private function handle_answer(): string
     {
-        $ip = unserialize($this->session->get("ip"));
+        $ip = unserialize($this->session->get(self::SESSION_IP));
 
         //Special view, check if the class doesn't exist and the user has succeeded.
         if ($ip->getClass() === $_POST["classe"] &&
             $ip->getClass() === "None") {
 
             return view("Exercises/IPClasses/ipclasses_success_none");
-        }
-        //Special view, check if the class doesn't exist and the user has failed.
+        } //Special view, check if the class doesn't exist and the user has failed.
         else if ($ip->getClass() !== $_POST["classe"] &&
             $ip->getClass() === "None") {
 
@@ -44,52 +72,21 @@ class IPClassesController extends Controller
         return view("Exercises/IPClasses/ipclasses_" . $state, $result_data);
     }
 
-    private function handle_retry() {
-        //Let's look if the user didn't click on retry and if our session doesn't contain an IP.
-        if (isset($_POST["retry"]) && isset($_SESSION["ip"])) {
-            $this->session->remove("ip");
+    protected function generateExercise(): void
+    {
+        //If an IP is set in the session, don't regenerate one.
+        if (isset($_SESSION[self::SESSION_IP])) {
+            return;
         }
+
+        $this->session->set(self::SESSION_IP, serialize($this->generate_random_ip()));
     }
 
     /**
      * Generates a random (sometimes wrong) address IP.
      */
-    private function generate_random_ip() : IPv4Address
+    private function generate_random_ip(): IPv4Address
     {
-        return new IPv4Address([ rand(1, 260), rand(0, 260), rand(0, 260), rand(0, 260) ]);
-    }
-
-    public function index(): string
-    {
-        //Look if the user asked for another IP.
-        $this->handle_retry();
-
-        //If there is no IP set in the session, set one. This avoid the user having access to the IP.
-        if (!isset($_SESSION["ip"])) {
-            $this->session->set("ip", serialize($this->generate_random_ip()));
-        }
-
-        //Fill the data with our IP address.
-        $data = [
-            "title" => "Classe de l'IP : Trouver la classe correspondante",
-            "menu_view" => view('templates/menu'),
-            "ip" => unserialize($this->session->get("ip"))
-        ];
-
-        //If the user has submitted his answer.
-        if (isset($_POST["submit"])) {
-
-            //TODO: Still need to generate the right sentence when showing the result view.
-            //Add the user result to the result view.
-            $data["result_view"] = $this->handle_answer();
-        }
-        //If the user hasn't sent his answer send him the form.
-        else {
-
-            //Show the form to the user by appending this view to our general view.
-            $data["form_view"] = view("Exercises/IPClasses/ipclasses_form");
-        }
-
-        return view('Exercises/IPClasses/ipclasses', $data);
+        return new IPv4Address([rand(1, 260), rand(0, 260), rand(0, 260), rand(0, 260)]);
     }
 }

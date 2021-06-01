@@ -152,7 +152,7 @@ class IPv4Address extends Address
         $network_address = new IPv4Address($this->getWords());
 
         try {
-            //Now let's apply the inverted mask using XOR 255 bitwise operator to get the broadcast address of the IP.
+            //Now let's apply the inverted mask using XOR 255 bitwise operator to get the broadcast address  of the IP.
             for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
                 $network_address->setWord($network_address->getWords()[$i] | ($mask_address->getWords()[$i] ^ (2 ** $this->getBitsPerWord()) - 1), $i);
             }

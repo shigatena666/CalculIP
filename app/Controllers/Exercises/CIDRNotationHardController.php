@@ -12,19 +12,19 @@ use App\Libraries\Exercises\CIDRNotation\Handlers\Impl\NetworkAddressHandler;
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
 use Exception;
 
-class CIDRNotationController extends ExerciseController
+class CIDRNotationHardController extends ExerciseController
 {
     //These fields are consts for the session variable defined in the base controller.
-    private const SESSION_IP = "ip_cidr";
-    private const SESSION_HANDLERS = "handlers_cidr";
-    private const SESSION_NETWORK_PART_BITS = "network_part_bits_cidr";
-    private const SESSION_MASK = "mask_cidr";
-    private const SESSION_NETWORK_ADDRESS = "network_address_cidr";
-    private const SESSION_BROADCAST_ADDRESS = "broadcast_address_cidr";
+    private const SESSION_IP = "ip_cidr_hard";
+    private const SESSION_HANDLERS = "handlers_cidr_hard";
+    private const SESSION_NETWORK_PART_BITS = "network_part_bits_cidr_hard";
+    private const SESSION_MASK = "mask_cidr_hard";
+    private const SESSION_NETWORK_ADDRESS = "network_address_cidr_hard";
+    private const SESSION_BROADCAST_ADDRESS = "broadcast_address_cidr_hard";
 
     //Add into an array so that we can easily reset the exercise from base controller.
     protected $session_fields = [
-        self::SESSION_IP, self::SESSION_HANDLERS, self::SESSION_NETWORK_ADDRESS, self::SESSION_MASK,
+        self::SESSION_IP, self::SESSION_HANDLERS, self::SESSION_NETWORK_PART_BITS, self::SESSION_MASK,
         self::SESSION_NETWORK_ADDRESS, self::SESSION_BROADCAST_ADDRESS
     ];
 
@@ -59,20 +59,20 @@ class CIDRNotationController extends ExerciseController
         }
 
         $form_data = [
-            "ip" => unserialize($this->session->get(self::SESSION_IP)),
+            "ip" => unserialize($this->session->get(self::SESSION_IP))
         ];
         $data = [
-            "title" => "Notation CIDR S2",
+            "title" => "Notation CIDR S3",
             "menu_view" => view('templates/menu'),
-            "form" => view("Exercises/CIDRNotation/cidrnotation_form", $form_data),
+            "form" => view("Exercises/CIDRNotationHard/cidrnotationhard_form", $form_data),
         ];
 
-        return view('Exercises/CIDRNotation/cidrnotation', $data);
+        return view('Exercises/CIDRNotationHard/cidrnotationhard', $data);
     }
 
     protected function generateExercise(): void
     {
-        //Don't regen the exercise if one has already been generated.
+        //If our session already contains an IP, don't regenerate it.
         if (isset($_SESSION[self::SESSION_IP])) {
             return;
         }
@@ -82,7 +82,7 @@ class CIDRNotationController extends ExerciseController
             $random_ip = generateIPv4Address();
 
             //Apply a random CIDR to it.
-            $random_ip->setCidr(8 * rand(1, 3));
+            $random_ip->setCidr(rand(3, 31));
 
             //Serialize it over the session.
             $this->session->set(self::SESSION_IP, serialize($random_ip));

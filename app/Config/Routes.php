@@ -62,6 +62,10 @@ $routes->post("/Exercices/PrefixeMaxDifficile", "Exercises/MaxCommonPrefixHardCo
 $routes->get("/Exercices/NotationCIDRS2", "Exercises/CIDRNotationController::index");
 $routes->post("/Exercices/NotationCIDRS2", "Exercises/CIDRNotationController::index");
 
+// Accept GET and POST requests for CIDR notation hard.
+$routes->get("/Exercices/NotationCIDR", "Exercises/CIDRNotationHardController::index");
+$routes->post("/Exercices/NotationCIDR", "Exercises/CIDRNotationHardController::index");
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

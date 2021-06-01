@@ -4,8 +4,9 @@ namespace App\Controllers;
 
 use App\Models\ExerciseDoneModel;
 use App\Models\QuoteModel;
+use CodeIgniter\Controller;
 
-class HomeController extends BaseController
+class HomeController extends Controller
 {
     /**
      * This method represents the root /CalculIP/ or /CalculIP/index.php .

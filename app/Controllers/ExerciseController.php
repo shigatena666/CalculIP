@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
  * For security be sure to declare any new methods as protected or private.
  */
 
-class BaseController extends Controller
+abstract class ExerciseController extends Controller
 {
 	/**
 	 * An array of helpers to be loaded automatically upon
@@ -27,7 +27,9 @@ class BaseController extends Controller
 	 *
 	 * @var array
 	 */
-	protected $helpers = [];
+	protected $helpers = [ "prefix", "frame", "url", "ipv6" ];
+	protected $session_fields = [];
+    protected $session;
 
 	/**
 	 * Constructor.
@@ -45,5 +47,16 @@ class BaseController extends Controller
 		// Preload any models, libraries, etc, here.
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
-	}
+        $this->session = session();
+        $this->generateExercise();
+ 	}
+
+    protected abstract function generateExercise() : void;
+
+    protected function reset_exercice() : void
+    {
+        foreach ($this->session_fields as $field) {
+            $this->session->remove($field);
+        }
+    }
 }

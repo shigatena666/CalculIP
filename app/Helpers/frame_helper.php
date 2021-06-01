@@ -6,9 +6,9 @@ use App\Libraries\Exercises\IPclasses\Impl\MACAddress;
 
 const USHORT_MAXVALUE = 65535;
 
-function generateRandomIndex($array) : int
+function generateRandomIndex($array)
 {
-    return rand(0, count($array) - 1);
+    return $array[rand(0, count($array) - 1)];
 }
 
 function generateRandomTTL() : int
