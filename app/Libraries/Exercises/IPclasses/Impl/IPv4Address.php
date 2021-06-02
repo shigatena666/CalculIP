@@ -7,6 +7,8 @@ use Exception;
 
 class IPv4Address extends Address
 {
+    private const BITS_PER_WORD = 8;
+
     /**
      * This function is used to check the class of an IPv4 address.
      *
@@ -14,28 +16,30 @@ class IPv4Address extends Address
      */
     public function getClass(): string
     {
+        $words = $this->getWords();
+
         //Let's check if all the other bytes are in the right range.
-        if ($this->check_range($this->getWords()[1]) && $this->check_range($this->getWords()[2]) &&
-            $this->check_range($this->getWords()[3])) {
+        if ($this->check_range($words[1]) && $this->check_range($words[2]) &&
+            $this->check_range($words[3])) {
 
             //Now let's check our first byte.
             //Small trick because if we use the first byte in switch and its value is 0, PHP will think it's false.
             switch (true) {
 
                 //The first byte needs to be strictly greeter than 0.
-                case $this->getWords()[0] > 0 && $this->getWords()[0] <= 127:
+                case $words[0] > 0 && $words[0] <= 127:
                     return "A";
 
-                case $this->getWords()[0] <= 191:
+                case $words[0] <= 191:
                     return "B";
 
-                case $this->getWords()[0] <= 223:
+                case $words[0] <= 223:
                     return "C";
 
-                case $this->getWords()[0] <= 239:
+                case $words[0] <= 239:
                     return "D";
 
-                case $this->getWords()[0] <= 255:
+                case $words[0] <= 255:
                     return "E";
 
                 default:
@@ -47,14 +51,50 @@ class IPv4Address extends Address
     }
 
     /**
+     * This function allows you to get the mask as a byte array.
+     *
+     * @return array : The mask as a byte array.
+     */
+    public function getMaskBytes(): array
+    {
+        //Get the mask as binary. 8 bits per word.
+
+        $bin = str_repeat("1", $this->getCidr());
+        $bin .= str_repeat("0", ($this->getWordsCountLimit() * 8) - $this->getCidr());
+
+        //Now let's split it into an array.
+        $mask_bin_array = str_split($bin, self::BITS_PER_WORD);
+
+        //Convert all the values of this array into an integer.
+        $mask_dec_bytes = [];
+        foreach ($mask_bin_array as $binary) {
+            $mask_dec_bytes[] = bindec($binary);
+        }
+
+        return $mask_dec_bytes;
+    }
+
+    /**
+     * This function is used to check the words of an IPv4 address.
+     *
+     * @param $val : The byte that needs to be checked
+     * @return bool: True if the byte is in the right range, false otherwise.
+     */
+    public function check_range($val): bool
+    {
+        return $val >= 0 && $val <= (1 << self::BITS_PER_WORD) - 1;
+    }
+
+    /**
      * This function allows you to get the IPv4 address bytes.
      *
      * @return string: A string with the following format: x.x.x.x where x is a byte.
      */
     public function __toString(): string
     {
-        return $this->getWords()[0] . "." . $this->getWords()[1] . "." . $this->getWords()[2] . "." .
-            $this->getWords()[3];
+        $words = $this->getWords();
+
+        return $words[0] . "." . $words[1] . "." . $words[2] . "." . $words[3];
     }
 
     /**
@@ -64,11 +104,13 @@ class IPv4Address extends Address
      */
     public function toHexa(): string
     {
-        $str = convertAndFormatHexa($this->getWords()[0], 2);
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getWords()[$i], 2);
+        $words = $this->getWords();
+
+        $str = convertAndFormatHexa($words[0], 2);
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatHexa($words[$i], 2);
         }
-        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 2);
+        $str .= convertAndFormatHexa($words[count($words) - 1], 2);
         return $str;
     }
 
@@ -79,22 +121,14 @@ class IPv4Address extends Address
      */
     public function toBin(): string
     {
-        $str = convertAndFormatBin($this->getWords()[0], $this->getBitsPerWord());
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatBin($this->getWords()[$i], $this->getBitsPerWord());
-        }
-        $str .= convertAndFormatBin($this->getWords()[count($this->getWords()) - 1], $this->getBitsPerWord());
-        return $str;
-    }
+        $words = $this->getWords();
 
-    /**
-     * This funtion allows you to set the amount of bits in a word for the address.
-     *
-     * @return int: The amount of supposed bits in a word of the IPv4 address. (8)
-     */
-    public function getBitsPerWord(): int
-    {
-        return 8;
+        $str = convertAndFormatBin($words[0], self::BITS_PER_WORD);
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatBin($words[$i], self::BITS_PER_WORD);
+        }
+        $str .= convertAndFormatBin($words[count($words) - 1], self::BITS_PER_WORD);
+        return $str;
     }
 
     /**
@@ -154,7 +188,7 @@ class IPv4Address extends Address
         try {
             //Now let's apply the inverted mask using XOR 255 bitwise operator to get the broadcast address  of the IP.
             for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
-                $network_address->setWord($network_address->getWords()[$i] | ($mask_address->getWords()[$i] ^ (2 ** $this->getBitsPerWord()) - 1), $i);
+                $network_address->setWord($network_address->getWords()[$i] | ($mask_address->getWords()[$i] ^ (1 << self::BITS_PER_WORD) - 1), $i);
             }
 
             return $network_address;

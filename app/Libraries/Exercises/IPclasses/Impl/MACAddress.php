@@ -4,10 +4,22 @@
 namespace App\Libraries\Exercises\IPclasses\Impl;
 
 use App\Libraries\Exercises\IPclasses\Address;
-use Exception;
 
 class MACAddress extends Address
 {
+    private const BITS_PER_WORD = 8;
+
+    /**
+     * This function is used to check the words of a MAC address.
+     *
+     * @param $val : The byte that needs to be checked
+     * @return bool: True if the byte is in the right range, false otherwise.
+     */
+    public function check_range($val): bool
+    {
+        return $val >= 0 && $val <= (1 << self::BITS_PER_WORD) - 1;
+    }
+
     /**
      * This function allows you to get the MAC address bytes.
      *
@@ -15,23 +27,14 @@ class MACAddress extends Address
      */
     public function __toString(): string
     {
-        $str = convertAndFormatHexa($this->getWords()[0], 2) . ":";
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getWords()[$i], 2) . ":";
-        }
-        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 2);
-        return $str;
-    }
+        $words = $this->getWords();
 
-    /**
-     * This function is supposed to check a MAC address class. This is not supported for MAC addresses.
-     *
-     * @return string: See exception.
-     * @throws Exception: Throws an exception since it's impossible to check for the class.
-     */
-    public function getClass(): string
-    {
-        throw new Exception("Error at check class for MAC: impossible to check a MAC address class.");
+        $str = convertAndFormatHexa($words[0], 2) . ":";
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatHexa($words[$i], 2) . ":";
+        }
+        $str .= convertAndFormatHexa($words[count($words) - 1], 2);
+        return $str;
     }
 
     /**
@@ -51,11 +54,13 @@ class MACAddress extends Address
      */
     public function toHexa(): string
     {
-        $str = convertAndFormatHexa($this->getWords()[0], 2);
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getWords()[$i], 2);
+        $words = $this->getWords();
+
+        $str = convertAndFormatHexa($words[0], 2);
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatHexa($words[$i], 2);
         }
-        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 2);
+        $str .= convertAndFormatHexa($words[count($words) - 1], 2);
         return $str;
     }
 
@@ -66,43 +71,13 @@ class MACAddress extends Address
      */
     public function toBin(): string
     {
-        $str = convertAndFormatBin($this->getWords()[0], $this->getBitsPerWord());
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatBin($this->getWords()[$i], $this->getBitsPerWord());
+        $words = $this->getWords();
+
+        $str = convertAndFormatBin($words[0], self::BITS_PER_WORD);
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatBin($words[$i], self::BITS_PER_WORD);
         }
-        $str .= convertAndFormatBin($this->getWords()[count($this->getWords()) - 1], $this->getBitsPerWord());
+        $str .= convertAndFormatBin($words[count($words) - 1], self::BITS_PER_WORD);
         return $str;
-    }
-
-    /**
-     * This funtion allows you to set the amount of bits in a word for a MAC address.
-     *
-     * @return int: The amount of supposed bits in a word of the MAC address.
-     */
-    public function getBitsPerWord(): int
-    {
-        return 8;
-    }
-
-    /**
-     * This function is supposed to allow you to get the network address of the current MAC address.
-     *
-     * @return Address : See exception.
-     * @throws Exception: Throws an exception since it's impossible to get the network address.
-     */
-    public function getNetworkAddress(): Address
-    {
-        throw new Exception("Error at get network address for MAC: impossible to get the network address.");
-    }
-
-    /**
-     * This function is supposed to allow you to get the broadcast address of the current MAC address.
-     *
-     * @return Address : See exception.
-     * @throws Exception: Throws an exception since it's impossible to get the broadcast address.
-     */
-    public function getBroadcastAddress(): Address
-    {
-        throw new Exception("Error at get broadcast address for MAC: impossible to get the broadcast address.");
     }
 }

@@ -66,6 +66,10 @@ $routes->post("/Exercices/NotationCIDRS2", "Exercises/CIDRNotationController::in
 $routes->get("/Exercices/NotationCIDR", "Exercises/CIDRNotationHardController::index");
 $routes->post("/Exercices/NotationCIDR", "Exercises/CIDRNotationHardController::index");
 
+// Accept GET and POST requests for mask.
+$routes->get("/Exercices/Masque", "Exercises/MaskController::index");
+$routes->post("/Exercices/Masque", "Exercises/MaskController::index");
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

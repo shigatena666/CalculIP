@@ -9,15 +9,17 @@ use Exception;
 
 class IPv6Address extends Address
 {
+    private const BITS_PER_WORD = 16;
+
     /**
-     * This function is supposed to check IPv6 address class. This is not supported for IPv6.
+     * This function is used to check the words of an IPv6 address.
      *
-     * @return string: See exception.
-     * @throws Exception: Throws an exception since it's impossible to check for the class.
+     * @param $val : The byte that needs to be checked
+     * @return bool: True if the byte is in the right range, false otherwise.
      */
-    public function getClass(): string
+    public function check_range($val): bool
     {
-        throw new Exception("Error at check class for IPv6: impossible to check an IPv6 address class.");
+        return $val >= 0 && $val <= (1 << self::BITS_PER_WORD) - 1;
     }
 
     /**
@@ -27,11 +29,13 @@ class IPv6Address extends Address
      */
     public function __toString(): string
     {
-        $str = convertAndFormatHexa($this->getWords()[0], 4) . ":";
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getWords()[$i], 4) . ":";
+        $words = $this->getWords();
+
+        $str = convertAndFormatHexa($words[0], 4) . ":";
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatHexa($words[$i], 4) . ":";
         }
-        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 4);
+        $str .= convertAndFormatHexa($words[count($words) - 1], 4);
         return compress($str);
     }
 
@@ -42,11 +46,13 @@ class IPv6Address extends Address
      */
     public function toHexa(): string
     {
-        $str = convertAndFormatHexa($this->getWords()[0], 4);
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatHexa($this->getWords()[$i], 4);
+        $words = $this->getWords();
+
+        $str = convertAndFormatHexa($words[0], 4);
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatHexa($words[$i], 4);
         }
-        $str .= convertAndFormatHexa($this->getWords()[count($this->getWords()) - 1], 4);
+        $str .= convertAndFormatHexa($words[count($words) - 1], 4);
         return $str;
     }
 
@@ -57,22 +63,38 @@ class IPv6Address extends Address
      */
     public function toBin(): string
     {
-        $str = convertAndFormatBin($this->getWords()[0], $this->getBitsPerWord());
-        for ($i = 1; $i < count($this->getWords()) - 1; $i++) {
-            $str .= convertAndFormatBin($this->getWords()[$i], $this->getBitsPerWord());
+        $words = $this->getWords();
+
+        $str = convertAndFormatBin($words[0], self::BITS_PER_WORD);
+        for ($i = 1; $i < count($words) - 1; $i++) {
+            $str .= convertAndFormatBin($words[$i], self::BITS_PER_WORD);
         }
-        $str .= convertAndFormatBin($this->getWords()[count($this->getWords()) - 1], $this->getBitsPerWord());
+        $str .= convertAndFormatBin($words[count($words) - 1], self::BITS_PER_WORD);
         return $str;
     }
 
     /**
-     * This funtion allows you to set the amount of bits in a word for the IPv6 address.
+     * This function allows you to get the mask as a byte array.
      *
-     * @return int: The amount of supposed bits in a word of the IPv6 address.
+     * @return array : The mask as a byte array.
      */
-    public function getBitsPerWord(): int
+    public function getMaskBytes(): array
     {
-        return 16;
+        //Get the mask as binary. 8 bits per word.
+
+        $bin = str_repeat("1", $this->getCidr());
+        $bin .= str_repeat("0", ($this->getWordsCountLimit() * 8) - $this->getCidr());
+
+        //Now let's split it into an array.
+        $mask_bin_array = str_split($bin, self::BITS_PER_WORD);
+
+        //Convert all the values of this array into an integer.
+        $mask_dec_bytes = [];
+        foreach ($mask_bin_array as $binary) {
+            $mask_dec_bytes[] = bindec($binary);
+        }
+
+        return $mask_dec_bytes;
     }
 
     /**
@@ -111,34 +133,6 @@ class IPv6Address extends Address
     public function getWordsCountLimit(): int
     {
         return 8;
-    }
-
-    /**
-     * This function allows you to get the broadcast address of the current IPv6 address.
-     *
-     * @return Address : An IPv6 address with the values of the broadcast address.
-     */
-    public function getBroadcastAddress(): Address
-    {
-        //Get the mask as a byte array.
-        $mask_bytes = $this->getMaskBytes();
-
-        //Create an IP address with the mask data.
-        $mask_address = new IPv6Address($mask_bytes);
-
-        //Initialize our broadcast address.
-        $network_address = new IPv6Address($this->getWords());
-
-        try {
-            //Now let's apply the inverted mask using XOR 255 bitwise operator to get the broadcast address of the IP.
-            for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
-                $network_address->setWord($network_address->getWords()[$i] | ($mask_address->getWords()[$i] ^ (2 ** $this->getBitsPerWord()) - 1), $i);
-            }
-
-            return $network_address;
-        } catch (Exception $e) {
-            die($e->getMessage());
-        }
     }
 
 }

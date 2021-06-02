@@ -48,6 +48,7 @@ abstract class ExerciseController extends Controller
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
         $this->session = session();
+
         $this->generateExercise();
  	}
 

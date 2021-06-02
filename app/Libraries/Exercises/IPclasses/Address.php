@@ -83,23 +83,12 @@ abstract class Address
     }
 
     /**
-     * This function is used to check the words of an IP address.
+     * This function is used to check the words of an address.
      *
      * @param $val : The byte that needs to be checked
      * @return bool: True if the byte is in the right range, false otherwise.
      */
-    public function check_range($val): bool
-    {
-        return $val >= 0 && $val <= (2 ** $this->getBitsPerWord()) - 1;
-    }
-
-    /**
-     * This funtion allows you to set the amount of bits in a word for the address.
-     * Example: If the IP address is IPv4, then it's a word of 8 bits. If it's IPv6 it's a word of 16 bits.
-     *
-     * @return int: The amount of supposed bits in a word of the address.
-     */
-    public abstract function getBitsPerWord(): int;
+    public abstract function check_range($val): bool;
 
     /**
      * This funtion allows you to set the amount of words for the address.
@@ -108,30 +97,6 @@ abstract class Address
      * @return int: The amount of supposed bytes in the address.
      */
     public abstract function getWordsCountLimit(): int;
-
-    /**
-     * This function allows you to get the mask as a byte array.
-     *
-     * @return array : The mask as a byte array.
-     */
-    public function getMaskBytes(): array
-    {
-        //Get the mask as binary. 8 bits per word.
-
-        $bin = str_repeat("1", $this->getCidr());
-        $bin .= str_repeat("0", ($this->getWordsCountLimit() * 8) - $this->getCidr());
-
-        //Now let's split it into an array.
-        $mask_bin_array = str_split($bin, $this->getBitsPerWord());
-
-        //Convert all the values of this array into an integer.
-        $mask_dec_bytes = [];
-        foreach ($mask_bin_array as $binary) {
-            $mask_dec_bytes[] = bindec($binary);
-        }
-
-        return $mask_dec_bytes;
-    }
 
     /**
      * This function allows you to get the CIDR of an IP address.
@@ -156,27 +121,6 @@ abstract class Address
         }
         $this->cidr = $cidr;
     }
-
-    /**
-     * This function allows you to get the network address of the current address.
-     *
-     * @return Address : An address child class with the values of the network address.
-     */
-    public abstract function getNetworkAddress(): Address;
-
-    /**
-     * This function allows you to get the broadcast address of the current address.
-     *
-     * @return Address : An address child class with the values of the broadcast address.
-     */
-    public abstract function getBroadcastAddress(): Address;
-
-    /**
-     * This function is used to check the class of an IPv4 address.
-     *
-     * @return string: The IPv4 address class. (A, B, C, D, E, None)
-     */
-    public abstract function getClass(): string;
 
     /**
      * Convert the address words to hexadecimal.

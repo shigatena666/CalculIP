@@ -42,7 +42,7 @@
                             <li><a href="/CalculIP/Exercices/TrouverClasseInverse">Classe IP <i><sub><small>Trouver
                                                 l'IP
                                                 correspondante</small></sub></i></a></li>
-                            <li><a href="/CalculIP/Exercices/Masque.php">Masque (niveau S3)</a></li>
+                            <li><a href="/CalculIP/Exercices/Masque">Masque (niveau S3)</a></li>
                             <li><a href="/CalculIP/Exercices/NotationCIDRS2">Notation CIDR (niveau S2)</a></li>
                             <li><a href="/CalculIP/Exercices/NotationCIDR">Notation CIDR (niveau S3)</a></li>
                             <li><a href="/CalculIP/Exercices/PrefixeMax">Préfixe max (S3)<i>
