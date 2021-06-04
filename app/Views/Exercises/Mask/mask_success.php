@@ -1,10 +1,10 @@
-<script src="../../../../CalculIP/JavaScript/Views/Exercises/Mask/maskcorrection.js?2"></script>
+<script src="../../../../CalculIP/JavaScript/Views/Exercises/Mask/maskcorrection.js"></script>
 
-<div class='alert alert-danger alert-dismissible text-center' role='alert'>
+<div class='alert alert-success alert-dismissible text-center' role='alert'>
     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
         <span aria-hidden='true'>&times;</span>
     </button>
-    <strong>Faux! La réponse était :</strong>
+    <strong>Correct! La réponse est bien :</strong>
 
     <?php for ($i = 1; $i <= 4; $i++): ?>
         <div class="form-group">
@@ -25,7 +25,7 @@
     <?php endfor ?>
 
     <strong>
-        Le masque est donc: <span id="mask"><?= $mask ?></span>
+        Le masque est bien: <span id="mask"><?= $mask ?></span>
     </strong>
 
 </div>

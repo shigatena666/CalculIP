@@ -148,9 +148,12 @@ class IPv4Address extends Address
         $network_address = new IPv4Address($this->getWords());
 
         try {
+            $network_address_words = $network_address->getWords();
+            $mask_address_words = $mask_address->getWords();
+
             //Now let's apply the mask using the AND bitwise operator to get the network address of the IP.
             for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
-                $network_address->setWord($network_address->getWords()[$i] & $mask_address->getWords()[$i], $i);
+                $network_address->setWord($network_address_words[$i] & $mask_address_words[$i], $i);
             }
 
             return $network_address;
@@ -186,9 +189,12 @@ class IPv4Address extends Address
         $network_address = new IPv4Address($this->getWords());
 
         try {
+            $network_address_words = $network_address->getWords();
+            $mask_address_words = $mask_address->getWords();
+
             //Now let's apply the inverted mask using XOR 255 bitwise operator to get the broadcast address  of the IP.
             for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
-                $network_address->setWord($network_address->getWords()[$i] | ($mask_address->getWords()[$i] ^ (1 << self::BITS_PER_WORD) - 1), $i);
+                $network_address->setWord($network_address_words[$i] | ($mask_address_words[$i] ^ (1 << self::BITS_PER_WORD) - 1), $i);
             }
 
             return $network_address;

@@ -114,9 +114,12 @@ class IPv6Address extends Address
         $network_address = new IPv6Address($this->getWords());
 
         try {
+            $network_address_words = $network_address->getWords();
+            $mask_address_words = $mask_address->getWords();
+
             //Now let's apply the mask using the AND bitwise operator to get the network address of the IP.
             for ($i = 0; $i < $this->getWordsCountLimit(); $i++) {
-                $network_address->setWord($network_address->getWords()[$i] & $mask_address->getWords()[$i], $i);
+                $network_address->setWord($network_address_words[$i] & $mask_address_words[$i], $i);
             }
 
             return $network_address;

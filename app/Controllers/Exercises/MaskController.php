@@ -33,7 +33,10 @@ class MaskController extends ExerciseController
 
             $session_ip = unserialize($this->session->get(self::SESSION_IP));
 
-            $this->session->set(self::SESSION_CORRECTION, $_POST["mask"] !== implode('.', $session_ip->getMaskBytes()));
+            $this->session->set(self::SESSION_CORRECTION,
+                $_POST["mask"] === implode('.', $session_ip->getMaskBytes()) ? 1 : 0);
+
+            echo $this->session->get(self::SESSION_CORRECTION);
 
             return "";
         }
@@ -42,18 +45,18 @@ class MaskController extends ExerciseController
 
             $session_ip = unserialize($this->session->get(self::SESSION_IP));
 
-            $this->session->remove(self::SESSION_CORRECTION);
-
             $answer_data = [ "mask" => implode('.', $session_ip->getMaskBytes()) ];
             $data["mask"] = implode('.', $session_ip->getMaskBytes());
             $data["ip_address"] = $session_ip;
 
-            if (!$this->session->get(self::SESSION_CORRECTION)) {
+            if ($this->session->get(self::SESSION_CORRECTION) !== 1) {
                 $data["correction"] = view('Exercises/Mask/mask_wrong', $answer_data);
             }
             else {
                 $data["correction"] = view('Exercises/Mask/mask_success', $answer_data);
             }
+
+            $this->session->remove(self::SESSION_CORRECTION);
 
             return view('Exercises/Mask/mask', $data);
         }

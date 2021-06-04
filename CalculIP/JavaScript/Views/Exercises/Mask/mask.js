@@ -52,6 +52,32 @@ $(document).ready(function() {
         });
     });
 
+    $("div[id^=rep_octet_]").each(function() {
+        //Now get the associated byte of the bit to set the answer.
+        let byte = $(this);
+
+        let byte_in_list = byte.attr("id").substring(10);
+
+        //Get which bit list we need to change.
+        let bit_list = bytes_as_bits[byte_in_list];
+
+        //This will be used to set the addition under the bits.
+        let bit_addition = [];
+
+        for (let i = bit_list.length - 1; i >= 0; i--) {
+            if (bit_list[i] === 0) {
+                continue;
+            }
+            bit_addition.push((bit_list[i] << i));
+        }
+
+        //Split the shifted bits by a +.
+        let shifted_bits = bit_addition.join(" + ");
+
+        //Set the text under the bits.
+        byte.text(shifted_bits);
+    });
+
     $("input[name=submit]").on("click", function() {
         let mask_bytes = [];
 
