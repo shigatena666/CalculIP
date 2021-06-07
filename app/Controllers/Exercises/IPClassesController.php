@@ -74,8 +74,8 @@ class IPClassesController extends ExerciseController
 
     protected function generateExercise(): void
     {
-        //If an IP is set in the session, don't regenerate one.
-        if (isset($_SESSION[self::SESSION_IP])) {
+        //Don't re-generate the exercise if the retry button hasn't been pressed
+        if (!isset($_POST["retry"]) && count($_POST) > 0 && isset($_SESSION[self::SESSION_IP])) {
             return;
         }
 

@@ -72,8 +72,8 @@ class CIDRNotationHardController extends ExerciseController
 
     protected function generateExercise(): void
     {
-        //If our session already contains an IP, don't regenerate it.
-        if (isset($_SESSION[self::SESSION_IP])) {
+        //Don't re-generate the exercise if the retry button hasn't been pressed
+        if (!isset($_POST["retry"]) && count($_POST) > 0 && isset($_SESSION[self::SESSION_IP])) {
             return;
         }
 

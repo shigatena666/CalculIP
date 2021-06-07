@@ -34,6 +34,8 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'HomeController::index');
 
+// EXERCICES - START
+
 // Accept GET and POST requests for conversions.
 $routes->get("/Exercices/Conversion", "Exercises/ConversionsController::index");
 $routes->post("/Exercices/Conversion", "Exercises/ConversionsController::index");
@@ -69,6 +71,27 @@ $routes->post("/Exercices/NotationCIDR", "Exercises/CIDRNotationHardController::
 // Accept GET and POST requests for mask.
 $routes->get("/Exercices/Masque", "Exercises/MaskController::index");
 $routes->post("/Exercices/Masque", "Exercises/MaskController::index");
+
+// Accept GET and POST requests for sub network.
+$routes->get("/Exercices/SousReseaux", "Exercises/SubNetworkController::index");
+$routes->post("/Exercices/SousReseaux", "Exercises/SubNetworkController::index");
+
+// EXERCICES - END
+
+// Accept GET requests for about us.
+$routes->get("/QuiSommesNous", "AboutUsController::index");
+
+// Accept GET requests for news.
+$routes->get("/News", "NewsController::index");
+
+// Accept GET requests for memos.
+$routes->get("/Memos", "MemosController::index");
+$routes->get("/Memos/Analyse", "MemosController::frameanalysis");
+$routes->get("/Memos/Classe", "MemosController::ipclasses");
+$routes->get("/Memos/Structure", "MemosController::framestructure");
+$routes->get("/Memos/CIDR", "MemosController::cidrnotation");
+$routes->get("/Memos/Routage", "MemosController::routingtable");
+$routes->get("/Memos/SousReseaux", "MemosController::subnetworks");
 
 /*
  * --------------------------------------------------------------------

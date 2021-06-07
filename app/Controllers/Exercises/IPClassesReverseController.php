@@ -69,8 +69,8 @@ class IPClassesReverseController extends ExerciseController
 
     protected function generateExercise(): void
     {
-        //If it has already been generated, then don't execute it.
-        if (isset($_SESSION[self::SESSION_IP_CLASS])) {
+        //Don't re-generate the exercise if the retry button hasn't been pressed
+        if (!isset($_POST["retry"]) && count($_POST) > 0 && isset($_SESSION[self::SESSION_IP_CLASS])) {
             return;
         }
 

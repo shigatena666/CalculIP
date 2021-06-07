@@ -72,8 +72,8 @@ class CIDRNotationController extends ExerciseController
 
     protected function generateExercise(): void
     {
-        //Don't regen the exercise if one has already been generated.
-        if (isset($_SESSION[self::SESSION_IP])) {
+        //Don't re-generate the exercise if the retry button hasn't been pressed
+        if (!isset($_POST["retry"]) && count($_POST) > 0 && isset($_SESSION[self::SESSION_IP])) {
             return;
         }
 

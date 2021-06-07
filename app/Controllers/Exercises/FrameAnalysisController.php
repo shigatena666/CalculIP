@@ -99,8 +99,8 @@ class FrameAnalysisController extends ExerciseController
 
     protected function generateExercise(): void
     {
-        //If our session already contains a frame don't regenerate it.
-        if (isset($_SESSION[self::SESSION_FRAME])) {
+        //Don't re-generate the exercise if the retry button hasn't been pressed
+        if (!isset($_POST["retry"]) && count($_POST) > 0 && isset($_SESSION[self::SESSION_FRAME])) {
             return;
         }
 

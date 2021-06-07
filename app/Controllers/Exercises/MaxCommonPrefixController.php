@@ -97,8 +97,10 @@ class MaxCommonPrefixController extends ExerciseController
 
     protected function generateExercise(): void
     {
-        //If the session already contains the 2 ips, don't do anything
-        if (isset($_SESSION[self::SESSION_IP1]) || isset($_SESSION[self::SESSION_IP2])) {
+        //Don't re-generate the exercise if the retry button hasn't been pressed
+        if (!isset($_POST["retry"]) && count($_POST) > 0 && isset($_SESSION[self::SESSION_IP1]) &&
+            isset($_SESSION[self::SESSION_IP2])) {
+
             return;
         }
 

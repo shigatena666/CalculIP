@@ -24,7 +24,7 @@
                            aria-expanded="false">Cours<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/CalculIP/Cours.php">Cours</a></li>
-                            <li><a href="/CalculIP/Memos/">Memos</a></li>
+                            <li><a href="/CalculIP/Memos">Memos</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -49,14 +49,14 @@
                                         <sub><small>Presque Facile</small></sub></i></a></li>
                             <li><a href="/CalculIP/Exercices/PrefixeMaxDifficile">Préfixe max (S3) <i><sub><small>plus
                                                 Difficile</small></sub></i></a></li>
-                            <li><a href="/CalculIP/Exercices/SousReseaux.php">Calcul de sous-réseaux (S3)</a></li>
+                            <li><a href="/CalculIP/Exercices/SousReseaux">Calcul de sous-réseaux (S3)</a></li>
                             <li><a href="/CalculIP/Exercices/TableRoutage.php">Table de Routage (S2,S3)</a></li>
                             <li><a href="/CalculIP/Exercices/StructureTrame.php"><s>Structure d'une trame</s>
                                     <sub><small>(exercice à recoder ou recycler)</small></sub></i></a></li>
                         </ul>
                     </li>
-                    <li><a href="/CalculIP/news.php">Nouveautés</a></li>
-                    <li><a href="/CalculIP/quiSommesNous.php">Qui sommes-nous ?</a></li>
+                    <li><a href="/CalculIP/News">Nouveautés</a></li>
+                    <li><a href="/CalculIP/QuiSommesNous">Qui sommes-nous ?</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <?php
