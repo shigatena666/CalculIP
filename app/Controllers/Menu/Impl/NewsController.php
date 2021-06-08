@@ -1,12 +1,10 @@
 <?php
 
+namespace App\Controllers\Menu\Impl;
 
-namespace App\Controllers;
+use App\Controllers\Menu\MenuController;
 
-
-use CodeIgniter\Controller;
-
-class NewsController extends Controller
+class NewsController extends MenuController
 {
     public function index(): string
     {

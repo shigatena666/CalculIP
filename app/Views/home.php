@@ -36,14 +36,14 @@
                         </dl>
                     </a>
 
-                    <a href="Exercises/TableRoutage.php" class="list-group-item">
+                    <a href="Exercises/TableRoutage" class="list-group-item">
                         <dl class="dl-horizontal">
                             <dt>Tables de routage</dt>
                             <dd>Entraînez-vous à faire des tables de routage&nbsp;!</dd>
                         </dl>
                     </a>
 
-                    <a href="Exercises" class="list-group-item">
+                    <a href="Exercices" class="list-group-item">
                         <dl class="dl-horizontal">
                             <dt>Plus d'exercices</dt>
                             <dd>Voir le menu !</dd>
@@ -60,14 +60,14 @@
                 <div class="panel-heading">Quelques mémos pour les exos</div>
 
                 <ul class="list-group">
-                    <a href="Memos/Classe.php" class="list-group-item">
+                    <a href="Memos/Classe" class="list-group-item">
                         <dl class="dl-horizontal">
                             <dt>Les classes</dt>
                             <dd>Petit mémo sur les différentes classes.</dd>
                         </dl>
                     </a>
 
-                    <a href="Memos/Analyse.php" class="list-group-item">
+                    <a href="Memos/Analyse" class="list-group-item">
                         <dl class="dl-horizontal">
                             <dt>L'analyse de trame</dt>
                             <dd>Petit mémo sur l'analyse de trame.</dd>

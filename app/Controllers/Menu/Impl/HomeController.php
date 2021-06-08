@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Menu\Impl;
 
+use App\Controllers\Menu\MenuController;
 use App\Models\ExerciseDoneModel;
 use App\Models\QuoteModel;
-use CodeIgniter\Controller;
 
-class HomeController extends Controller
+class HomeController extends MenuController
 {
     /**
      * This method represents the root /CalculIP/ or /CalculIP/index.php .
@@ -21,7 +21,7 @@ class HomeController extends Controller
 
         $data = array(
             "title" => "Exercices corrigés autour de TCP/IP - CalculIP",
-            "menu_view" => view('templates/menu'),
+            "menu_view" => view('templates/menu', [ "path_array" => $this->path_array ]),
             "quote" => $quote,
             "percentageExercises" => $exerciseDoneModel
         );

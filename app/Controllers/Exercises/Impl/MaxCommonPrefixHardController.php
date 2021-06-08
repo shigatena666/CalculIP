@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Controllers\Exercises;
+namespace App\Controllers\Exercises\Impl;
 
-use App\Controllers\ExerciseController;
+use App\Controllers\Exercises\ExerciseTypeController;
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
 use Exception;
 
-class MaxCommonPrefixHardController extends ExerciseController
+class MaxCommonPrefixHardController extends ExerciseTypeController
 {
     //These fields are consts for the session variable defined in the base controller.
     private const SESSION_IP1 = "ip1_commonprefixhard";

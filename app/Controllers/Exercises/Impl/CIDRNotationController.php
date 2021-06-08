@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Controllers\Exercises;
+namespace App\Controllers\Exercises\Impl;
 
 
-use App\Controllers\ExerciseController;
+use App\Controllers\Exercises\ExerciseTypeController;
 use App\Libraries\Exercises\CIDRNotation\Handlers\Impl\BitCountHandler;
 use App\Libraries\Exercises\CIDRNotation\Handlers\Impl\BroadcastAddressHandler;
 use App\Libraries\Exercises\CIDRNotation\Handlers\Impl\MaskHandler;
@@ -12,7 +12,7 @@ use App\Libraries\Exercises\CIDRNotation\Handlers\Impl\NetworkAddressHandler;
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
 use Exception;
 
-class CIDRNotationController extends ExerciseController
+class CIDRNotationController extends ExerciseTypeController
 {
     //These fields are consts for the session variable defined in the base controller.
     private const SESSION_IP = "ip_cidr";

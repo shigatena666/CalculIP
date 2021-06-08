@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Menu\Impl;
 
-use CodeIgniter\Controller;
+use App\Controllers\Menu\MenuController;
 
 
-class MemosController extends Controller
+class MemosController extends MenuController
 {
     public function index(): string
     {
         $data = [
             "title" => "Memos",
-            "menu_view" => view('templates/menu'),
+            "menu_view" => view('templates/menu', [ "path_array" => $this->path_array ]),
         ];
 
         return view('Memos/memos', $data);

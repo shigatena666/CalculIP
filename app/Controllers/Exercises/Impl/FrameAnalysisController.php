@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Controllers\Exercises;
+namespace App\Controllers\Exercises\Impl;
 
-use App\Controllers\ExerciseController;
+use App\Controllers\Exercises\ExerciseTypeController;
 use App\Libraries\Exercises\FrameAnalysis\Components\FrameComponent;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Frames\EthernetFrame;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Messages\Datagram\UDPDatagram;
@@ -14,7 +14,7 @@ use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\ICMPPacket;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\IPv4\IPv4Packet;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\IPv6\IPv6Packet;
 
-class FrameAnalysisController extends ExerciseController
+class FrameAnalysisController extends ExerciseTypeController
 {
     public const IPV4_CODE = 0x0800;
     public const IPV6_CODE = 0x86DD;

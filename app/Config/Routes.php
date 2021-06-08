@@ -32,66 +32,54 @@ $routes->setAutoRoute(true);
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-$routes->get('/', 'HomeController::index');
+$routes->get('/', 'Menu/Impl/HomeController::index');
+
+// Accept GET requests for about us.
+$routes->get("/QuiSommesNous", "Menu/Impl/AboutUsController::index");
+
+// Accept GET requests for news.
+$routes->get("/News", "Menu/Impl/NewsController::index");
+
+// Accept GET requests for courses.
+$routes->get("/Cours", "Menu/Impl/CoursesController::index");
+
+// Accept GET requests for memos.
+$routes->get("/Memos", "Menu/Impl/MemosController::index");
+$routes->get("/Memos/Analyse", "Menu/Impl/MemosController::frameanalysis");
+$routes->get("/Memos/Classe", "Menu/Impl/MemosController::ipclasses");
+$routes->get("/Memos/Structure", "Menu/Impl/MemosController::framestructure");
+$routes->get("/Memos/CIDR", "Menu/Impl/MemosController::cidrnotation");
+$routes->get("/Memos/Routage", "Menu/Impl/MemosController::routingtable");
+$routes->get("/Memos/SousReseaux", "Menu/Impl/MemosController::subnetworks");
+
 
 // EXERCICES - START
 
-// Accept GET and POST requests for conversions.
-$routes->get("/Exercices/Conversion", "Exercises/ConversionsController::index");
-$routes->post("/Exercices/Conversion", "Exercises/ConversionsController::index");
-
-// Accept GET and POST requests for IP classes.
-$routes->get("/Exercices/TrouverClasse", "Exercises/IPClassesController::index");
-$routes->post("/Exercices/TrouverClasse", "Exercises/IPClassesController::index");
-
-// Accept GET and POST requests for reverse IP classes.
-$routes->get("/Exercices/TrouverClasseInverse", "Exercises/IPClassesReverseController::index");
-$routes->post("/Exercices/TrouverClasseInverse", "Exercises/IPClassesReverseController::index");
-
-// Accept GET and POST requests for frame analysis.
-$routes->get("/Exercices/AnalyseTrame", "Exercises/FrameAnalysisController::index");
-$routes->post("/Exercices/AnalyseTrame", "Exercises/FrameAnalysisController::index");
-
-// Accept GET and POST requests for max common prefix.
-$routes->get("/Exercices/PrefixeMax", "Exercises/MaxCommonPrefixController::index");
-$routes->post("/Exercices/PrefixeMax", "Exercises/MaxCommonPrefixController::index");
-
-// Accept GET and POST requests for max common prefix hard.
-$routes->get("/Exercices/PrefixeMaxDifficile", "Exercises/MaxCommonPrefixHardController::index");
-$routes->post("/Exercices/PrefixeMaxDifficile", "Exercises/MaxCommonPrefixHardController::index");
-
-// Accept GET and POST requests for CIDR notation.
-$routes->get("/Exercices/NotationCIDRS2", "Exercises/CIDRNotationController::index");
-$routes->post("/Exercices/NotationCIDRS2", "Exercises/CIDRNotationController::index");
-
-// Accept GET and POST requests for CIDR notation hard.
-$routes->get("/Exercices/NotationCIDR", "Exercises/CIDRNotationHardController::index");
-$routes->post("/Exercices/NotationCIDR", "Exercises/CIDRNotationHardController::index");
-
-// Accept GET and POST requests for mask.
-$routes->get("/Exercices/Masque", "Exercises/MaskController::index");
-$routes->post("/Exercices/Masque", "Exercises/MaskController::index");
-
-// Accept GET and POST requests for sub network.
-$routes->get("/Exercices/SousReseaux", "Exercises/SubNetworkController::index");
-$routes->post("/Exercices/SousReseaux", "Exercises/SubNetworkController::index");
+//Accept GET requests for the exercise list.
+$routes->get("/Exercices", "ExercisesController::index");
+// Accept GET and POST requests for the exercices.
+$routes->get("/Exercices/Conversion", "Exercises/Impl/ConversionsController::index");
+$routes->post("/Exercices/Conversion", "Exercises/Impl/ConversionsController::index");
+$routes->get("/Exercices/TrouverClasse", "Exercises/Impl/IPClassesController::index");
+$routes->post("/Exercices/TrouverClasse", "Exercises/Impl/IPClassesController::index");
+$routes->get("/Exercices/TrouverClasseInverse", "Exercises/Impl/IPClassesReverseController::index");
+$routes->post("/Exercices/TrouverClasseInverse", "Exercises/Impl/IPClassesReverseController::index");
+$routes->get("/Exercices/AnalyseTrame", "Exercises/Impl/FrameAnalysisController::index");
+$routes->post("/Exercices/AnalyseTrame", "Exercises/Impl/FrameAnalysisController::index");
+$routes->get("/Exercices/PrefixeMax", "Exercises/Impl/MaxCommonPrefixController::index");
+$routes->post("/Exercices/PrefixeMax", "Exercises/Impl/MaxCommonPrefixController::index");
+$routes->get("/Exercices/PrefixeMaxDifficile", "Exercises/Impl/MaxCommonPrefixHardController::index");
+$routes->post("/Exercices/PrefixeMaxDifficile", "Exercises/Impl/MaxCommonPrefixHardController::index");
+$routes->get("/Exercices/NotationCIDRS2", "Exercises/Impl/CIDRNotationController::index");
+$routes->post("/Exercices/NotationCIDRS2", "Exercises/Impl/CIDRNotationController::index");
+$routes->get("/Exercices/NotationCIDR", "Exercises/Impl/CIDRNotationHardController::index");
+$routes->post("/Exercices/NotationCIDR", "Exercises/Impl/CIDRNotationHardController::index");
+$routes->get("/Exercices/Masque", "Exercises/Impl/MaskController::index");
+$routes->post("/Exercices/Masque", "Exercises/Impl/MaskController::index");
+$routes->get("/Exercices/SousReseaux", "Exercises/Impl/SubNetworkController::index");
+$routes->post("/Exercices/SousReseaux", "Exercises/Impl/SubNetworkController::index");
 
 // EXERCICES - END
-
-// Accept GET requests for about us.
-$routes->get("/QuiSommesNous", "AboutUsController::index");
-
-// Accept GET requests for news.
-$routes->get("/News", "NewsController::index");
-
-// Accept GET requests for memos.
-$routes->get("/Memos", "MemosController::index");
-$routes->get("/Memos/Analyse", "MemosController::frameanalysis");
-$routes->get("/Memos/Classe", "MemosController::ipclasses");
-$routes->get("/Memos/Structure", "MemosController::framestructure");
-$routes->get("/Memos/CIDR", "MemosController::cidrnotation");
-$routes->get("/Memos/Routage", "MemosController::routingtable");
-$routes->get("/Memos/SousReseaux", "MemosController::subnetworks");
 
 /*
  * --------------------------------------------------------------------

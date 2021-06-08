@@ -5,7 +5,6 @@ namespace App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets;
 use App\Libraries\Exercises\FrameAnalysis\Components\FrameComponent;
 use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Frames\EthernetFrame;
 use App\Libraries\Exercises\FrameAnalysis\FrameTypes;
-use App\Libraries\Exercises\FrameAnalysis\Handlers\FrameHandlerManager;
 use App\Libraries\Exercises\FrameAnalysis\Handlers\Impl\ARPHandler;
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
 use App\Libraries\Exercises\IPclasses\Impl\MACAddress;
@@ -320,7 +319,7 @@ class ARPPacket extends FrameComponent
             $this->setProtocolAddressSpace(2048);
             $this->setHlen(6);
             $this->setPlen(4);
-            $this->setOpCode(self::$ARP_builder[generateRandomIndex(self::$ARP_builder)]);
+            $this->setOpCode(generateRandomIndex(self::$ARP_builder));
 
             $this->setSenderHardwareAddress($this->getEthernetFrame()->getSa());
             $this->setSenderProtocolAddress(generateIPv4Address());

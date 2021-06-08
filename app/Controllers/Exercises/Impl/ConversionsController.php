@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers\Exercises;
+namespace App\Controllers\Exercises\Impl;
 
-use App\Controllers\ExerciseController;
+use App\Controllers\Exercises\ExerciseTypeController;
 use App\Libraries\Exercises\Conversions\ConversionType;
 use App\Libraries\Exercises\Conversions\Impl\BinToDecConversion;
 use App\Libraries\Exercises\Conversions\Impl\BinToHexConversion;
@@ -12,7 +12,7 @@ use App\Libraries\Exercises\Conversions\Impl\HexToBinConversion;
 use App\Libraries\Exercises\Conversions\Impl\HexToDecConversion;
 use App\Models\ExerciseDoneModel;
 
-class ConversionsController extends ExerciseController
+class ConversionsController extends ExerciseTypeController
 {
     //To later give an user some points.
     private const TITLE = "Conversions : Binaire - Hexadécimal - Décimal";

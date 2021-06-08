@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Exercises;
 
-use CodeIgniter\Controller;
+use App\Controllers\GeneralController;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -18,7 +18,7 @@ use Psr\Log\LoggerInterface;
  * For security be sure to declare any new methods as protected or private.
  */
 
-abstract class ExerciseController extends Controller
+abstract class ExerciseTypeController extends GeneralController
 {
 	/**
 	 * An array of helpers to be loaded automatically upon
@@ -29,7 +29,6 @@ abstract class ExerciseController extends Controller
 	 */
 	protected $helpers = [ "prefix", "frame", "url", "ipv6" ];
 	protected $session_fields = [];
-    protected $session;
 
 	/**
 	 * Constructor.
@@ -47,7 +46,6 @@ abstract class ExerciseController extends Controller
 		// Preload any models, libraries, etc, here.
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
-        $this->session = session();
 
         $this->generateExercise();
  	}
