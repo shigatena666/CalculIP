@@ -12,6 +12,7 @@ use Exception;
 
 class DNSFlagsHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const FLAG_QR = "DNSflagQr";
     public const FLAG_OPCODE = "DNSflagOpCode";
     public const FLAG_AA = "DNSflagAa";
@@ -21,6 +22,9 @@ class DNSFlagsHandler extends FrameHandler
     public const FLAG_ZEROS = "DNSflagZeros";
     public const FLAG_RCODE = "DNSflagRcode";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof DNSMessage) {

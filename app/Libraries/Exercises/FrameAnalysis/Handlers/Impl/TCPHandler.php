@@ -12,6 +12,7 @@ use Exception;
 
 class TCPHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const SOURCE_PORT = "TCPsourcePort";
     public const DESTINATION_PORT = "TCPdestinationPort";
     public const SEQUENCE_NUMBER = "TCPsequenceNumber";
@@ -23,6 +24,9 @@ class TCPHandler extends FrameHandler
     public const CHECKSUM = "TCPchecksum";
     public const POINTER = "TCPpointer";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof TCPSegment) {

@@ -339,6 +339,10 @@ class ARPPacket extends FrameComponent
         }
     }
 
+    /**
+     * This function will allow you to get the handlers attached to the ARP packet.
+     * Should be an array of 1 element since ARP has no flags.
+     */
     public function getHandlers(): array
     {
         return $this->handlers;

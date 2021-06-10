@@ -12,6 +12,7 @@ use Exception;
 
 class TCPFlagsHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const FLAG_NS = "TCPflagNs";
     public const FLAG_CWR = "TCPflagCwr";
     public const FLAG_ECE = "TCPflagEce";
@@ -22,6 +23,9 @@ class TCPFlagsHandler extends FrameHandler
     public const FLAG_SYN = "TCPflagSyn";
     public const FLAG_FIN = "TCPflagFin";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof TCPSegment) {

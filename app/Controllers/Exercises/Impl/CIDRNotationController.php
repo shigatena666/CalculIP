@@ -28,6 +28,9 @@ class CIDRNotationController extends ExerciseTypeController
         self::SESSION_NETWORK_ADDRESS, self::SESSION_BROADCAST_ADDRESS
     ];
 
+    /**
+     * This method represents the index.php of the exercise.
+     */
     public function index()
     {
         //In case the user hit the retry button, regenerate the session and redirect him to the current page.
@@ -61,15 +64,15 @@ class CIDRNotationController extends ExerciseTypeController
         $form_data = [
             "ip" => unserialize($this->session->get(self::SESSION_IP)),
         ];
-        $data = [
-            "title" => "Notation CIDR S2",
-            "menu_view" => view('templates/menu'),
-            "form" => view("Exercises/CIDRNotation/cidrnotation_form", $form_data),
-        ];
+        $this->controller_data[parent::DATA_TITLE] = "Notation CIDR S2";
+        $this->controller_data["form"] = view("Exercises/CIDRNotation/cidrnotation_form", $form_data);
 
-        return view('Exercises/CIDRNotation/cidrnotation', $data);
+        return view('Exercises/CIDRNotation/cidrnotation', $this->controller_data);
     }
 
+    /**
+     *  This function will allow you to generate the exercise.
+     */
     protected function generateExercise(): void
     {
         //Don't re-generate the exercise if the retry button hasn't been pressed
@@ -103,6 +106,9 @@ class CIDRNotationController extends ExerciseTypeController
         }
     }
 
+    /**
+     *  This function allows you to get the correct answer to compare the user input later.
+     */
     private function get_correct_answer()
     {
         //Unserialize the IP address so that we can access its methods.

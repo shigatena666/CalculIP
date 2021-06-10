@@ -298,6 +298,10 @@ class IPv6Packet extends FrameComponent
         return $str;
     }
 
+    /**
+     * This function will allow you to get the handlers attached to the IPv6 packet.
+     * Should be an array of 1 element since IPv6 has no flags.
+     */
     public function getHandlers(): array
     {
         return $this->handlers;

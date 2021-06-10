@@ -167,6 +167,10 @@ class EthernetFrame extends FrameComponent
         return $str;
     }
 
+    /**
+     * This function will allow you to get the handlers attached to the ethernet frame.
+     * Should be an array of 1 element since EthernetFrame has no flags.
+     */
     public function getHandlers(): array
     {
         return $this->handlers;

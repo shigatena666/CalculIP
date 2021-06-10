@@ -45,7 +45,7 @@ function generateIPv6Address() : IPv6Address
 
 function generateMACAddress() : MACAddress
 {
-    return new MACAddress([ rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), ]);
+    return new MACAddress([ rand(0, 63), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), rand(0, 255), ]);
 }
 
 function convertAndFormatHexa(string $to_format, int $digits): string

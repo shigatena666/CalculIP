@@ -19,6 +19,9 @@ class SubNetworkController extends ExerciseTypeController
     //Add into an array so that we can easily reset the exercise from base controller.
     protected $session_fields = [ self::SESSION_IP, self::SESSION_AMOUNT_SUBNETS ];
 
+    /**
+     * This method represents the index.php of the exercise.
+     */
     public function index()
     {
         //In case the user hit the retry button, regenerate the session and redirect him to the current page.
@@ -27,14 +30,14 @@ class SubNetworkController extends ExerciseTypeController
             return redirect()->to(current_url());
         }
 
-        $data = [
-            "title" => "Calcul de sous-réseaux",
-            "menu_view" => view('templates/menu'),
-        ];
+        $this->controller_data[parent::DATA_TITLE] = "Calcul de sous-réseaux";
 
-        return view('Exercises/SubNetwork/subnetwork', $data);
+        return view('Exercises/SubNetwork/subnetwork', $this->controller_data);
     }
 
+    /**
+     *  This function will allow you to generate the exercise.
+     */
     protected function generateExercise(): void
     {
         //Don't re-generate the exercise if the retry button hasn't been pressed

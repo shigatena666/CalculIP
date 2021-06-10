@@ -258,6 +258,10 @@ class ICMPPacket extends FrameComponent
             convertAndFormatHexa($this->getSequenceNum(), 4);
     }
 
+    /**
+     * This function will allow you to get the handlers attached to the IPv4 packet.
+     * Should be an array of 1 element since ARP has no flags.
+     */
     public function getHandlers(): array
     {
         return $this->handlers;

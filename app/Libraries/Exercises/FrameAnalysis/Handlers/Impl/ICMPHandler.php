@@ -12,12 +12,16 @@ use Exception;
 
 class ICMPHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const TYPE = "ICMPtype";
     public const ERROR_CODE = "ICMPerrorCode";
     public const CHECKSUM = "ICMPchecksum";
     public const IDENTIFIER = "ICMPidentifier";
     public const SEQUENCE_NUMBER = "ICMPsequenceNumber";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof ICMPPacket) {

@@ -9,9 +9,11 @@ use Psr\Log\LoggerInterface;
 
 abstract class GeneralController extends Controller
 {
+    public const DATA_TITLE = "title";
+    public const SESSION_CONNECT = "connect";
+
     protected $session;
-    protected $menu_path;
-    protected $path_array;
+    protected $controller_data;
 
     /**
      * Constructor.
@@ -38,15 +40,27 @@ abstract class GeneralController extends Controller
         //Get the current url.
         $url = current_url();
 
-        //Only get the part that interest us (CalculIP/Path/OtherPath..)
-        $this->menu_path = substr($url, strpos($url, 'CalculIP'));
+        //Only get the part that interests us (CalculIP/Path/OtherPath..)
+        $menu_path = substr($url, strpos($url, 'CalculIP'));
 
         //If the path ends with a / like for the index, remove it.
-        if ($this->menu_path[strlen($this->menu_path) - 1] === '/') {
-            $this->menu_path = substr($this->menu_path, 0, -1);
+        if ($menu_path[strlen($menu_path) - 1] === '/') {
+            $menu_path = substr($menu_path, 0, -1);
         }
 
         //Split the path into an array to create our link.
-        $this->path_array = explode('/', $this->menu_path);
+        $path_array = explode('/', $menu_path);
+
+        //This array is only used for the menu.
+        $menu_data = [
+            "path_array" => $path_array,
+            "title" => $this->controller_data[self::DATA_TITLE]
+        ];
+
+        //Build the data for all controllers.
+        $this->controller_data = [
+            self::DATA_TITLE => "Please set the title in the right controller",
+            "menu_view" => view('templates/menu', $menu_data),
+        ];
     }
 }

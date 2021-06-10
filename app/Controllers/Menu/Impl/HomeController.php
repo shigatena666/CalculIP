@@ -19,14 +19,11 @@ class HomeController extends MenuController
 
         $exerciseDoneModel = new ExerciseDoneModel();
 
-        $data = array(
-            "title" => "Exercices corrigés autour de TCP/IP - CalculIP",
-            "menu_view" => view('templates/menu', [ "path_array" => $this->path_array ]),
-            "quote" => $quote,
-            "percentageExercises" => $exerciseDoneModel
-        );
+        $this->controller_data[parent::DATA_TITLE] = "Exercices corrigés autour de TCP/IP - CalculIP";
+        $this->controller_data["quote"] = $quote;
+        $this->controller_data["percentageExercises"] = $exerciseDoneModel;
 
-        return view('home', $data);
+        return view('home', $this->controller_data);
     }
 
 

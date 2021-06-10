@@ -7,14 +7,12 @@ use App\Controllers\Menu\MenuController;
 
 class CoursesController extends MenuController
 {
+    /**
+     * This function represents the index.php of the courses section.
+     */
     public function index(): string
     {
-
-        $data = array(
-            "title" => "Cours",
-            "menu_view" => view('templates/menu'),
-        );
-
-        return view('courses', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Cours";
+        return view('courses', $this->controller_data);
     }
 }

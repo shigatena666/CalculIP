@@ -16,6 +16,7 @@ use App\Libraries\Exercises\FrameAnalysis\Components\Impl\Packets\IPv6\IPv6Packe
 
 class FrameAnalysisController extends ExerciseTypeController
 {
+    //These are the codes to generate the frame.
     public const IPV4_CODE = 0x0800;
     public const IPV6_CODE = 0x86DD;
     public const ARP_CODE = 0x0806;
@@ -26,6 +27,9 @@ class FrameAnalysisController extends ExerciseTypeController
     //Add into an array so that we can easily reset the exercise from base controller.
     protected $session_fields = [self::SESSION_FRAME];
 
+    /**
+     * This method represents the index.php of the exercise.
+     */
     public function index()
     {
         //In case the user asked for another frame.
@@ -65,25 +69,25 @@ class FrameAnalysisController extends ExerciseTypeController
             return "";
         }
 
-        //TODO: Don't forget to give a point when the user is logged in.
-
-        $data = [
-            "title" => "Analyse de trame Ethernet (département info)",
-            "menu_view" => view('templates/menu'),
-            "frame_viewer" => view('Exercises/FrameAnalysis/frame_viewer', $frame_viewer_data),
-            "ethernet_frame" => view('Exercises/FrameAnalysis/ethernetframe'),
-            "arp_packet" => view('Exercises/FrameAnalysis/arppacket'),
-            "ipv4_packet" => view('Exercises/FrameAnalysis/ipv4packet'),
-            "ipv6_packet" => view('Exercises/FrameAnalysis/ipv6packet'),
-            "udp_datagram" => view('Exercises/FrameAnalysis/udpdatagram'),
-            "icmp_packet" => view('Exercises/FrameAnalysis/icmppacket'),
-            "tcp_segment" => view('Exercises/FrameAnalysis/tcpsegment'),
-            "dns_message" => view('Exercises/FrameAnalysis/dnsmessage'),
-        ];
-
-        return view('Exercises/FrameAnalysis/frameanalysis', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Analyse de trame Ethernet (département info)";
+        $this->controller_data["frame_viewer"] = view('Exercises/FrameAnalysis/frame_viewer', $frame_viewer_data);
+        $this->controller_data["ethernet_frame"] = view('Exercises/FrameAnalysis/ethernetframe');
+        $this->controller_data["arp_packet"] = view('Exercises/FrameAnalysis/arppacket');
+        $this->controller_data["ipv4_packet"] = view('Exercises/FrameAnalysis/ipv4packet');
+        $this->controller_data["ipv6_packet"] = view('Exercises/FrameAnalysis/ipv6packet');
+        $this->controller_data["udp_datagram"] = view('Exercises/FrameAnalysis/udpdatagram');
+        $this->controller_data["icmp_packet"] = view('Exercises/FrameAnalysis/icmppacket');
+        $this->controller_data["tcp_segment"] = view('Exercises/FrameAnalysis/tcpsegment');
+        $this->controller_data["dns_message"] = view('Exercises/FrameAnalysis/dnsmessage');
+        return view('Exercises/FrameAnalysis/frameanalysis', $this->controller_data);
     }
 
+    /**
+     * This method allows you to get all the handlers attached to every frame and subframe.
+     *
+     * @param FrameComponent $frameComponent : A FrameComponent, in general should be an EthernetFrame
+     * @return array : An array of handler.
+     */
     private function getHandlersFromFrame(FrameComponent $frameComponent): array
     {
         $handlers = [];
@@ -97,6 +101,9 @@ class FrameAnalysisController extends ExerciseTypeController
         return $handlers;
     }
 
+    /**
+     *  This function allows you to generate the exercise.
+     */
     protected function generateExercise(): void
     {
         //Don't re-generate the exercise if the retry button hasn't been pressed
@@ -111,6 +118,12 @@ class FrameAnalysisController extends ExerciseTypeController
         $this->session->set(self::SESSION_FRAME, serialize($frame));
     }
 
+    /**
+     * This method allows you to build a random frame from the EthernetFrame component.
+     * It will auto-generate depending on the setDefaultBehaviour.
+     *
+     * @return EthernetFrame : An ethernet frame with the data that represents the other frames.
+     */
     private function buildFrame(): EthernetFrame
     {
         $ethernet = new EthernetFrame();

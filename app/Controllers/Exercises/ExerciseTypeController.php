@@ -50,8 +50,14 @@ abstract class ExerciseTypeController extends GeneralController
         $this->generateExercise();
  	}
 
+    /**
+     *  This function will allow you to generate the exercise.
+     */
     protected abstract function generateExercise() : void;
 
+    /**
+     * This function allows you to remove the session fields from an exercise that redefines the session_fields array.
+     */
     protected function reset_exercice() : void
     {
         foreach ($this->session_fields as $field) {

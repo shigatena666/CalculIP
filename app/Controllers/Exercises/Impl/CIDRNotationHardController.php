@@ -28,6 +28,10 @@ class CIDRNotationHardController extends ExerciseTypeController
         self::SESSION_NETWORK_ADDRESS, self::SESSION_BROADCAST_ADDRESS
     ];
 
+
+    /**
+     * This method represents the index.php of the exercise.
+     */
     public function index()
     {
         //In case the user hit the retry button, regenerate the session and redirect him to the current page.
@@ -61,15 +65,15 @@ class CIDRNotationHardController extends ExerciseTypeController
         $form_data = [
             "ip" => unserialize($this->session->get(self::SESSION_IP))
         ];
-        $data = [
-            "title" => "Notation CIDR S3",
-            "menu_view" => view('templates/menu'),
-            "form" => view("Exercises/CIDRNotationHard/cidrnotationhard_form", $form_data),
-        ];
 
-        return view('Exercises/CIDRNotationHard/cidrnotationhard', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Notation CIDR S3";
+        $this->controller_data["form"] = view("Exercises/CIDRNotationHard/cidrnotationhard_form", $form_data);
+        return view('Exercises/CIDRNotationHard/cidrnotationhard', $this->controller_data);
     }
 
+    /**
+     *  This function will allow you to generate the exercise.
+     */
     protected function generateExercise(): void
     {
         //Don't re-generate the exercise if the retry button hasn't been pressed

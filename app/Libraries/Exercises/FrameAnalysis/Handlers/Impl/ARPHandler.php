@@ -12,6 +12,7 @@ use Exception;
 
 class ARPHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const HARDWARE_ADDRESS_SPACE = "ARPhardwareAddressSpace";
     public const PROTOCOL_ADDRESS_SPACE = "ARPprotocolAddressSpace";
     public const HLEN = "ARPhlen";
@@ -22,6 +23,9 @@ class ARPHandler extends FrameHandler
     public const TARGET_HARDWARE_ADDRESS = "ARPtargetHardwareAddress";
     public const TARGET_PROTOCOL_ADDRESS = "ARPtargetProtocolAddress";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof ARPPacket) {

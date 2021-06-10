@@ -485,6 +485,10 @@ class IPv4Packet extends FrameComponent
         return $frame_bytes;
     }
 
+    /**
+     * This function will allow you to get the handlers attached to the IPv4 packet.
+     * Should be an array of 1 element since IPv4 has no flags.
+     */
     public function getHandlers(): array
     {
         return $this->handlers;

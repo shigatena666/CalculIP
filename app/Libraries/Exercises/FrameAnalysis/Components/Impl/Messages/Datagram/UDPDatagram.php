@@ -228,6 +228,10 @@ class UDPDatagram extends FrameComponent
         return $frame_bytes;
     }
 
+    /**
+     * This function will allow you to get the handlers attached to the UDP datagram.
+     * Should be an array of 1 element since UDP has no flags.
+     */
     public function getHandlers(): array
     {
         return $this->handlers;

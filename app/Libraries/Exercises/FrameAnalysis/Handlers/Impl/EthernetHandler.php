@@ -10,10 +10,14 @@ use Exception;
 
 class EthernetHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const DESTINATION_ADDRESS = "EthernetDestinationAddress";
     public const SENDER_ADDRESS = "EthernetSenderAddress";
     public const ETYPE = "EthernetEtype";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof EthernetFrame) {

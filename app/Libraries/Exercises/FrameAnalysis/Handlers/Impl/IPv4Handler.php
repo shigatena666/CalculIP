@@ -11,6 +11,7 @@ use Exception;
 
 class IPv4Handler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const VERSION = "IPv4version";
     public const HEADER_LENGTH = "IPv4headerLength";
     public const SERVICE_TYPE = "IPv4serviceType";
@@ -26,6 +27,9 @@ class IPv4Handler extends FrameHandler
     public const EMITTER = "IPv4Emitter";
     public const RECEIVER = "IPv4Receiver";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof IPv4Packet) {

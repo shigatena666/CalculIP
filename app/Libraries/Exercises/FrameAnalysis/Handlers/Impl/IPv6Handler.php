@@ -12,6 +12,7 @@ use Exception;
 
 class IPv6Handler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const VERSION = "IPv6version";
     public const TRAFFIC_CLASS = "IPv6trafficClass";
     public const FLOW_LABEL = "IPv6flowLabel";
@@ -21,6 +22,9 @@ class IPv6Handler extends FrameHandler
     public const SOURCE_ADDRESS = "IPv6sourceAddress";
     public const DESTINATION_ADDRESS = "IPv6destinationAddress";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof IPv6Packet) {

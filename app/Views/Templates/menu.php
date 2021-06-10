@@ -81,9 +81,11 @@
 </nav>
 
 <ol class="breadcrumb">
+    <?php $path = ""; ?>
     <?php for ($i = 0; $i < count($path_array); $i++): ?>
         <li>
-            <a href=<?= $i === 0 ? $path_array[$i] : '/' . $path_array[$i] ?>><?= $path_array[$i] ?></a>
+            <?php $path .= $i === 0 ? $path_array[$i] : '/' . $path_array[$i]; ?>
+            <a href="/<?= $path ?>"><?= $path_array[$i] ?></a>
         </li>
     <?php endfor ?>
 </ol>

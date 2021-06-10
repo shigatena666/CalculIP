@@ -12,11 +12,15 @@ use Exception;
 
 class UDPHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const SOURCE_PORT = "UDPsourcePort";
     public const DESTINATION_PORT = "UDPdestinationPort";
     public const TOTAL_LENGTH = "UDPtotalLength";
     public const CHECKSUM = "UDPchecksum";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof UDPDatagram) {

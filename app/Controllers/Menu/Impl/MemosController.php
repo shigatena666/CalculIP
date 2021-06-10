@@ -7,73 +7,66 @@ use App\Controllers\Menu\MenuController;
 
 class MemosController extends MenuController
 {
+    /**
+     * This function represents the index.php of the memo section.
+     */
     public function index(): string
     {
-        $data = [
-            "title" => "Memos",
-            "menu_view" => view('templates/menu', [ "path_array" => $this->path_array ]),
-        ];
-
-        return view('Memos/memos', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Memos";
+        return view('Memos/memos', $this->controller_data);
     }
 
+    /**
+     * This function represents the /Analyse endpoint of the memo section.
+     */
     public function frameanalysis(): string
     {
-        $data = [
-            "title" => "Analyse de trame",
-            "menu_view" => view('templates/menu'),
-        ];
-
-        return view('Memos/frameanalysis', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Analyse de trame";
+        return view('Memos/frameanalysis', $this->controller_data);
     }
 
+    /**
+     * This function represents the /Classe endpoint of the memo section.
+     */
     public function ipclasses(): string
     {
-        $data = [
-            "title" => "Classe de l'IP : Trouver la classe correspondante",
-            "menu_view" => view('templates/menu'),
-        ];
-
-        return view('Memos/ipclasses', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Classe de l'IP : Trouver la classe correspondante";
+        return view('Memos/ipclasses', $this->controller_data);
     }
 
+    /**
+     * This function represents the /Structure endpoint of the memo section.
+     */
     public function framestructure(): string
     {
-        $data = [
-            "title" => "Structure de trame",
-            "menu_view" => view('templates/menu'),
-        ];
-
-        return view('Memos/framestructure', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Structure de trame";
+        return view('Memos/framestructure', $this->controller_data);
     }
 
+    /**
+     * This function represents the /CIDR endpoint of the memo section.
+     */
     public function cidrnotation(): string
     {
-        $data = [
-            "title" => "CIDR et Masque",
-            "menu_view" => view('templates/menu'),
-        ];
-
-        return view('Memos/cidrnotation', $data);
+        $this->controller_data[parent::DATA_TITLE] = "CIDR et Masque";
+        return view('Memos/cidrnotation', $this->controller_data);
     }
 
+    /**
+     * This function represents the /Routage endpoint of the memo section.
+     */
     public function routingtable(): string
     {
-        $data = [
-            "title" => "Table de routage",
-            "menu_view" => view('templates/menu'),
-        ];
-
-        return view('Memos/routingtable', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Table de routage";
+        return view('Memos/routingtable', $this->controller_data);
     }
 
+    /**
+     * This function represents the /SousReseaux endpoint of the memo section.
+     */
     public function subnetworks(): string
     {
-        $data = [
-            "title" => "Sous-réseaux",
-            "menu_view" => view('templates/menu'),
-        ];
-
-        return view('Memos/subnetworks', $data);
+        $this->controller_data[parent::DATA_TITLE] = "Sous-réseaux";
+        return view('Memos/subnetworks', $this->controller_data);
     }
 }

@@ -17,12 +17,20 @@ abstract class FrameHandler
         $this->response = service('response');
     }
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     *
+     * @return array : An array of the following type: [ "name" => 0, ... ];
+     */
     protected abstract function getData(): array;
 
+    /**
+     * This function allows you to prepare the data to send them to the client later.
+     *
+     * @return array|array[] : An array of data and / or empty fields that needs to be completed on the client side.
+     */
     public function handle(): array
     {
-        //TODO: Maybe it could be useful to send only the fields that are completed.
-
         $notSet_fields = $this->getNotSetFields();
         if (count($notSet_fields) !== 0) {
             return [];
@@ -37,6 +45,11 @@ abstract class FrameHandler
             [ "data" => $this->getData() ];
     }
 
+    /**
+     * This function allows you to get the fields that aren't set in the POST request.
+     *
+     * @return array : An array of unset POST fields.
+     */
     private function getNotSetFields() : array
     {
         $notSet = [];
@@ -48,6 +61,11 @@ abstract class FrameHandler
         return $notSet;
     }
 
+    /**
+     * This function allows you to get the fields that are empty in the POST request.
+     *
+     * @return array : An array of empty POST fields.
+     */
     private function getEmptyFields() : array
     {
         $empty = [];

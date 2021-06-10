@@ -5,10 +5,14 @@ namespace App\Controllers\Exercises\Impl;
 
 use App\Controllers\Exercises\ExerciseTypeController;
 use App\Libraries\Exercises\IPclasses\Impl\IPv4Address;
+use App\Models\ExerciseDoneModel;
+use CodeIgniter\Model;
 use Exception;
 
 class MaxCommonPrefixHardController extends ExerciseTypeController
 {
+    private const TITLE = "Préfixe max : plus difficile";
+
     //These fields are consts for the session variable defined in the base controller.
     private const SESSION_IP1 = "ip1_commonprefixhard";
     private const SESSION_IP2 = "ip2_commonprefixhard";
@@ -21,6 +25,9 @@ class MaxCommonPrefixHardController extends ExerciseTypeController
         self::SESSION_IP1, self::SESSION_IP2, self::SESSION_IP3, self::SESSION_ANSWER, self::SESSION_ANSWER_LENGTH
     ];
 
+    /**
+     * This method represent the index.php of the exercise.
+     */
     public function index()
     {
         //In case the user hit the retry button, regenerate the session and redirect him to the current page.
@@ -29,10 +36,7 @@ class MaxCommonPrefixHardController extends ExerciseTypeController
             return redirect()->to(current_url());
         }
 
-        $data = [
-            "title" => "Préfixe max : plus difficile",
-            "menu_view" => view('templates/menu')
-        ];
+        $this->controller_data[parent::DATA_TITLE] = self::TITLE;
 
         //If the user didn't submit his answer, show him the form and the IP addresses for him to complete the exercise.
         if (!isset($_POST["submit"])) {
@@ -42,8 +46,8 @@ class MaxCommonPrefixHardController extends ExerciseTypeController
                 "ip3" => $this->session->get(self::SESSION_IP3)
             ];
 
-            $data["ips"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_ipboard', $board_data);
-            $data["form"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_form');
+            $this->controller_data["ips"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_ipboard', $board_data);
+            $this->controller_data["form"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_form');
         } //Else if he submitted something, check if it contains the right fields.
         else if (!empty($_POST["ip"]) && !empty($_POST["taille"])) {
 
@@ -56,6 +60,9 @@ class MaxCommonPrefixHardController extends ExerciseTypeController
 
                     //Get all elements in array except first one because of preg_match making it the whole IP.
                     $user_ip = new IPv4Address([(int)$bytes[1], (int)$bytes[2], (int)$bytes[3], (int)$bytes[4]]);
+
+                    //Create the model so that we can add the user points in the database.
+                    $exerciseDoneModel = new ExerciseDoneModel();
 
                     //Check if the IP address has one of its byte incorrect.
                     if ($user_ip->getClass() !== "None") {
@@ -73,32 +80,63 @@ class MaxCommonPrefixHardController extends ExerciseTypeController
 
                         //Now check the user IP with the one stored in the session.
                         if ($user_ip->__toString() === $this->session->get(self::SESSION_ANSWER)) {
+
                             //Append our success view to the global one.
-                            $data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_success', $answer_data);
-                        } //If it's incorrect then
-                        else {
-                            //Append our fail view to the global one.
-                            $data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_fail', $answer_data);
+                            $this->controller_data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_success', $answer_data);
+
+                            //Insert or update the user's point if he succeeded the exercise.
+                            $exerciseDoneModel->updateOrInsertUserOnExercise(
+                                $this->session->get(parent::SESSION_CONNECT),
+                                self::TITLE,
+                                true
+                            );
                         }
-                    } //Else display an error view to tell the user he incorrectly wrote the IP.
-                    else {
-                        $data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_errorip');
+                        //If it's incorrect then
+                        else {
+
+                            //Append our fail view to the global one.
+                            $this->controller_data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_fail', $answer_data);
+
+                            //Insert or update the user's point if he failed the exercise.
+                            $exerciseDoneModel->updateOrInsertUserOnExercise(
+                                $this->session->get(parent::SESSION_CONNECT),
+                                self::TITLE,
+                                false
+                            );
+                        }
                     }
-                } //Else tell the user he incorrectly entered the length or its value is wrong.
-                else {
-                    $data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_errorlength');
+                    //Else display an error view to tell the user he incorrectly wrote the IP.
+                    else {
+                        $this->controller_data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_errorip');
+
+                        //Insert or update the user's point if he failed the exercise.
+                        $exerciseDoneModel->updateOrInsertUserOnExercise(
+                            $this->session->get(parent::SESSION_CONNECT),
+                            self::TITLE,
+                            false
+                        );
+                    }
                 }
-            } //Else in case the user didn't mind about the IP address.
-            else {
-                $data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_errorip');
+                //Else tell the user he incorrectly entered the length or its value is wrong.
+                else {
+                    $this->controller_data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_errorlength');
+                }
             }
-        } //Else the user submitted a request with the wrong attribute or missing ones.
-        else {
-            $data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_missingvalues');
+            //Else in case the user didn't mind about the IP address.
+            else {
+                $this->controller_data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_errorip');
+            }
         }
-        return view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard', $data);
+        //Else the user submitted a request with the wrong attribute or missing ones.
+        else {
+            $this->controller_data["answer"] = view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard_missingvalues');
+        }
+        return view('Exercises/MaxCommonPrefixHard/maxcommonprefixhard',  $this->controller_data);
     }
 
+    /**
+     *  This function will allow you to generate the exercise.
+     */
     protected function generateExercise(): void
     {
         //Don't re-generate the exercise if the retry button hasn't been pressed
@@ -141,6 +179,9 @@ class MaxCommonPrefixHardController extends ExerciseTypeController
         }
     }
 
+    /**
+     *  This function is used to get the correct answers to compare them to the user input later
+     */
     private function get_correct_answer()
     {
         //Both IPs should be in the same format, which means IPv4.

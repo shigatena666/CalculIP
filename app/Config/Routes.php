@@ -56,7 +56,7 @@ $routes->get("/Memos/SousReseaux", "Menu/Impl/MemosController::subnetworks");
 // EXERCICES - START
 
 //Accept GET requests for the exercise list.
-$routes->get("/Exercices", "ExercisesController::index");
+$routes->get("/Exercices", "Menu/Impl/ExercisesController::index");
 // Accept GET and POST requests for the exercices.
 $routes->get("/Exercices/Conversion", "Exercises/Impl/ConversionsController::index");
 $routes->post("/Exercices/Conversion", "Exercises/Impl/ConversionsController::index");

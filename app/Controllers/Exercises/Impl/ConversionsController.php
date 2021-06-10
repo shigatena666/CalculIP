@@ -38,11 +38,10 @@ class ConversionsController extends ExerciseTypeController
     //These fields are consts for the session variable defined in the base controller.
     private const SESSION_CONVERTER = "converter";
     private const SESSION_RANDOM = "random_number";
-    private const SESSION_CONNECT = "connect";
 
     //Add into an array so that we can easily reset the exercise from base controller.
     protected $session_fields = [
-        self::SESSION_CONVERTER, self::SESSION_RANDOM, self::SESSION_CONNECT
+        self::SESSION_CONVERTER, self::SESSION_RANDOM
     ];
 
     //These are our arrays containing all the possible conversions.
@@ -179,23 +178,20 @@ class ConversionsController extends ExerciseTypeController
             $this->converter;
 
         //Prepare the data.
-        $answer_data = ["converter" => $this->converter];
+        $answer_data = [ "converter" => $this->converter ];
 
-        $data = [
-            "title" => self::TITLE,
-            "menu_view" => view('templates/menu'),
-            "converter" => $this->converter,
-            "types" => $this->types,
-            "conversion_answer" => view('Exercises/Conversions/conversion_answer', $answer_data)
-        ];
+        $this->controller_data[parent::DATA_TITLE] = self::TITLE;
+        $this->controller_data["converter"] = $this->converter;
+        $this->controller_data["types"] = $this->types;
+        $this->controller_data["conversion_answer"] = view('Exercises/Conversions/conversion_answer', $answer_data);
 
         //If an error has been detected during the process.
         if ($this->session->get(self::ERROR)) {
-            $data["conversion_result"] = view('Exercises/Conversions/conversion_error');
+            $this->controller_data["conversion_result"] = view('Exercises/Conversions/conversion_error');
             $this->session->remove(self::ERROR);
         } //Else, if the answer provided by the user is empty.
         else if (isset($_POST[self::ANSWER]) && $_POST[self::ANSWER] === "") {
-            $data["conversion_result"] = view('Exercises/Conversions/conversion_empty');
+            $this->controller_data["conversion_result"] = view('Exercises/Conversions/conversion_empty');
         } //Else, if the user submitted an answer.
         else if (isset($_POST[self::ANSWER]) && isset($_SESSION[self::SESSION_RANDOM])) {
 
@@ -227,17 +223,17 @@ class ConversionsController extends ExerciseTypeController
             ];
 
             //Add the result to the view
-            $data["conversion_result"] = view('Exercises/Conversions/conversion_' . $state, $result_data);
+            $this->controller_data["conversion_result"] = view('Exercises/Conversions/conversion_' . $state, $result_data);
 
             //Check if the user is connected and hasn't made an error.
-            if (isset($_SESSION[self::SESSION_CONNECT]) && $state !== self::ERROR) {
+            if (isset($_SESSION[parent::SESSION_CONNECT]) && $state !== self::ERROR) {
 
                 //Create the model so that we can add the user points in the database.
                 $exerciseDoneModel = new ExerciseDoneModel();
 
                 //Insert or update the user's point if he succeeded or failed the exercise.
                 $exerciseDoneModel->updateOrInsertUserOnExercise(
-                    $this->session->get(self::SESSION_CONNECT),
+                    $this->session->get(parent::SESSION_CONNECT),
                     self::TITLE,
                     $state === self::SUCCESS
                 );
@@ -246,7 +242,7 @@ class ConversionsController extends ExerciseTypeController
             //Reset the exercice.
             $this->reset_exercice();
         }
-        return $data;
+        return $this->controller_data;
     }
 
     protected function generateExercise(): void

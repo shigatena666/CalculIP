@@ -129,7 +129,6 @@ class ExerciseDoneModel extends Model
      * @param $exercise_name: The exercise on which we are supposed to update or insert the score.
      * @param $isSuccess: Did the user succeed the exercise ?
      */
-    //TODO: Old function name: exerciceFait()
     function updateOrInsertUserOnExercise($userID, $exercise_name, $isSuccess)
     {
         try {

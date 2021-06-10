@@ -12,6 +12,7 @@ use Exception;
 
 class DNSHandler extends FrameHandler
 {
+    //Consts for the names that are used in the view.
     public const TRANS_ID = "DNSTransID";
     public const FLAGS = "DNSflags";
     public const REQUESTS_NUMBER = "DNSrequestsNumber";
@@ -19,6 +20,9 @@ class DNSHandler extends FrameHandler
     public const AUTHORITY_NUMBER = "DNSauthorityNumber";
     public const ADDITIONAL_NUMBER = "DNSadditionalNumber";
 
+    /**
+     * This function will allow you to compare the required data to the user input.
+     */
     protected function getData(): array
     {
         if (!$this->frameComponent instanceof DNSMessage) {

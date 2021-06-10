@@ -321,6 +321,10 @@ class DNSMessage extends FrameComponent
         }
     }
 
+    /**
+     * This function will allow you to get the handlers attached to the DNS message.
+     * Should be an array of 2 element since DNS message has some flags.
+     */
     public function getHandlers(): array
     {
         return $this->handlers;
