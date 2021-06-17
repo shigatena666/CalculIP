@@ -26,5 +26,10 @@ class HomeController extends MenuController
         return view('home', $this->controller_data);
     }
 
+    public function profil() : string
+    {
+        $this->controller_data[parent::DATA_TITLE] = "Profil";
 
+        return view('profil', $this->controller_data);
+    }
 }

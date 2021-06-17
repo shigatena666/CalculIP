@@ -2,7 +2,7 @@
 
 <?= $this->section("content") ?>
 
-<script src="../../../../CalculIP/JavaScript/Views/Exercises/CIDRNotation/cidrnotation.js?3"></script>
+<script src="/CalculIP.new/JavaScript/Views/Exercises/CIDRNotation/cidrnotation.js"></script>
 
 <div class="container">
     <h1>Notation CIDR (niveau S3)</h1>

@@ -20,14 +20,6 @@ use Psr\Log\LoggerInterface;
 
 abstract class ExerciseTypeController extends GeneralController
 {
-	/**
-	 * An array of helpers to be loaded automatically upon
-	 * class instantiation. These helpers will be available
-	 * to all other controllers that extend BaseController.
-	 *
-	 * @var array
-	 */
-	protected $helpers = [ "prefix", "frame", "url", "ipv6" ];
 	protected $session_fields = [];
 
 	/**

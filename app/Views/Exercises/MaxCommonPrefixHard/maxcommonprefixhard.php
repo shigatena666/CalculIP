@@ -3,7 +3,7 @@
 <?= $this->section("content") ?>
 
 <div class="container">
-    <h1>Préfixe maximal <small>Presque Facile</small></h1>
+    <h1>Préfixe maximal <small>Plus difficile</small></h1>
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Exercice</h3>

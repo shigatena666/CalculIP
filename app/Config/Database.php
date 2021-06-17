@@ -59,8 +59,8 @@ class Database extends Config
 	public $db = [
 		'DSN'      => 'MySQLi:host=localhost;dbname=calcul_ip2;charset=utf8',
 		'hostname' => 'localhost',
-		'username' => 'root',
-		'password' => 'root',
+		'username' => 'calcul_ip2',
+		'password' => '05FIxycj0',
 		'database' => 'calcul_ip2',
 		'DBDriver' => 'MySQLi',
 		'DBPrefix' => '',

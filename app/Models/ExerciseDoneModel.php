@@ -9,7 +9,6 @@ class ExerciseDoneModel extends Model
 {
     protected $table            = 'exercices_fait';
     protected $primaryKey       = 'id_exercice';
-    //TODO: Maybe remove TS from the fields?
     protected $allowedFields    = [ "id_exercice", "userID", "reussi", "echec", "ts" ];
 
     /**

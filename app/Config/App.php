@@ -23,9 +23,7 @@ class App extends BaseConfig
 	 *
 	 * @var string
 	 */
-	//TODO: Change this back when in prod.
-	//public $baseURL = 'https://www-info.iutv.univ-paris13.fr/~desousa/CalculIPNew/';
-    public $baseURL = 'http://127.0.0.1/CalculIP/';
+	public $baseURL = 'https://www-info.iutv.univ-paris13.fr/CalculIP.new/';
 
 	/**
 	 * --------------------------------------------------------------------------

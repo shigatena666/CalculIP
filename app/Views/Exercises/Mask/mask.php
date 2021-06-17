@@ -2,7 +2,7 @@
 
 <?= $this->section("content") ?>
 
-<script src="../../../../CalculIP/JavaScript/Views/Exercises/Mask/mask.js"></script>
+<script src="/CalculIP.new/JavaScript/Views/Exercises/Mask/mask.js"></script>
 
 <div class="container">
     <h1>Masque</h1>

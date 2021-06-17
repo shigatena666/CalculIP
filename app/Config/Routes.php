@@ -33,6 +33,10 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Menu/Impl/HomeController::index');
+$routes->post('/handleScore', 'Menu/Impl/HomeController::handleScore');
+
+//Accept get requests for the profile page.
+$routes->get('/Profil', 'Menu/Impl/HomeController::profil');
 
 // Accept GET requests for about us.
 $routes->get("/QuiSommesNous", "Menu/Impl/AboutUsController::index");
@@ -57,27 +61,18 @@ $routes->get("/Memos/SousReseaux", "Menu/Impl/MemosController::subnetworks");
 
 //Accept GET requests for the exercise list.
 $routes->get("/Exercices", "Menu/Impl/ExercisesController::index");
+
 // Accept GET and POST requests for the exercices.
-$routes->get("/Exercices/Conversion", "Exercises/Impl/ConversionsController::index");
-$routes->post("/Exercices/Conversion", "Exercises/Impl/ConversionsController::index");
-$routes->get("/Exercices/TrouverClasse", "Exercises/Impl/IPClassesController::index");
-$routes->post("/Exercices/TrouverClasse", "Exercises/Impl/IPClassesController::index");
-$routes->get("/Exercices/TrouverClasseInverse", "Exercises/Impl/IPClassesReverseController::index");
-$routes->post("/Exercices/TrouverClasseInverse", "Exercises/Impl/IPClassesReverseController::index");
-$routes->get("/Exercices/AnalyseTrame", "Exercises/Impl/FrameAnalysisController::index");
-$routes->post("/Exercices/AnalyseTrame", "Exercises/Impl/FrameAnalysisController::index");
-$routes->get("/Exercices/PrefixeMax", "Exercises/Impl/MaxCommonPrefixController::index");
-$routes->post("/Exercices/PrefixeMax", "Exercises/Impl/MaxCommonPrefixController::index");
-$routes->get("/Exercices/PrefixeMaxDifficile", "Exercises/Impl/MaxCommonPrefixHardController::index");
-$routes->post("/Exercices/PrefixeMaxDifficile", "Exercises/Impl/MaxCommonPrefixHardController::index");
-$routes->get("/Exercices/NotationCIDRS2", "Exercises/Impl/CIDRNotationController::index");
-$routes->post("/Exercices/NotationCIDRS2", "Exercises/Impl/CIDRNotationController::index");
-$routes->get("/Exercices/NotationCIDR", "Exercises/Impl/CIDRNotationHardController::index");
-$routes->post("/Exercices/NotationCIDR", "Exercises/Impl/CIDRNotationHardController::index");
-$routes->get("/Exercices/Masque", "Exercises/Impl/MaskController::index");
-$routes->post("/Exercices/Masque", "Exercises/Impl/MaskController::index");
-$routes->get("/Exercices/SousReseaux", "Exercises/Impl/SubNetworkController::index");
-$routes->post("/Exercices/SousReseaux", "Exercises/Impl/SubNetworkController::index");
+$routes->match(["get", "post"], "/Exercices/Conversion", "Exercises/Impl/ConversionsController::index");
+$routes->match(["get", "post"], "/Exercices/TrouverClasse", "Exercises/Impl/IPClassesController::index");
+$routes->match(["get", "post"], "/Exercices/TrouverClasseInverse", "Exercises/Impl/IPClassesReverseController::index");
+$routes->match(["get", "post"], "/Exercices/AnalyseTrame", "Exercises/Impl/FrameAnalysisController::index");
+$routes->match(["get", "post"], "/Exercices/PrefixeMax", "Exercises/Impl/MaxCommonPrefixController::index");
+$routes->match(["get", "post"], "/Exercices/PrefixeMaxDifficile", "Exercises/Impl/MaxCommonPrefixHardController::index");
+$routes->match(["get", "post"], "/Exercices/NotationCIDRS2", "Exercises/Impl/CIDRNotationController::index");
+$routes->match(["get", "post"], "/Exercices/NotationCIDR", "Exercises/Impl/CIDRNotationHardController::index");
+$routes->match(["get", "post"], "/Exercices/Masque", "Exercises/Impl/MaskController::index");
+$routes->match(["get", "post"], "/Exercices/SousReseaux", "Exercises/Impl/SubNetworkController::index");
 
 // EXERCICES - END
 

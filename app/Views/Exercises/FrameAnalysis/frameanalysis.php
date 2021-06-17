@@ -2,7 +2,7 @@
 
 <?= $this->section("content") ?>
 
-<script src="../../../../CalculIP/JavaScript/Views/Exercises/FrameAnalysis/frameanalysis.js"></script>
+<script src="/CalculIP.new/JavaScript/Views/Exercises/FrameAnalysis/frameanalysis.js"></script>
 
 <div class="container">
     <h1>Analyse de trame Ethernet</h1>
